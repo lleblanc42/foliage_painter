@@ -1,15 +1,16 @@
-tool
+@tool
 
-static func get_scene_aabb(node, aabb=AABB(), parent_transform=Transform()):
+static func get_scene_aabb(node, aabb=AABB(), parent_transform=Transform3D()):
 	if not node.visible:
 		return aabb
-	var gtrans := Transform()
-	if node is Spatial:
+	var gtrans := Transform3D()
+	if node is Node3D:
 		# We cannot use `global_transform` because the node might not be in the scene tree.
 		# If we still use it, Godot will print warnings.
 		gtrans = parent_transform * node.transform
-	if node is VisualInstance:
-		var node_aabb = gtrans.xform(node.get_aabb())
+	if node is VisualInstance3D:
+		var node_aabb = gtrans * node.get_aabb()
+		#var node_aabb = gtrans.xform(node.get_aabb())
 		if aabb == AABB():
 			aabb = node_aabb
 		else:

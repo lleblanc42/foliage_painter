@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 const Scatter3D = preload("res://addons/zylann.scatter/scatter3d.gd")
@@ -13,7 +13,7 @@ const ACTION_ERASE = 1
 var _node : Scatter3D
 var _selected_patterns := []
 var _mouse_position := Vector2()
-var _editor_camera : Camera
+var _editor_camera : Camera3D
 var _collision_mask := 1
 var _placed_instances = []
 var _removed_instances = []
@@ -35,16 +35,16 @@ func _enter_tree():
 	_logger.debug("Scatter plugin Enter tree")
 	# The class is globally named but still need to register it just so the node creation dialog gets it
 	# https://github.com/godotengine/godot/issues/30048
-	add_custom_type("Scatter3D", "Spatial", Scatter3D, get_icon("scatter3d_node"))
+	add_custom_type("Scatter3D", "Node3D", Scatter3D, get_icon("scatter3d_node"))
 	
 	var base_control = get_editor_interface().get_base_control()
 	
-	_palette = PaletteScene.instance()
-	_palette.connect("patterns_selected", self, "_on_Palette_patterns_selected")
-	_palette.connect("pattern_added", self, "_on_Palette_pattern_added")
-	_palette.connect("patterns_removed", self, "_on_Palette_patterns_removed")
+	_palette = PaletteScene.instantiate()
+	_palette.connect("patterns_selected", _on_Palette_patterns_selected)
+	_palette.connect("pattern_added", _on_Palette_pattern_added)
+	_palette.connect("patterns_removed", _on_Palette_patterns_removed)
 	_palette.hide()
-	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT, _palette)
+	add_control_to_container(EditorPlugin.CONTAINER_Node3D_EDITOR_SIDE_LEFT, _palette)
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
 	_palette.call_deferred("setup_dialogs", base_control)
 
@@ -90,7 +90,7 @@ func make_visible(visible):
 		edit(null)
 
 
-func forward_spatial_gui_input(p_camera, p_event):
+func forward_Node3D_gui_input(p_camera, p_event):
 	if _node == null:
 		return false
 
@@ -99,15 +99,15 @@ func forward_spatial_gui_input(p_camera, p_event):
 	if p_event is InputEventMouseButton:
 		var mb = p_event
 		
-		if mb.button_index == BUTTON_LEFT or mb.button_index == BUTTON_RIGHT:
+		if mb.button_index == MOUSE_BUTTON_LEFT or mb.button_index == MOUSE_BUTTON_RIGHT:
 			# Need to check modifiers before capturing the event,
 			# because they are used in navigation schemes
 			if (not mb.control) and (not mb.alt):# and mb.button_index == BUTTON_LEFT:
 				if mb.pressed:
 					match mb.button_index:
-						BUTTON_LEFT:
+						MOUSE_BUTTON_LEFT:
 							_current_action = ACTION_PAINT
-						BUTTON_RIGHT:
+						MOUSE_BUTTON_RIGHT:
 							_current_action = ACTION_ERASE
 					_cmd_pending_action = true
 				
@@ -128,7 +128,7 @@ func forward_spatial_gui_input(p_camera, p_event):
 
 		_mouse_position = screen_position
 		# Trigger action only if these buttons are held
-		_cmd_pending_action = mm.button_mask & (BUTTON_MASK_LEFT | BUTTON_MASK_RIGHT)
+		_cmd_pending_action = mm.button_mask & (MOUSE_BUTTON_MASK_LEFT | MOUSE_BUTTON_MASK_RIGHT)
 
 	_editor_camera = p_camera
 	return captured_event
@@ -162,7 +162,7 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 	if len(_selected_patterns) == 0:
 		return
 	
-	var space_state :=  get_viewport().world.direct_space_state
+	var space_state =  get_viewport().world.direct_space_state
 	var hit = space_state.intersect_ray(ray_origin, ray_origin + ray_end, [], _collision_mask)
 	
 	if hit.empty():
@@ -180,7 +180,7 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 		# but should be good enough and cheap
 		var too_close = false
 		if len(_placed_instances) != 0:
-			var last_placed_transform := (_placed_instances[-1] as Spatial).global_transform
+			var last_placed_transform := (_placed_instances[-1] as Node3D).global_transform
 			var margin := _pattern_margin + _palette.get_configured_margin()
 			if last_placed_transform.origin.distance_to(pos) < margin:
 				too_close = true
@@ -188,21 +188,21 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 		if not too_close:
 			var instance = _create_pattern_instance()
 			instance.translation = pos
-			instance.rotate_y(rand_range(-PI, PI))
+			instance.rotate_y(randf_range(-PI, PI))
 			_node.add_child(instance)
 			instance.owner = get_editor_interface().get_edited_scene_root()
 			_placed_instances.append(instance)
 
 
 func _erase(ray_origin: Vector3, ray_dir: Vector3):
-	var time_before := OS.get_ticks_usec()
-	var hits := VisualServer.instances_cull_ray(ray_origin, ray_dir, _node.get_world().scenario)
+	var time_before := Time.get_ticks_usec()
+	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, _node.get_world().scenario)
 
 	if len(hits) > 0:
 		var instance = null
 		for hit_object_id in hits:
 			var hit = instance_from_id(hit_object_id)
-			if hit is Spatial:
+			if hit is Node3D:
 				instance = get_scatter_child_instance(hit, _node)
 				if instance != null:
 					break
@@ -371,13 +371,13 @@ func _verify_scene(fpath):
 		_show_error("The selected scene can't be added recursively")
 		return false
 	
-	# Check it inherits Spatial
+	# Check it inherits Node3D
 #	var scene_state = scene.get_state()
 #	var root_type = scene_state.get_node_type(0)
 	# Aaaah screw this
 	var scene_instance = scene.instance()
-	if not (scene_instance is Spatial):
-		_show_error(tr("The selected scene is not a Spatial, it can't be painted in a 3D scene."))
+	if not (scene_instance is Node3D):
+		_show_error(tr("The selected scene is not a Node3D, it can't be painted in a 3D scene."))
 		scene_instance.free()
 		return false
 	scene_instance.free()

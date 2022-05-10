@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 const Logger = preload("../util/logger.gd")
@@ -7,8 +7,8 @@ signal patterns_selected(pattern_paths)
 signal pattern_added(path)
 signal patterns_removed(path)
 
-onready var _item_list : ItemList = get_node("VBoxContainer/ItemList")
-onready var _margin_spin_box : SpinBox = get_node("VBoxContainer/MarginContainer/MarginSpinBox")
+@onready var _item_list : ItemList = get_node("VBoxContainer/ItemList")
+@onready var _margin_spin_box : SpinBox = get_node("VBoxContainer/MarginContainer/MarginSpinBox")
 
 var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
@@ -29,7 +29,7 @@ func set_preview_provider(provider : EditorResourcePreview):
 	assert(_preview_provider == null)
 	assert(provider != null)
 	_preview_provider = provider
-	_preview_provider.connect("preview_invalidated", self, "_on_EditorResourcePreview_preview_invalidated")
+	_preview_provider.connect("preview_invalidated", _on_EditorResourcePreview_preview_invalidated)
 
 
 func _exit_tree():
@@ -47,7 +47,8 @@ func load_patterns(patterns):
 
 func add_pattern(scene_path):
 	# TODO I need scene thumbnails from the editor
-	var default_icon = get_icon("PackedScene", "EditorIcons")
+	var t:Theme = Theme.new()
+	var default_icon = t.get_icon("PackedScene", "EditorIcons")
 	var pattern_name = scene_path.get_file().get_basename()
 	var i = _item_list.get_item_count()
 	_item_list.add_item(pattern_name, default_icon)
