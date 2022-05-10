@@ -1,5 +1,6 @@
 # Godot
 .import/
+.godot/
 logs/
 default_env.tres
 
