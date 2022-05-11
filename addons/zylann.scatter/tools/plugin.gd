@@ -33,6 +33,7 @@ static func get_icon(name):
 
 func _enter_tree():
 	_logger.debug("Scatter plugin Enter tree")
+	print("Scatter plugin Enter tree")
 	# The class is globally named but still need to register it just so the node creation dialog gets it
 	# https://github.com/godotengine/godot/issues/30048
 	add_custom_type("Scatter3D", "Node3D", Scatter3D, get_icon("scatter3d_node"))
@@ -44,14 +45,14 @@ func _enter_tree():
 	_palette.connect("pattern_added", _on_Palette_pattern_added)
 	_palette.connect("patterns_removed", _on_Palette_patterns_removed)
 	_palette.hide()
-	add_control_to_container(EditorPlugin.CONTAINER_Node3D_EDITOR_SIDE_LEFT, _palette)
+	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT, _palette)
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
 	_palette.call_deferred("setup_dialogs", base_control)
 
 	_error_dialog = AcceptDialog.new()
-	_error_dialog.rect_min_size = Vector2(300, 200)
+#	_error_dialog.rect_min_size = Vector2(300, 200)
 	_error_dialog.hide()
-	_error_dialog.window_title = "Error"
+	_error_dialog.title = "Error"
 	base_control.add_child(_error_dialog)
 	
 
@@ -61,8 +62,9 @@ func _exit_tree():
 	
 	remove_custom_type("Scatter3D")
 	
-	_palette.queue_free()
-	_palette = null
+	if _palette != null:
+		_palette.queue_free()
+		_palette = null
 	
 	_error_dialog.queue_free()
 	_error_dialog = null
@@ -90,7 +92,7 @@ func make_visible(visible):
 		edit(null)
 
 
-func forward_Node3D_gui_input(p_camera, p_event):
+func _forward_3d_gui_input(p_camera, p_event):
 	if _node == null:
 		return false
 

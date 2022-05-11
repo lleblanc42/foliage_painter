@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://cf17kiadxg0d6"]
+[gd_scene load_steps=4 format=3 uid="uid://cf17kiadxg0d6"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/scatter3d.gd" id="1_2fe1v"]
-[ext_resource type="PackedScene" uid="uid://414a16sqv27o" path="res://demo/elements/box.tscn" id="2_cick3"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
 size = Vector3(10, 0.25, 10)
@@ -23,4 +22,4 @@ shape = SubResource( "BoxShape3D_6qix4" )
 
 [node name="Scatter3D" type="Node3D" parent="."]
 script = ExtResource( "1_2fe1v" )
-_scenes = [ExtResource( "2_cick3" )]
+_scenes = []
