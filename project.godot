@@ -8,8 +8,15 @@
 
 config_version=5
 
-_global_script_classes=[]
-_global_script_class_icons={}
+_global_script_classes=[{
+"base": "Control",
+"class": &"Palette",
+"language": &"GDScript",
+"path": "res://addons/zylann.scatter/tools/palette.gd"
+}]
+_global_script_class_icons={
+"Palette": ""
+}
 
 [application]
 

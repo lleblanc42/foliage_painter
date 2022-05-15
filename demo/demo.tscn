@@ -1,25 +1,40 @@
-[gd_scene load_steps=4 format=3 uid="uid://cf17kiadxg0d6"]
+[gd_scene load_steps=8 format=3 uid="uid://cf17kiadxg0d6"]
 
-[ext_resource type="Script" path="res://addons/zylann.scatter/scatter3d.gd" id="1_2fe1v"]
+[ext_resource type="Script" path="res://addons/zylann.scatter/scatter3d.gd" id="1_c7aas"]
+[ext_resource type="PackedScene" uid="uid://414a16sqv27o" path="res://demo/elements/box.tscn" id="2_ahu76"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
-size = Vector3(10, 0.25, 10)
+size = Vector3(40, 0.25, 40)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u1nyd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6qix4"]
-size = Vector3(10.0472, 0.250339, 9.92099)
+size = Vector3(40.008, 0.250339, 40.0361)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8tmav"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yyrx4"]
+albedo_color = Color(1, 0, 0.027451, 1)
+roughness = 0.0
 
 [node name="demo" type="Node3D"]
 
 [node name="Terrain" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.125, 0)
 mesh = SubResource( "BoxMesh_jkts7" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_u1nyd" )
 metadata/_edit_lock_ = true
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Terrain"]
+[node name="TerrainStatic" type="StaticBody3D" parent="Terrain"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain/TerrainStatic"]
 shape = SubResource( "BoxShape3D_6qix4" )
 
+[node name="sphere" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.2547, 0.000169754, 14.2971)
+mesh = SubResource( "SphereMesh_8tmav" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_yyrx4" )
+
 [node name="Scatter3D" type="Node3D" parent="."]
-script = ExtResource( "1_2fe1v" )
-_scenes = []
+script = ExtResource( "1_c7aas" )
+_scenes = [ExtResource( "2_ahu76" )]

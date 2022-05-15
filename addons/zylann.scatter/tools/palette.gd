@@ -1,5 +1,6 @@
 @tool
 extends Control
+class_name Palette
 
 const Logger = preload("../util/logger.gd")
 
@@ -7,13 +8,17 @@ signal patterns_selected(pattern_paths)
 signal pattern_added(path)
 signal patterns_removed(path)
 
-@onready var _item_list : ItemList = get_node("VBoxContainer/ItemList")
-@onready var _margin_spin_box : SpinBox = get_node("VBoxContainer/MarginContainer/MarginSpinBox")
+@onready var _item_list : ItemList = $VBoxContainer/ItemList
+@onready var _margin_spin_box : SpinBox = $VBoxContainer/MarginContainer/MarginSpinBox
+
+@onready var scale_min:SpinBox = $VBoxContainer/VBoxContainer/ScaleBox/minSpin
+@onready var scale_max:SpinBox = $VBoxContainer/VBoxContainer/ScaleBox/MaxSpin
+@onready var rotate_min:SpinBox = $VBoxContainer/VBoxContainer/RotateBox/minSpin
+@onready var rotate_max:SpinBox = $VBoxContainer/VBoxContainer/RotateBox/MaxSpin
 
 var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
 var _logger = Logger.get_for(self)
-
 
 func setup_dialogs(base_control):
 	_file_dialog = FileDialog.new()
@@ -47,18 +52,22 @@ func load_patterns(patterns):
 
 func add_pattern(scene_path):
 	# TODO I need scene thumbnails from the editor
-	var t:Theme = Theme.new()
-	var default_icon = t.get_icon("PackedScene", "EditorIcons")
+	var godot_theme = EditorPlugin.new().get_editor_interface().get_base_control().theme
+	
+#	var list = Array(godot_theme.get_icon_list('EditorIcons'))
+#	for icon_name in list:
+#		print(icon_name)
+	
+	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons") #PackedScene
 	var pattern_name = scene_path.get_file().get_basename()
 	var i = _item_list.get_item_count()
-	_item_list.add_item(pattern_name, default_icon)
+	_item_list.add_item(pattern_name,default_icon)
 	_item_list.set_item_metadata(i, scene_path)
 	
-	_preview_provider.queue_resource_preview( \
-		scene_path, self, "_on_EditorResourcePreview_preview_loaded", null)
+	_preview_provider.queue_resource_preview(scene_path, self, "_on_EditorResourcePreview_preview_loaded", null)
 
 
-func _on_EditorResourcePreview_preview_loaded(path, texture, userdata):
+func _on_EditorResourcePreview_preview_loaded(path, texture,preview, userdata):
 	var i = find_pattern(path)
 	if i == -1:
 		return
@@ -117,6 +126,7 @@ func _on_RemoveButton_pressed():
 
 
 func _on_FileDialog_file_selected(fpath):
+	print("fpath: ",fpath)
 	emit_signal("pattern_added", fpath)
 
 

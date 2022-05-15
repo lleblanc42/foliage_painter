@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
 
 [node name="Palette" type="Control"]
-minimum_size = Vector2(200, 0)
+minimum_size = Vector2(300, 0)
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( "1" )
@@ -37,26 +37,116 @@ text = "Remove"
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer"]
 offset_top = 35.0
-offset_right = 1024.0
-offset_bottom = 565.0
+offset_right = 1920.0
+offset_bottom = 975.0
 size_flags_vertical = 3
 select_mode = 1
 
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+offset_top = 979.0
+offset_right = 1920.0
+offset_bottom = 1045.0
+
+[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+offset_right = 1920.0
+offset_bottom = 31.0
+theme_override_constants/separation = 5
+
+[node name="des" type="Label" parent="VBoxContainer/VBoxContainer/ScaleBox"]
+offset_top = 2.0
+offset_right = 47.0
+offset_bottom = 28.0
+text = "scale  "
+
+[node name="Label2" type="Label" parent="VBoxContainer/VBoxContainer/ScaleBox"]
+offset_left = 52.0
+offset_top = 2.0
+offset_right = 82.0
+offset_bottom = 28.0
+text = "min"
+
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/ScaleBox"]
+offset_left = 87.0
+offset_right = 170.0
+offset_bottom = 31.0
+min_value = 0.1
+max_value = 10.0
+step = 0.05
+value = 1.0
+
+[node name="Label3" type="Label" parent="VBoxContainer/VBoxContainer/ScaleBox"]
+offset_left = 175.0
+offset_top = 2.0
+offset_right = 209.0
+offset_bottom = 28.0
+text = "max"
+
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/ScaleBox"]
+offset_left = 214.0
+offset_right = 297.0
+offset_bottom = 31.0
+min_value = 0.1
+max_value = 10.0
+step = 0.05
+value = 1.0
+
+[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+offset_top = 35.0
+offset_right = 1920.0
+offset_bottom = 66.0
+theme_override_constants/separation = 5
+
+[node name="des" type="Label" parent="VBoxContainer/VBoxContainer/RotateBox"]
+offset_top = 2.0
+offset_right = 48.0
+offset_bottom = 28.0
+text = "rotate"
+
+[node name="Label2" type="Label" parent="VBoxContainer/VBoxContainer/RotateBox"]
+offset_left = 53.0
+offset_top = 2.0
+offset_right = 83.0
+offset_bottom = 28.0
+text = "min"
+
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/RotateBox"]
+offset_left = 88.0
+offset_right = 171.0
+offset_bottom = 31.0
+min_value = -180.0
+max_value = 180.0
+step = 0.05
+
+[node name="Label3" type="Label" parent="VBoxContainer/VBoxContainer/RotateBox"]
+offset_left = 176.0
+offset_top = 2.0
+offset_right = 210.0
+offset_bottom = 28.0
+text = "max"
+
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/RotateBox"]
+offset_left = 215.0
+offset_right = 298.0
+offset_bottom = 31.0
+min_value = -180.0
+max_value = 180.0
+step = 0.05
+
 [node name="MarginContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 569.0
-offset_right = 1024.0
-offset_bottom = 600.0
+offset_top = 1049.0
+offset_right = 1920.0
+offset_bottom = 1080.0
 
 [node name="MarginLabel" type="Label" parent="VBoxContainer/MarginContainer"]
 offset_top = 2.0
-offset_right = 510.0
+offset_right = 958.0
 offset_bottom = 28.0
 size_flags_horizontal = 3
 text = "Object margin:"
 
 [node name="MarginSpinBox" type="SpinBox" parent="VBoxContainer/MarginContainer"]
-offset_left = 514.0
-offset_right = 1024.0
+offset_left = 962.0
+offset_right = 1920.0
 offset_bottom = 31.0
 size_flags_horizontal = 3
 max_value = 10.0

@@ -22,7 +22,7 @@ static func get_scene_aabb(node, aabb=AABB(), parent_transform=Transform3D()):
 
 static func get_instance_root(node):
 	# TODO Could use `owner`?
-	while node != null and node.filename == "":
+	while node != null and node.scene_file_path == "":
 		node = node.get_parent()
 	return node
 
@@ -37,7 +37,7 @@ static func get_node_in_parents(node, klass):
 
 static func is_self_or_parent_scene(fpath, node):
 	while node != null:
-		if node.filename == fpath:
+		if node.scene_file_path == fpath:
 			return true
 		node = node.get_parent()
 	return false
