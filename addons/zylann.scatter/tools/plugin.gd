@@ -4,6 +4,7 @@ extends EditorPlugin
 const Scatter3D = preload("res://addons/zylann.scatter/scatter3d.gd")
 const PaletteScene = preload("res://addons/zylann.scatter/tools/palette.tscn")
 var _palette:Palette = preload("res://addons/zylann.scatter/tools/palette.tscn").instantiate()
+var _topui = preload("res://addons/zylann.scatter/tools/topui.tscn").instantiate()
 #const Palette = preload("./palette.gd")
 const Util = preload("../util/util.gd")
 const Logger = preload("../util/logger.gd")
@@ -36,7 +37,7 @@ func _enter_tree():
 	_logger.debug("Scatter plugin Enter tree")
 	print("Scatter plugin Enter tree")
 	
-	
+	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	
 	# The class is globally named but still need to register it just so the node creation dialog gets it
 	# https://github.com/godotengine/godot/issues/30048
@@ -65,6 +66,7 @@ func _exit_tree():
 	_logger.debug("Scatter plugin Exit tree")
 	_edit(null)
 
+	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	remove_custom_type("Scatter3D")
 	
 	remove_control_from_container(CustomControlContainer.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT,_palette)
