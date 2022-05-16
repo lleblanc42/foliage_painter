@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://cinqj7ed56wp6"]
+
+[node name="topui" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MenuButton" type="MenuButton" parent="."]
+offset_right = 8.0
+offset_bottom = 31.0
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 16
+text = "Mode"
+text_direction = 1
+item_count = 2
+popup/item_0/text = "Select Mode"
+popup/item_0/id = 0
+popup/item_1/text = "Foliage Mode"
+popup/item_1/id = 1

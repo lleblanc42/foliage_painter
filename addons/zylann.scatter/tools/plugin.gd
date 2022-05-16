@@ -35,6 +35,9 @@ static func get_icon(name):
 func _enter_tree():
 	_logger.debug("Scatter plugin Enter tree")
 	print("Scatter plugin Enter tree")
+	
+	
+	
 	# The class is globally named but still need to register it just so the node creation dialog gets it
 	# https://github.com/godotengine/godot/issues/30048
 	add_custom_type("Scatter3D", "Node3D", Scatter3D, get_icon("scatter3d_node"))
