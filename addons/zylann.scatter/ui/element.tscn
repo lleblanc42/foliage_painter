@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://ubiq5lbtdl2n"]
+
+[ext_resource type="Texture2D" uid="uid://ghvinfm7mlxl" path="res://icon.png" id="1_bstac"]
+[ext_resource type="Script" path="res://addons/zylann.scatter/ui/element.gd" id="2_erivp"]
+
+[node name="Element" type="TextureRect"]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource( "1_bstac" )
+script = ExtResource( "2_erivp" )
+
+[node name="CheckBox" type="CheckBox" parent="."]
+offset_left = 1.0
+offset_top = -7.0
+offset_right = 31.0
+offset_bottom = 36.0
+focus_mode = 0
+
+[node name="count" type="Label" parent="."]
+offset_left = 22.0
+offset_top = 40.0
+offset_right = 62.0
+offset_bottom = 66.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 3
+text = "999"
+horizontal_alignment = 2

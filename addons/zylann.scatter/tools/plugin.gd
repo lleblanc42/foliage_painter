@@ -3,7 +3,9 @@ extends EditorPlugin
 
 const Scatter3D = preload("res://addons/zylann.scatter/scatter3d.gd")
 const PaletteScene = preload("res://addons/zylann.scatter/tools/palette.tscn")
+#左侧素材列表
 var _palette:Palette = preload("res://addons/zylann.scatter/tools/palette.tscn").instantiate()
+#顶部模式选择UI
 var _topui = preload("res://addons/zylann.scatter/tools/topui.tscn").instantiate()
 #const Palette = preload("./palette.gd")
 const Util = preload("../util/util.gd")
@@ -12,6 +14,10 @@ const Logger = preload("../util/logger.gd")
 const ACTION_PAINT = 0
 const ACTION_ERASE = 1
 
+#模式 0选择 1植物
+var mode:int = 0
+
+#绘制根节点
 var _node : Scatter3D
 var _selected_patterns := []
 var _mouse_position := Vector2()
@@ -36,6 +42,7 @@ static func get_icon(name):
 func _enter_tree():
 	_logger.debug("Scatter plugin Enter tree")
 	print("Scatter plugin Enter tree")
+	
 	
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	
@@ -102,15 +109,15 @@ func _make_visible(visible):
 		_edit(null)
 
 func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
+	
 	if _node == null:
 		return false
 
 	var captured_event = false
-
 	if p_event is InputEventMouseButton:
 #		var mb:InputEventMouseButton = p_event as InputEventMouseButton
 
-		if p_event.button_index == MOUSE_BUTTON_LEFT or p_event.button_index == MOUSE_BUTTON_RIGHT:
+		if p_event.button_index == MOUSE_BUTTON_LEFT:# or p_event.button_index == MOUSE_BUTTON_RIGHT:
 			# Need to check modifiers before capturing the event,
 			# because they are used in navigation schemes
 			if (not p_event.ctrl_pressed) and (not p_event.alt_pressed):# and mb.button_index == BUTTON_LEFT:
@@ -187,7 +194,6 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 	var hit = space_state.intersect_ray(pt)
 	
 	if hit.is_empty():
-		print("没有结果")
 		return
 
 	var hit_instance_root

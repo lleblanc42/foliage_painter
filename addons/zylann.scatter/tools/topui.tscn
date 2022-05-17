@@ -12,8 +12,8 @@ script = ExtResource( "1_gksi4" )
 [node name="MenuButton" type="MenuButton" parent="."]
 offset_right = 8.0
 offset_bottom = 31.0
-theme_override_colors/font_outline_color = Color(0, 0.0392157, 0.976471, 1)
-theme_override_constants/outline_size = 1
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 16
 text = "Select Mode"
 text_direction = 1

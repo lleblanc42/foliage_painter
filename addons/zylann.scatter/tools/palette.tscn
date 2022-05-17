@@ -1,11 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://4288psv8yhbx"]
+[gd_scene load_steps=3 format=3 uid="uid://4288psv8yhbx"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://ubiq5lbtdl2n" path="res://addons/zylann.scatter/ui/element.tscn" id="2_45qrk"]
 
 [node name="Palette" type="Control"]
 minimum_size = Vector2(300, 0)
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -724.0
 script = ExtResource( "1" )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -36,19 +38,102 @@ offset_bottom = 31.0
 text = "Remove"
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer"]
+visible = false
 offset_top = 35.0
-offset_right = 1920.0
-offset_bottom = 975.0
+offset_right = 300.0
+offset_bottom = 263.0
 size_flags_vertical = 3
 select_mode = 1
 
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+offset_top = 35.0
+offset_right = 300.0
+offset_bottom = 495.0
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
+offset_right = 268.0
+offset_bottom = 460.0
+size_flags_vertical = 3
+columns = 4
+
+[node name="Element" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_right = 64.0
+offset_bottom = 64.0
+
+[node name="Element2" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 68.0
+offset_right = 132.0
+offset_bottom = 64.0
+
+[node name="Element3" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 136.0
+offset_right = 200.0
+offset_bottom = 64.0
+
+[node name="Element4" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 204.0
+offset_right = 268.0
+offset_bottom = 64.0
+
+[node name="Element5" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_top = 68.0
+offset_right = 64.0
+offset_bottom = 132.0
+
+[node name="Element6" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 68.0
+offset_top = 68.0
+offset_right = 132.0
+offset_bottom = 132.0
+
+[node name="Element7" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 136.0
+offset_top = 68.0
+offset_right = 200.0
+offset_bottom = 132.0
+
+[node name="Element8" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 204.0
+offset_top = 68.0
+offset_right = 268.0
+offset_bottom = 132.0
+
+[node name="Element9" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_top = 136.0
+offset_right = 64.0
+offset_bottom = 200.0
+
+[node name="Element10" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 68.0
+offset_top = 136.0
+offset_right = 132.0
+offset_bottom = 200.0
+
+[node name="Element11" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 136.0
+offset_top = 136.0
+offset_right = 200.0
+offset_bottom = 200.0
+
+[node name="Element12" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_left = 204.0
+offset_top = 136.0
+offset_right = 268.0
+offset_bottom = 200.0
+
+[node name="Element13" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
+offset_top = 204.0
+offset_right = 64.0
+offset_bottom = 268.0
+
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
-offset_top = 979.0
-offset_right = 1920.0
-offset_bottom = 1045.0
+offset_top = 499.0
+offset_right = 300.0
+offset_bottom = 565.0
 
 [node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
-offset_right = 1920.0
+offset_right = 300.0
 offset_bottom = 31.0
 theme_override_constants/separation = 5
 
@@ -92,7 +177,7 @@ value = 1.0
 
 [node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
 offset_top = 35.0
-offset_right = 1920.0
+offset_right = 300.0
 offset_bottom = 66.0
 theme_override_constants/separation = 5
 
@@ -133,20 +218,20 @@ max_value = 180.0
 step = 0.05
 
 [node name="MarginContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 1049.0
-offset_right = 1920.0
-offset_bottom = 1080.0
+offset_top = 569.0
+offset_right = 300.0
+offset_bottom = 600.0
 
 [node name="MarginLabel" type="Label" parent="VBoxContainer/MarginContainer"]
 offset_top = 2.0
-offset_right = 958.0
+offset_right = 148.0
 offset_bottom = 28.0
 size_flags_horizontal = 3
 text = "Object margin:"
 
 [node name="MarginSpinBox" type="SpinBox" parent="VBoxContainer/MarginContainer"]
-offset_left = 962.0
-offset_right = 1920.0
+offset_left = 152.0
+offset_right = 300.0
 offset_bottom = 31.0
 size_flags_horizontal = 3
 max_value = 10.0

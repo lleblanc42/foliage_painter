@@ -24,6 +24,10 @@ config/name="Scatter plugin"
 config/icon="res://addons/zylann.scatter/tools/icons/icon_scatter3d_node.svg"
 config/features=PackedStringArray("4.0")
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/zylann.scatter/plugin.cfg")
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
