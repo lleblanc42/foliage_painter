@@ -24,9 +24,10 @@ config/name="Scatter plugin"
 config/icon="res://addons/zylann.scatter/tools/icons/icon_scatter3d_node.svg"
 config/features=PackedStringArray("4.0")
 
-[editor_plugins]
+[display]
 
-enabled=PackedStringArray("res://addons/zylann.scatter/plugin.cfg")
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 
 [rendering]
 

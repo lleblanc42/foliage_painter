@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://cf17kiadxg0d6"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/scatter3d.gd" id="1_c7aas"]
-[ext_resource type="PackedScene" uid="uid://414a16sqv27o" path="res://demo/elements/box.tscn" id="2_ahu76"]
+[ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="3_gsikh"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
 size = Vector3(40, 0.25, 40)
@@ -37,4 +37,7 @@ surface_material_override/0 = SubResource( "StandardMaterial3D_yyrx4" )
 
 [node name="Scatter3D" type="Node3D" parent="."]
 script = ExtResource( "1_c7aas" )
-_scenes = [ExtResource( "2_ahu76" )]
+_scenes = [ExtResource( "3_gsikh" )]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75422, 17.9252)

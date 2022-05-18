@@ -2,19 +2,25 @@
 extends Control
 class_name Palette
 
+const btn_group = preload("res://addons/zylann.scatter/ui/btn_group/element_group.tres")
+const element_res = preload("res://addons/zylann.scatter/ui/element.tscn")
 const Logger = preload("../util/logger.gd")
 
 signal patterns_selected(pattern_paths)
 signal pattern_added(path)
 signal patterns_removed(path)
 
+#工具列表
+@onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/toolList
 @onready var _item_list : ItemList = $VBoxContainer/ItemList
+#场景元素列表
+@onready var elementsList:GridContainer = $VBoxContainer/ScrollContainer/ElementsList
 @onready var _margin_spin_box : SpinBox = $VBoxContainer/MarginContainer/MarginSpinBox
 
-@onready var scale_min:SpinBox = $VBoxContainer/VBoxContainer/ScaleBox/minSpin
-@onready var scale_max:SpinBox = $VBoxContainer/VBoxContainer/ScaleBox/MaxSpin
-@onready var rotate_min:SpinBox = $VBoxContainer/VBoxContainer/RotateBox/minSpin
-@onready var rotate_max:SpinBox = $VBoxContainer/VBoxContainer/RotateBox/MaxSpin
+@onready var scale_min:SpinBox = $VBoxContainer/SetContainer/ScaleBox/minSpin
+@onready var scale_max:SpinBox = $VBoxContainer/SetContainer/ScaleBox/MaxSpin
+@onready var rotate_min:SpinBox = $VBoxContainer/SetContainer/RotateBox/minSpin
+@onready var rotate_max:SpinBox = $VBoxContainer/SetContainer/RotateBox/MaxSpin
 
 var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
@@ -50,32 +56,59 @@ func load_patterns(patterns):
 		add_pattern(scene.resource_path)
 
 
+#func add_pattern(scene_path):
+#	# TODO I need scene thumbnails from the editor
+#	var godot_theme = EditorPlugin.new().get_editor_interface().get_base_control().theme
+#
+##	var list = Array(godot_theme.get_icon_list('EditorIcons'))
+##	for icon_name in list:
+##		print(icon_name)
+#
+#	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons") #PackedScene
+#	var pattern_name = scene_path.get_file().get_basename()
+#	var i = _item_list.get_item_count()
+#	_item_list.add_item(pattern_name,default_icon)
+#	_item_list.set_item_metadata(i, scene_path)
+#
+#	_preview_provider.queue_resource_preview(scene_path, self, "_on_EditorResourcePreview_preview_loaded", i)
+
 func add_pattern(scene_path):
-	# TODO I need scene thumbnails from the editor
+	var element = element_res.instantiate()
 	var godot_theme = EditorPlugin.new().get_editor_interface().get_base_control().theme
-	
-#	var list = Array(godot_theme.get_icon_list('EditorIcons'))
-#	for icon_name in list:
-#		print(icon_name)
-	
-	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons") #PackedScene
+	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons")
 	var pattern_name = scene_path.get_file().get_basename()
-	var i = _item_list.get_item_count()
-	_item_list.add_item(pattern_name,default_icon)
-	_item_list.set_item_metadata(i, scene_path)
+	var i = elementsList.get_child_count()
+	elementsList.add_child(element)
+	element.name = pattern_name
+	element.icon.texture = default_icon
+	element.checkBox.visible = false
+	element.index = i
+	element.path = scene_path
+	element.button_group = btn_group
 	
-	_preview_provider.queue_resource_preview(scene_path, self, "_on_EditorResourcePreview_preview_loaded", null)
 
+	_preview_provider.queue_resource_preview(scene_path, self, "_on_EditorResourcePreview_preview_loaded", i)
 
-func _on_EditorResourcePreview_preview_loaded(path, texture,preview, userdata):
-	var i = find_pattern(path)
-	if i == -1:
-		return
+#func _on_EditorResourcePreview_preview_loaded(path, texture,preview, i):
+##	print("userdata: ",userdata)
+##	var i = find_pattern(path)
+##	if i == -1:
+##		return
+#	if texture != null:
+#		_item_list.set_item_icon(i, texture)
+#	else:
+#		_logger.debug(str("No preview available for ", path))
+
+func _on_EditorResourcePreview_preview_loaded(path, texture,preview, index):
+	print("index: ",index)
+	print(texture)
+#	var i = find_pattern(path)
+#	if i == -1:
+#		return
 	if texture != null:
-		_item_list.set_item_icon(i, texture)
+		elementsList.get_child(index).icon.texture = texture
 	else:
 		_logger.debug(str("No preview available for ", path))
-
 
 func _on_EditorResourcePreview_preview_invalidated(path):
 	# TODO Handle thumbnail invalidation
@@ -83,25 +116,32 @@ func _on_EditorResourcePreview_preview_invalidated(path):
 	pass
 
 
+#func remove_pattern(scene_path):
+#	var i = find_pattern(scene_path)
+#	if i != -1:
+#		_item_list.remove_item(i)
+
 func remove_pattern(scene_path):
 	var i = find_pattern(scene_path)
 	if i != -1:
 		_item_list.remove_item(i)
 
+#func find_pattern(path):
+#	for i in _item_list.get_item_count():
+#		var scene_path = _item_list.get_item_metadata(i)
+#		if scene_path == path:
+#			return i
+#	return -1
 
 func find_pattern(path):
-	for i in _item_list.get_item_count():
-		var scene_path = _item_list.get_item_metadata(i)
-		if scene_path == path:
-			return i
-	return -1
-
+	for child in toolList.get_children():
+		if child.path == path:
+			return child.index
 
 func select_pattern(path):
 	var i = find_pattern(path)
 	if i != -1:
 		_item_list.select(i)
-
 
 func _on_ItemList_multi_selected(_unused_index, _unused_selected):
 	var selected = []

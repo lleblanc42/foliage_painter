@@ -1,23 +1,84 @@
-[gd_scene load_steps=3 format=3 uid="uid://4288psv8yhbx"]
+[gd_scene load_steps=6 format=3 uid="uid://4288psv8yhbx"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://ubiq5lbtdl2n" path="res://addons/zylann.scatter/ui/element.tscn" id="2_45qrk"]
+[ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/zylann.scatter/ui/toolItem.tscn" id="2_fnbg1"]
+[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
+bg_color = Color(0.180392, 0.180392, 0.180392, 1)
 
 [node name="Palette" type="Control"]
 minimum_size = Vector2(300, 0)
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -724.0
+offset_right = -1620.0
 script = ExtResource( "1" )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-anchor_right = 1.0
+anchor_left = 0.5
+anchor_right = 0.5
 anchor_bottom = 1.0
+offset_left = -149.0
+offset_right = 149.0
 mouse_filter = 2
+theme_override_constants/separation = 7
+
+[node name="ToolBG" type="ColorRect" parent="VBoxContainer"]
+minimum_size = Vector2(0, 66)
+offset_right = 308.0
+offset_bottom = 66.0
+color = Color(0.156863, 0.156863, 0.156863, 1)
+
+[node name="ToolContainer" type="MarginContainer" parent="VBoxContainer/ToolBG"]
+offset_right = 148.0
+offset_bottom = 46.0
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_left = 11
+metadata/_edit_layout_mode = 1
+
+[node name="toolList" type="GridContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
+minimum_size = Vector2(0, 32)
+offset_left = 11.0
+offset_top = 10.0
+offset_right = 159.0
+offset_bottom = 56.0
+theme_override_constants/h_separation = 14
+columns = 6
+
+[node name="paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+
+[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/paint" index="1"]
+texture = ExtResource( "3_30bq8" )
+
+[node name="single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+offset_left = 54.0
+offset_right = 94.0
+
+[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/single" index="1"]
+texture = ExtResource( "4_q04a5" )
+
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/single" index="2"]
+text = "Single"
+
+[node name="erase" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+offset_left = 108.0
+offset_right = 148.0
+
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/erase" index="2"]
+text = "Erase"
+
+[node name="Split" type="ColorRect" parent="VBoxContainer"]
+minimum_size = Vector2(0, 5)
+offset_top = 73.0
+offset_right = 308.0
+offset_bottom = 78.0
+color = Color(0.12549, 0.12549, 0.12549, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+offset_top = 85.0
 offset_right = 153.0
-offset_bottom = 31.0
+offset_bottom = 116.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 15
@@ -39,201 +100,213 @@ text = "Remove"
 
 [node name="ItemList" type="ItemList" parent="VBoxContainer"]
 visible = false
-offset_top = 35.0
-offset_right = 300.0
-offset_bottom = 263.0
+offset_top = 108.0
+offset_right = 298.0
+offset_bottom = 969.0
 size_flags_vertical = 3
 select_mode = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-offset_top = 35.0
-offset_right = 300.0
-offset_bottom = 495.0
+offset_top = 123.0
+offset_right = 308.0
+offset_bottom = 823.0
 size_flags_vertical = 3
+theme_override_styles/bg = SubResource( "StyleBoxFlat_626v5" )
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
-offset_right = 268.0
-offset_bottom = 460.0
-size_flags_vertical = 3
+[node name="ElementsList" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
+theme_override_constants/v_separation = 11
+theme_override_constants/h_separation = 11
 columns = 4
 
-[node name="Element" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_right = 64.0
-offset_bottom = 64.0
+[node name="SetContainer" type="VBoxContainer" parent="VBoxContainer"]
+offset_top = 830.0
+offset_right = 308.0
+offset_bottom = 1042.0
 
-[node name="Element2" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 68.0
-offset_right = 132.0
-offset_bottom = 64.0
+[node name="NameLabel" type="Label" parent="VBoxContainer/SetContainer"]
+offset_right = 308.0
+offset_bottom = 37.0
+theme_override_font_sizes/font_size = 24
+text = "box"
 
-[node name="Element3" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 136.0
-offset_right = 200.0
-offset_bottom = 64.0
+[node name="DensityBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
+offset_top = 41.0
+offset_right = 308.0
+offset_bottom = 72.0
 
-[node name="Element4" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 204.0
-offset_right = 268.0
-offset_bottom = 64.0
-
-[node name="Element5" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_top = 68.0
-offset_right = 64.0
-offset_bottom = 132.0
-
-[node name="Element6" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 68.0
-offset_top = 68.0
-offset_right = 132.0
-offset_bottom = 132.0
-
-[node name="Element7" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 136.0
-offset_top = 68.0
-offset_right = 200.0
-offset_bottom = 132.0
-
-[node name="Element8" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 204.0
-offset_top = 68.0
-offset_right = 268.0
-offset_bottom = 132.0
-
-[node name="Element9" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_top = 136.0
-offset_right = 64.0
-offset_bottom = 200.0
-
-[node name="Element10" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 68.0
-offset_top = 136.0
-offset_right = 132.0
-offset_bottom = 200.0
-
-[node name="Element11" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 136.0
-offset_top = 136.0
-offset_right = 200.0
-offset_bottom = 200.0
-
-[node name="Element12" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_left = 204.0
-offset_top = 136.0
-offset_right = 268.0
-offset_bottom = 200.0
-
-[node name="Element13" parent="VBoxContainer/ScrollContainer/GridContainer" instance=ExtResource( "2_45qrk" )]
-offset_top = 204.0
-offset_right = 64.0
-offset_bottom = 268.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
-offset_top = 499.0
-offset_right = 300.0
-offset_bottom = 565.0
-
-[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
-offset_right = 300.0
-offset_bottom = 31.0
-theme_override_constants/separation = 5
-
-[node name="des" type="Label" parent="VBoxContainer/VBoxContainer/ScaleBox"]
+[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/DensityBox"]
 offset_top = 2.0
-offset_right = 47.0
+offset_right = 59.0
 offset_bottom = 28.0
-text = "scale  "
+hint_tooltip = "1000 x 1000"
+mouse_filter = 1
+text = "Density"
 
-[node name="Label2" type="Label" parent="VBoxContainer/VBoxContainer/ScaleBox"]
-offset_left = 52.0
+[node name="densitySpin" type="SpinBox" parent="VBoxContainer/SetContainer/DensityBox"]
+offset_left = 63.0
+offset_right = 146.0
+offset_bottom = 31.0
+max_value = 1000.0
+step = 0.01
+
+[node name="RediusBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
+offset_top = 76.0
+offset_right = 308.0
+offset_bottom = 107.0
+
+[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/RediusBox"]
 offset_top = 2.0
-offset_right = 82.0
+offset_right = 61.0
+offset_bottom = 28.0
+text = "Redius  "
+
+[node name="rediusSpin" type="SpinBox" parent="VBoxContainer/SetContainer/RediusBox"]
+offset_left = 65.0
+offset_right = 148.0
+offset_bottom = 31.0
+max_value = 1000.0
+step = 0.01
+
+[node name="YOffsetBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
+offset_top = 111.0
+offset_right = 308.0
+offset_bottom = 142.0
+
+[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/YOffsetBox"]
+offset_top = 2.0
+offset_right = 62.0
+offset_bottom = 28.0
+text = "Y Offset"
+
+[node name="Label3" type="Label" parent="VBoxContainer/SetContainer/YOffsetBox"]
+offset_left = 66.0
+offset_top = 2.0
+offset_right = 96.0
 offset_bottom = 28.0
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/ScaleBox"]
-offset_left = 87.0
-offset_right = 170.0
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/SetContainer/YOffsetBox"]
+offset_left = 100.0
+offset_right = 183.0
 offset_bottom = 31.0
-min_value = 0.1
-max_value = 10.0
-step = 0.05
-value = 1.0
+max_value = 1000.0
+step = 0.01
 
-[node name="Label3" type="Label" parent="VBoxContainer/VBoxContainer/ScaleBox"]
-offset_left = 175.0
+[node name="Label4" type="Label" parent="VBoxContainer/SetContainer/YOffsetBox"]
+offset_left = 187.0
 offset_top = 2.0
-offset_right = 209.0
+offset_right = 221.0
 offset_bottom = 28.0
 text = "max"
 
-[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/ScaleBox"]
-offset_left = 214.0
-offset_right = 297.0
+[node name="maxSpin" type="SpinBox" parent="VBoxContainer/SetContainer/YOffsetBox"]
+offset_left = 225.0
+offset_right = 308.0
+offset_bottom = 31.0
+max_value = 1000.0
+step = 0.01
+
+[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
+offset_top = 146.0
+offset_right = 308.0
+offset_bottom = 177.0
+theme_override_constants/separation = 5
+
+[node name="des" type="Label" parent="VBoxContainer/SetContainer/ScaleBox"]
+offset_top = 2.0
+offset_right = 53.0
+offset_bottom = 28.0
+text = "Scale   "
+
+[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/ScaleBox"]
+offset_left = 58.0
+offset_top = 2.0
+offset_right = 88.0
+offset_bottom = 28.0
+text = "min"
+
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/SetContainer/ScaleBox"]
+offset_left = 93.0
+offset_right = 176.0
 offset_bottom = 31.0
 min_value = 0.1
 max_value = 10.0
 step = 0.05
 value = 1.0
 
-[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
-offset_top = 35.0
-offset_right = 300.0
-offset_bottom = 66.0
+[node name="Label3" type="Label" parent="VBoxContainer/SetContainer/ScaleBox"]
+offset_left = 181.0
+offset_top = 2.0
+offset_right = 215.0
+offset_bottom = 28.0
+text = "max"
+
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/SetContainer/ScaleBox"]
+offset_left = 220.0
+offset_right = 303.0
+offset_bottom = 31.0
+min_value = 0.1
+max_value = 10.0
+step = 0.05
+value = 1.0
+
+[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
+offset_top = 181.0
+offset_right = 308.0
+offset_bottom = 212.0
 theme_override_constants/separation = 5
 
-[node name="des" type="Label" parent="VBoxContainer/VBoxContainer/RotateBox"]
+[node name="des" type="Label" parent="VBoxContainer/SetContainer/RotateBox"]
 offset_top = 2.0
-offset_right = 48.0
+offset_right = 52.0
 offset_bottom = 28.0
-text = "rotate"
+text = "Rotate"
 
-[node name="Label2" type="Label" parent="VBoxContainer/VBoxContainer/RotateBox"]
-offset_left = 53.0
+[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/RotateBox"]
+offset_left = 57.0
 offset_top = 2.0
-offset_right = 83.0
+offset_right = 87.0
 offset_bottom = 28.0
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/RotateBox"]
-offset_left = 88.0
-offset_right = 171.0
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/SetContainer/RotateBox"]
+offset_left = 92.0
+offset_right = 175.0
 offset_bottom = 31.0
 min_value = -180.0
 max_value = 180.0
 step = 0.05
 
-[node name="Label3" type="Label" parent="VBoxContainer/VBoxContainer/RotateBox"]
-offset_left = 176.0
+[node name="Label3" type="Label" parent="VBoxContainer/SetContainer/RotateBox"]
+offset_left = 180.0
 offset_top = 2.0
-offset_right = 210.0
+offset_right = 214.0
 offset_bottom = 28.0
 text = "max"
 
-[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/VBoxContainer/RotateBox"]
-offset_left = 215.0
-offset_right = 298.0
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/SetContainer/RotateBox"]
+offset_left = 219.0
+offset_right = 302.0
 offset_bottom = 31.0
 min_value = -180.0
 max_value = 180.0
 step = 0.05
 
 [node name="MarginContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 569.0
-offset_right = 300.0
-offset_bottom = 600.0
+offset_top = 1049.0
+offset_right = 308.0
+offset_bottom = 1080.0
 
 [node name="MarginLabel" type="Label" parent="VBoxContainer/MarginContainer"]
 offset_top = 2.0
-offset_right = 148.0
+offset_right = 115.0
 offset_bottom = 28.0
-size_flags_horizontal = 3
 text = "Object margin:"
 
 [node name="MarginSpinBox" type="SpinBox" parent="VBoxContainer/MarginContainer"]
-offset_left = 152.0
-offset_right = 300.0
+offset_left = 119.0
+offset_right = 202.0
 offset_bottom = 31.0
-size_flags_horizontal = 3
 max_value = 10.0
 step = 0.01
 allow_greater = true
@@ -241,3 +314,7 @@ allow_greater = true
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 [connection signal="multi_selected" from="VBoxContainer/ItemList" to="." method="_on_ItemList_multi_selected"]
+
+[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/paint"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/single"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/erase"]
