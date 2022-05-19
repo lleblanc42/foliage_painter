@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://4288psv8yhbx"]
+[gd_scene load_steps=7 format=3 uid="uid://4288psv8yhbx"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/zylann.scatter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
-[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Texture2D" uid="uid://dvv3k46vtdkea" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/zylann.scatter/ui/btn_group/tool_group.tres" id="3_yna7w"]
+[ext_resource type="Texture2D" uid="uid://b5eaewrrkvte" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)
@@ -47,6 +48,8 @@ theme_override_constants/h_separation = 14
 columns = 6
 
 [node name="paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+button_pressed = true
+button_group = ExtResource( "3_yna7w" )
 
 [node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/paint" index="1"]
 texture = ExtResource( "3_30bq8" )
@@ -54,6 +57,7 @@ texture = ExtResource( "3_30bq8" )
 [node name="single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 54.0
 offset_right = 94.0
+button_group = ExtResource( "3_yna7w" )
 
 [node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/single" index="1"]
 texture = ExtResource( "4_q04a5" )
@@ -64,6 +68,7 @@ text = "Single"
 [node name="erase" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 108.0
 offset_right = 148.0
+button_group = ExtResource( "3_yna7w" )
 
 [node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/erase" index="2"]
 text = "Erase"
@@ -311,6 +316,9 @@ max_value = 10.0
 step = 0.01
 allow_greater = true
 
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/paint" to="." method="_on_tool_toggled" binds= ["paint"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/single" to="." method="_on_tool_toggled" binds= ["single"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/erase" to="." method="_on_tool_toggled" binds= ["erase"]]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 [connection signal="multi_selected" from="VBoxContainer/ItemList" to="." method="_on_ItemList_multi_selected"]

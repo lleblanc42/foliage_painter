@@ -26,6 +26,18 @@ var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
 var _logger = Logger.get_for(self)
 
+func _ready():
+	initTool()
+
+func initTool():
+	for node in toolList.get_children():
+		print(node.name)
+		if node.name == "single":
+			node.get_node("status").visible = true
+			node.button_pressed = true
+		else:
+			node.get_node("status").visible = false
+
 func setup_dialogs(base_control):
 	_file_dialog = FileDialog.new()
 	_file_dialog.access = FileDialog.ACCESS_RESOURCES
@@ -47,7 +59,6 @@ func _exit_tree():
 	if _file_dialog != null:
 		_file_dialog.queue_free()
 		_file_dialog = null
-
 
 func load_patterns(patterns):
 	_item_list.clear()
@@ -177,3 +188,11 @@ func can_drop_data(position, data):
 func drop_data(position, data):
 	for file in data.files:
 		emit_signal("pattern_added", file)
+
+
+func _on_tool_toggled(button_pressed, toolName):
+	print("tool:",toolName," visible: ",button_pressed)
+	var node := toolList.get_node(toolName)
+	if node != null:
+		node.get_node("status").visible = button_pressed
+
