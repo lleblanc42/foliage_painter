@@ -2,32 +2,30 @@
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/zylann.scatter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://dvv3k46vtdkea" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
 [ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/zylann.scatter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://b5eaewrrkvte" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)
 
 [node name="Palette" type="Control"]
-minimum_size = Vector2(300, 0)
+minimum_size = Vector2(327, 0)
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1620.0
+offset_right = -1612.0
 script = ExtResource( "1" )
+metadata/_edit_use_custom_anchors = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -149.0
-offset_right = 149.0
 mouse_filter = 2
 theme_override_constants/separation = 7
 
 [node name="ToolBG" type="ColorRect" parent="VBoxContainer"]
 minimum_size = Vector2(0, 66)
-offset_right = 308.0
+offset_right = 327.0
 offset_bottom = 66.0
 color = Color(0.156863, 0.156863, 0.156863, 1)
 
@@ -48,8 +46,10 @@ theme_override_constants/h_separation = 14
 columns = 6
 
 [node name="paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
-button_pressed = true
 button_group = ExtResource( "3_yna7w" )
+
+[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/paint" index="0"]
+visible = false
 
 [node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/paint" index="1"]
 texture = ExtResource( "3_30bq8" )
@@ -57,6 +57,7 @@ texture = ExtResource( "3_30bq8" )
 [node name="single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 54.0
 offset_right = 94.0
+button_pressed = true
 button_group = ExtResource( "3_yna7w" )
 
 [node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/single" index="1"]
@@ -70,13 +71,16 @@ offset_left = 108.0
 offset_right = 148.0
 button_group = ExtResource( "3_yna7w" )
 
+[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/erase" index="0"]
+visible = false
+
 [node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/erase" index="2"]
 text = "Erase"
 
 [node name="Split" type="ColorRect" parent="VBoxContainer"]
 minimum_size = Vector2(0, 5)
 offset_top = 73.0
-offset_right = 308.0
+offset_right = 327.0
 offset_bottom = 78.0
 color = Color(0.12549, 0.12549, 0.12549, 1)
 
@@ -103,18 +107,10 @@ offset_right = 153.0
 offset_bottom = 31.0
 text = "Remove"
 
-[node name="ItemList" type="ItemList" parent="VBoxContainer"]
-visible = false
-offset_top = 108.0
-offset_right = 298.0
-offset_bottom = 969.0
-size_flags_vertical = 3
-select_mode = 1
-
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 offset_top = 123.0
-offset_right = 308.0
-offset_bottom = 823.0
+offset_right = 327.0
+offset_bottom = 814.0
 size_flags_vertical = 3
 theme_override_styles/bg = SubResource( "StyleBoxFlat_626v5" )
 
@@ -123,23 +119,30 @@ theme_override_constants/v_separation = 11
 theme_override_constants/h_separation = 11
 columns = 4
 
-[node name="SetContainer" type="VBoxContainer" parent="VBoxContainer"]
-offset_top = 830.0
-offset_right = 308.0
+[node name="PropertyPanel" type="VBoxContainer" parent="VBoxContainer"]
+offset_top = 821.0
+offset_right = 327.0
 offset_bottom = 1042.0
 
-[node name="NameLabel" type="Label" parent="VBoxContainer/SetContainer"]
-offset_right = 308.0
+[node name="NameLabel" type="Label" parent="VBoxContainer/PropertyPanel"]
+offset_right = 327.0
 offset_bottom = 37.0
 theme_override_font_sizes/font_size = 24
 text = "box"
 
-[node name="DensityBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
+[node name="Split" type="ColorRect" parent="VBoxContainer/PropertyPanel"]
+minimum_size = Vector2(0, 5)
 offset_top = 41.0
-offset_right = 308.0
-offset_bottom = 72.0
+offset_right = 327.0
+offset_bottom = 46.0
+color = Color(0.12549, 0.12549, 0.12549, 1)
 
-[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/DensityBox"]
+[node name="DensityBox" type="HBoxContainer" parent="VBoxContainer/PropertyPanel"]
+offset_top = 50.0
+offset_right = 327.0
+offset_bottom = 81.0
+
+[node name="Label2" type="Label" parent="VBoxContainer/PropertyPanel/DensityBox"]
 offset_top = 2.0
 offset_right = 59.0
 offset_bottom = 28.0
@@ -147,90 +150,90 @@ hint_tooltip = "1000 x 1000"
 mouse_filter = 1
 text = "Density"
 
-[node name="densitySpin" type="SpinBox" parent="VBoxContainer/SetContainer/DensityBox"]
+[node name="densitySpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/DensityBox"]
 offset_left = 63.0
 offset_right = 146.0
 offset_bottom = 31.0
 max_value = 1000.0
 step = 0.01
 
-[node name="RediusBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
-offset_top = 76.0
-offset_right = 308.0
-offset_bottom = 107.0
+[node name="RadiusBox" type="HBoxContainer" parent="VBoxContainer/PropertyPanel"]
+offset_top = 85.0
+offset_right = 327.0
+offset_bottom = 116.0
 
-[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/RediusBox"]
+[node name="Label2" type="Label" parent="VBoxContainer/PropertyPanel/RadiusBox"]
 offset_top = 2.0
 offset_right = 61.0
 offset_bottom = 28.0
 text = "Redius  "
 
-[node name="rediusSpin" type="SpinBox" parent="VBoxContainer/SetContainer/RediusBox"]
+[node name="radiusSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/RadiusBox"]
 offset_left = 65.0
 offset_right = 148.0
 offset_bottom = 31.0
 max_value = 1000.0
 step = 0.01
 
-[node name="YOffsetBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
-offset_top = 111.0
-offset_right = 308.0
-offset_bottom = 142.0
+[node name="YOffsetBox" type="HBoxContainer" parent="VBoxContainer/PropertyPanel"]
+offset_top = 120.0
+offset_right = 327.0
+offset_bottom = 151.0
 
-[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/YOffsetBox"]
+[node name="Label2" type="Label" parent="VBoxContainer/PropertyPanel/YOffsetBox"]
 offset_top = 2.0
 offset_right = 62.0
 offset_bottom = 28.0
 text = "Y Offset"
 
-[node name="Label3" type="Label" parent="VBoxContainer/SetContainer/YOffsetBox"]
+[node name="Label3" type="Label" parent="VBoxContainer/PropertyPanel/YOffsetBox"]
 offset_left = 66.0
 offset_top = 2.0
 offset_right = 96.0
 offset_bottom = 28.0
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/SetContainer/YOffsetBox"]
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/YOffsetBox"]
 offset_left = 100.0
 offset_right = 183.0
 offset_bottom = 31.0
 max_value = 1000.0
 step = 0.01
 
-[node name="Label4" type="Label" parent="VBoxContainer/SetContainer/YOffsetBox"]
+[node name="Label4" type="Label" parent="VBoxContainer/PropertyPanel/YOffsetBox"]
 offset_left = 187.0
 offset_top = 2.0
 offset_right = 221.0
 offset_bottom = 28.0
 text = "max"
 
-[node name="maxSpin" type="SpinBox" parent="VBoxContainer/SetContainer/YOffsetBox"]
+[node name="maxSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/YOffsetBox"]
 offset_left = 225.0
 offset_right = 308.0
 offset_bottom = 31.0
 max_value = 1000.0
 step = 0.01
 
-[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
-offset_top = 146.0
-offset_right = 308.0
-offset_bottom = 177.0
+[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/PropertyPanel"]
+offset_top = 155.0
+offset_right = 327.0
+offset_bottom = 186.0
 theme_override_constants/separation = 5
 
-[node name="des" type="Label" parent="VBoxContainer/SetContainer/ScaleBox"]
+[node name="des" type="Label" parent="VBoxContainer/PropertyPanel/ScaleBox"]
 offset_top = 2.0
 offset_right = 53.0
 offset_bottom = 28.0
 text = "Scale   "
 
-[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/ScaleBox"]
+[node name="Label2" type="Label" parent="VBoxContainer/PropertyPanel/ScaleBox"]
 offset_left = 58.0
 offset_top = 2.0
 offset_right = 88.0
 offset_bottom = 28.0
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/SetContainer/ScaleBox"]
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/ScaleBox"]
 offset_left = 93.0
 offset_right = 176.0
 offset_bottom = 31.0
@@ -239,14 +242,14 @@ max_value = 10.0
 step = 0.05
 value = 1.0
 
-[node name="Label3" type="Label" parent="VBoxContainer/SetContainer/ScaleBox"]
+[node name="Label3" type="Label" parent="VBoxContainer/PropertyPanel/ScaleBox"]
 offset_left = 181.0
 offset_top = 2.0
 offset_right = 215.0
 offset_bottom = 28.0
 text = "max"
 
-[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/SetContainer/ScaleBox"]
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/ScaleBox"]
 offset_left = 220.0
 offset_right = 303.0
 offset_bottom = 31.0
@@ -255,26 +258,26 @@ max_value = 10.0
 step = 0.05
 value = 1.0
 
-[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/SetContainer"]
-offset_top = 181.0
-offset_right = 308.0
-offset_bottom = 212.0
+[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/PropertyPanel"]
+offset_top = 190.0
+offset_right = 327.0
+offset_bottom = 221.0
 theme_override_constants/separation = 5
 
-[node name="des" type="Label" parent="VBoxContainer/SetContainer/RotateBox"]
+[node name="des" type="Label" parent="VBoxContainer/PropertyPanel/RotateBox"]
 offset_top = 2.0
 offset_right = 52.0
 offset_bottom = 28.0
 text = "Rotate"
 
-[node name="Label2" type="Label" parent="VBoxContainer/SetContainer/RotateBox"]
+[node name="Label2" type="Label" parent="VBoxContainer/PropertyPanel/RotateBox"]
 offset_left = 57.0
 offset_top = 2.0
 offset_right = 87.0
 offset_bottom = 28.0
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/SetContainer/RotateBox"]
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/RotateBox"]
 offset_left = 92.0
 offset_right = 175.0
 offset_bottom = 31.0
@@ -282,14 +285,14 @@ min_value = -180.0
 max_value = 180.0
 step = 0.05
 
-[node name="Label3" type="Label" parent="VBoxContainer/SetContainer/RotateBox"]
+[node name="Label3" type="Label" parent="VBoxContainer/PropertyPanel/RotateBox"]
 offset_left = 180.0
 offset_top = 2.0
 offset_right = 214.0
 offset_bottom = 28.0
 text = "max"
 
-[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/SetContainer/RotateBox"]
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/PropertyPanel/RotateBox"]
 offset_left = 219.0
 offset_right = 302.0
 offset_bottom = 31.0
@@ -299,7 +302,7 @@ step = 0.05
 
 [node name="MarginContainer" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 1049.0
-offset_right = 308.0
+offset_right = 327.0
 offset_bottom = 1080.0
 
 [node name="MarginLabel" type="Label" parent="VBoxContainer/MarginContainer"]
@@ -321,7 +324,14 @@ allow_greater = true
 [connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/erase" to="." method="_on_tool_toggled" binds= ["erase"]]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
-[connection signal="multi_selected" from="VBoxContainer/ItemList" to="." method="_on_ItemList_multi_selected"]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/DensityBox/densitySpin" to="." method="_on_property_changed" binds= ["density"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/RadiusBox/radiusSpin" to="." method="_on_property_changed" binds= ["radius"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/YOffsetBox/minSpin" to="." method="_on_property_changed" binds= ["yOffsetMin"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/YOffsetBox/maxSpin" to="." method="_on_property_changed" binds= ["yOffsetMax"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/ScaleBox/minSpin" to="." method="_on_property_changed" binds= ["scaleMin"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/ScaleBox/MaxSpin" to="." method="_on_property_changed" binds= ["scaleMax"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/RotateBox/minSpin" to="." method="_on_property_changed" binds= ["rotateMin"]]
+[connection signal="value_changed" from="VBoxContainer/PropertyPanel/RotateBox/MaxSpin" to="." method="_on_property_changed" binds= ["rotateMax"]]
 
 [editable path="VBoxContainer/ToolBG/ToolContainer/toolList/paint"]
 [editable path="VBoxContainer/ToolBG/ToolContainer/toolList/single"]

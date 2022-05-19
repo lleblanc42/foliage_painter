@@ -1,6 +1,11 @@
 @tool
 extends TextureButton
 
+#使用素材
+signal element_select()
+#选择素材
+signal show_property(index)
+
 @onready var over:ColorRect = $over
 @onready var select:ColorRect = $select
 @onready var icon:TextureRect = $icon
@@ -12,16 +17,10 @@ extends TextureButton
 var index:int = 0
 #场景地址
 var path:String = ""
-#密度
-var density:float = 0.0
-#间距
-var radius:float = 0.0
-#高度随机偏移
-#最小偏移
-var yOffsetMin:float = 0.0
-#最大偏移
-var yOffsetMax:float = 0.0
+
 var selected:bool = false
+
+var property:ElementProperty = preload("res://addons/zylann.scatter/ui/element_property.gd").new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -31,6 +30,8 @@ func _ready():
 func _on_check_box_toggled(button_pressed):
 	print("button_pressed: ",button_pressed)
 	mask.visible = !button_pressed
+	selected = button_pressed
+	emit_signal("element_select")
 
 
 func _on_element_mouse_entered():
@@ -44,3 +45,5 @@ func _on_element_mouse_exited():
 
 func _on_element_toggled(button_pressed):
 	select.visible = button_pressed
+	if button_pressed:
+		emit_signal("show_property",index)

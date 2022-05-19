@@ -9,12 +9,18 @@
 config_version=5
 
 _global_script_classes=[{
+"base": "RefCounted",
+"class": &"ElementProperty",
+"language": &"GDScript",
+"path": "res://addons/zylann.scatter/ui/element_property.gd"
+}, {
 "base": "Control",
 "class": &"Palette",
 "language": &"GDScript",
 "path": "res://addons/zylann.scatter/tools/palette.gd"
 }]
 _global_script_class_icons={
+"ElementProperty": "",
 "Palette": ""
 }
 
