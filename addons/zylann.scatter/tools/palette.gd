@@ -40,7 +40,7 @@ var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
 var _logger = Logger.get_for(self)
 #工具模式
-var tool_mode:String = ""
+var tool_mode:String = "single"
 #操作模式
 var mode:int = 0
 
@@ -177,13 +177,13 @@ func _on_FileDialog_file_selected(fpath):
 	emit_signal("pattern_added", fpath)
 
 
-func can_drop_data(position, data):
-	return data is Dictionary and data.get("type") == "files"
-
-
-func drop_data(position, data):
-	for file in data.files:
-		emit_signal("pattern_added", file)
+#func can_drop_data(position, data):
+#	return data is Dictionary and data.get("type") == "files"
+#
+#
+#func drop_data(position, data):
+#	for file in data.files:
+#		emit_signal("pattern_added", file)
 
 
 func _on_tool_toggled(button_pressed, tool_name):

@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dgm4pdvj73ywm"]
+[gd_scene load_steps=8 format=3 uid="uid://dgm4pdvj73ywm"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/foliage3d.gd" id="1_y2at3"]
+[ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="2_q1vj1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
 size = Vector3(40, 0.25, 40)
@@ -30,7 +31,7 @@ metadata/_edit_lock_ = true
 shape = SubResource( "BoxShape3D_6qix4" )
 
 [node name="sphere" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.2547, 0.000169754, 14.2971)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5684, -0.0155182, 14.9588)
 mesh = SubResource( "SphereMesh_8tmav" )
 surface_material_override/0 = SubResource( "StandardMaterial3D_yyrx4" )
 
@@ -39,4 +40,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75422, 17.9252)
 
 [node name="Foliage3D" type="Node3D" parent="."]
 script = ExtResource( "1_y2at3" )
-_scenes = []
+_scenes = [ExtResource( "2_q1vj1" )]
+metadata/_edit_lock_ = true
+
+[node name="layer_box1_2247569959" type="Node3D" parent="Foliage3D"]
