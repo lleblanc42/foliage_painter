@@ -1,6 +1,8 @@
 @tool
 extends Control
 
+signal toggle_mode(int)
+
 var select_icon = preload("res://addons/zylann.scatter/tools/icons/select.png")
 var foliage_icon = preload("res://addons/zylann.scatter/tools/icons/foliage.png")
 
@@ -31,7 +33,7 @@ func on_item_press(id):
 		1:
 			menuBtn.text = "Foliage Mode"
 			menuBtn.icon = foliage_icon
-	
+	emit_signal("toggle_mode",id)
 
 
 

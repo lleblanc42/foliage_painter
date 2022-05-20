@@ -1,7 +1,13 @@
 @tool
 extends EditorPlugin
 
-const Scatter3D = preload("res://addons/zylann.scatter/scatter3d.gd")
+enum MODE {
+	SELECT_MODE = 0,
+	FOLIAGE_MODE = 1
+}
+
+const FOLIAGE_NAME:String = "Foliage3D"
+const Foliage3D = preload("res://addons/zylann.scatter/foliage3d.gd")
 const PaletteScene = preload("res://addons/zylann.scatter/tools/palette.tscn")
 #左侧素材列表
 var _palette:Palette = preload("res://addons/zylann.scatter/tools/palette.tscn").instantiate()
@@ -18,7 +24,7 @@ const ACTION_ERASE = 1
 var mode:int = 0
 
 #绘制根节点
-var _node : Scatter3D
+var foliage : Foliage3D
 var _selected_patterns := []
 var _mouse_position := Vector2()
 var _editor_camera : Camera3D
@@ -30,8 +36,6 @@ var _pattern_margin := 0.0
 var _logger = Logger.get_for(self)
 var _current_action := -1
 var _cmd_pending_action := false
-#
-#var _palette : Palette
 var _error_dialog = null
 
 
@@ -43,16 +47,15 @@ func _enter_tree():
 	_logger.debug("Scatter plugin Enter tree")
 	print("Scatter plugin Enter tree")
 	
-	
+	_topui.connect("toggle_mode",_on_toggle_mode)
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	
 	# The class is globally named but still need to register it just so the node creation dialog gets it
 	# https://github.com/godotengine/godot/issues/30048
-	add_custom_type("Scatter3D", "Node3D", Scatter3D, get_icon("scatter3d_node"))
+	add_custom_type("Foliage3D", "Node3D", Foliage3D, get_icon("scatter3d_node"))
 	
 	var base_control = get_editor_interface().get_base_control()
-#
-#	_palette = PaletteScene.instantiate()
+
 	_palette.connect("patterns_selected", _on_Palette_patterns_selected)
 	_palette.connect("pattern_added", _on_Palette_pattern_added)
 	_palette.connect("patterns_removed", _on_Palette_patterns_removed)
@@ -67,7 +70,6 @@ func _enter_tree():
 	_error_dialog.hide()
 	_error_dialog.title = "Error"
 	base_control.add_child(_error_dialog)
-	
 
 func _exit_tree():
 	_logger.debug("Scatter plugin Exit tree")
@@ -75,7 +77,6 @@ func _exit_tree():
 
 	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	remove_custom_type("Scatter3D")
-	
 	remove_control_from_container(CustomControlContainer.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT,_palette)
 	
 	if _palette != null:
@@ -88,13 +89,13 @@ func _exit_tree():
 
 
 func _handles(obj):
-	return obj != null and obj is Scatter3D
+	return obj != null and obj is Foliage3D
 
 
 func _edit(obj):
-	_node = obj
-	if _node:
-		var patterns = _node.get_patterns()
+	foliage = obj
+	if foliage:
+		var patterns = foliage.get_patterns()
 		_palette.load_patterns(patterns)
 		set_physics_process(true)
 	else:
@@ -110,7 +111,7 @@ func _make_visible(visible):
 
 func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 	
-	if _node == null:
+	if foliage == null:
 		return false
 
 	var captured_event = false
@@ -158,7 +159,7 @@ func _physics_process(_unused_delta):
 	if not is_instance_valid(_editor_camera):
 		_editor_camera = null
 		return
-	if _node == null:
+	if foliage == null:
 		return
 
 	if _cmd_pending_action:
@@ -201,7 +202,7 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 	if hit.collider != null:
 		hit_instance_root = Util.get_instance_root(hit.collider)
 
-	if hit.collider == null or not (hit_instance_root.get_parent() is Scatter3D):
+	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
 		var pos = hit.position
 		# Not accurate, you might still paint stuff too close to others,
 		# but should be good enough and cheap
@@ -213,25 +214,47 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 				too_close = true
 
 		if not too_close:
-			var instance = _create_pattern_instance()
-			instance.position = pos
+			var instance:MeshInstance3D = _create_pattern_instance()
+			var path = instance.get_meta("path")
 			
-			var angle:float = randf_range(_palette.rotate_min.value,_palette.rotate_max.value)
+			#get scene path hash code
+			var base_name = path.get_file().get_basename()
+			var pash_hash:int = path.hash()
+			var layer_name:String = "%s_%d" % [base_name,pash_hash]
+			print("layer_name: ",layer_name)
+			var layer = foliage.get_node_or_null(layer_name)
+			print("layer: ",layer)
+			if layer == null:
+				print("添加Layer")
+				layer = Node3D.new()
+				layer.name = layer_name
+				foliage.add_child(layer)
+				layer.owner = get_editor_interface().get_edited_scene_root()
+			
+			#user property
+			var property:ElementProperty = _palette.get_element_property(path)
+			#random y offset from min ~ max
+			var yOffset:float = randf_range(property.yOffsetMin,property.yOffsetMax)
+			#10 times smaller,so -1000 to 1000 is -10 meter to 10 meter
+			yOffset /= 10
+			instance.position = pos + Vector3(0,yOffset,0)
+			#random roate from min ~ max
+			var angle:float = randf_range(property.rotateMin,property.rotateMax)
 			var rad:float = deg2rad(angle)
 			instance.rotate_y(rad)
-			
-			var s:float = randf_range(_palette.scale_min.value,_palette.scale_max.value)
-			print("scale: ",s)
+			#random scale from min ~ max
+			var s:float = randf_range(property.scaleMin,property.scaleMax)
 			instance.scale = Vector3(s,s,s)
 			
-			_node.add_child(instance)
+			layer.add_child(instance)
+#			foliage.add_child(instance)
 			instance.owner = get_editor_interface().get_edited_scene_root()
 			_placed_instances.append(instance)
 
 
 func _erase(ray_origin: Vector3, ray_dir: Vector3):
 #	var time_before := Time.get_ticks_usec()
-	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, _node.get_world_3d().scenario)
+	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, foliage.get_world_3d().scenario)
 #	print("hits: ",hits)
 	if len(hits) > 0:
 		var instance = null
@@ -239,13 +262,13 @@ func _erase(ray_origin: Vector3, ray_dir: Vector3):
 			var hit = instance_from_id(hit_object_id)
 #			print("hit: ",hit," hit.name: ",hit.name)
 			if hit is Node3D:
-				instance = get_scatter_child_instance(hit, _node)
+				instance = get_scatter_child_instance(hit, foliage)
 				if instance != null:
 					break
 
 #		print("Hits: ", len(hits), ", instance: ", instance)
 		if instance != null:
-			assert(instance.get_parent() == _node)
+			assert(instance.get_parent() == foliage)
 			instance.get_parent().remove_child(instance)
 			_removed_instances.append(instance)
 
@@ -263,8 +286,8 @@ func _on_action_completed(action: int):
 			# This is what allows nodes to be freed
 			ur.add_do_reference(instance)
 		_disable_undo = true
-		ur.add_do_method(self, "_redo_paint", _node.get_path(), _placed_instances.duplicate(false))
-		ur.add_undo_method(self, "_undo_paint", _node.get_path(), _placed_instances.duplicate(false))
+		ur.add_do_method(self, "_redo_paint", foliage.get_path(), _placed_instances.duplicate(false))
+		ur.add_undo_method(self, "_undo_paint", foliage.get_path(), _placed_instances.duplicate(false))
 		ur.commit_action()
 		_disable_undo = false
 		_placed_instances.clear()
@@ -277,8 +300,8 @@ func _on_action_completed(action: int):
 		for instance in _removed_instances:
 			ur.add_undo_reference(instance)
 		_disable_undo = true
-		ur.add_do_method(self, "_redo_erase", _node.get_path(), _removed_instances.duplicate(false))
-		ur.add_undo_method(self, "_undo_erase", _node.get_path(), _removed_instances.duplicate(false))
+		ur.add_do_method(self, "_redo_erase", foliage.get_path(), _removed_instances.duplicate(false))
+		ur.add_undo_method(self, "_undo_erase", foliage.get_path(), _removed_instances.duplicate(false))
 		ur.commit_action()
 		_disable_undo = false
 		_removed_instances.clear()
@@ -347,13 +370,19 @@ func _set_selected_patterns(patterns):
 
 
 func _create_pattern_instance():
-	return _selected_patterns[floor(randf() * _selected_patterns.size())].instantiate()
+	var rand:int = randi_range(0,_selected_patterns.size() - 1)
+	var ins = _selected_patterns[rand].instantiate()
+	var path = _selected_patterns[rand].get_meta("path")
+	ins.set_meta("path",path)
+	return ins
 
 
 func _on_Palette_patterns_selected(pattern_paths):
 	var scenes = []
 	for file in pattern_paths:
-		scenes.append(load(file))
+		var packet = load(file)
+		packet.set_meta("path",file)
+		scenes.append(packet)
 	_set_selected_patterns(scenes)
 
 
@@ -379,13 +408,13 @@ func _on_Palette_patterns_removed(paths):
 
 func _add_pattern(path):
 	_logger.debug(str("Adding pattern ", path))
-	_node.add_pattern(path)
+	foliage.add_pattern(path)
 	_palette.add_pattern(path)
 
 
 func _remove_pattern(path):
 	_logger.debug(str("Removing pattern ", path))
-	_node.remove_pattern(path)
+	foliage.remove_pattern(path)
 	_palette.remove_pattern(path)
 
 
@@ -397,13 +426,13 @@ func _verify_scene(fpath):
 		return false
 
 	# Check it's not already in the list
-	if _node.has_pattern(fpath):
+	if foliage.has_pattern(fpath):
 		_palette.select_pattern(fpath)
 		_show_error(tr("The selected scene is already in the palette"))
 		return false
 
 	# Check it's not the current scene itself
-	if Util.is_self_or_parent_scene(fpath, _node):
+	if Util.is_self_or_parent_scene(fpath, foliage):
 		_show_error("The selected scene can't be added recursively")
 		return false
 
@@ -420,9 +449,35 @@ func _verify_scene(fpath):
 
 	return true
 
+#切换模式
+func _on_toggle_mode(id):
+	_palette.mode = id
+	match id:
+		MODE.SELECT_MODE:
+			select_mode()
+		MODE.FOLIAGE_MODE:
+			foliage_mode()
+
+func select_mode():
+	pass
+
+func foliage_mode():
+	#获取主场景
+	var root = get_editor_interface().get_edited_scene_root()
+	
+	var has_foliage_node:bool = false
+	for node in root.get_children():
+		if(node.name == FOLIAGE_NAME):
+			has_foliage_node = true
+			break
+	if !has_foliage_node:
+		print("没有Foliage3D")
+		foliage = Foliage3D.new()
+		foliage.name = FOLIAGE_NAME
+		root.add_child(foliage)
+		foliage.owner = root
 
 func _show_error(msg):
 	_error_dialog.dialog_text = msg
 	_error_dialog.popup_centered_minsize()
-
 

@@ -2,6 +2,10 @@
 extends Control
 class_name Palette
 
+const PAINT = "paint"
+const SINGLE = "single"
+const ERASE = "erase"
+
 const btn_group = preload("res://addons/zylann.scatter/ui/btn_group/element_group.tres")
 const element_res = preload("res://addons/zylann.scatter/ui/element.tscn")
 const Logger = preload("../util/logger.gd")
@@ -32,10 +36,13 @@ signal patterns_removed(path)
 #正在被选择显示属性的element index
 var selected_element_index:int = -1
 
-
 var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
 var _logger = Logger.get_for(self)
+#工具模式
+var tool_mode:String = ""
+#操作模式
+var mode:int = 0
 
 func _ready():
 	selected_element_index = -1
@@ -44,9 +51,10 @@ func _ready():
 
 func initTool():
 	for node in toolList.get_children():
-		if node.name == "single":
+		if node.name == SINGLE:
 			node.get_node("status").visible = true
 			node.button_pressed = true
+			tool_mode = SINGLE
 		else:
 			node.get_node("status").visible = false
 
@@ -120,18 +128,19 @@ func _on_show_element_property(index):
 	pass
 
 func remove_pattern(scene_path):
-	var i = find_pattern(scene_path)
+	var i = find_elment_index(scene_path)
 	if i != -1:
 #		_item_list.remove_item(i)
 		elementsList.remove_child(elementsList.get_child(i))
 
-func find_pattern(path):
-	for child in toolList.get_children():
+#根据资源地址查找资源在GridContainer里的索引
+func find_elment_index(path):
+	for child in elementsList.get_children():
 		if child.path == path:
 			return child.index
 
 func select_pattern(path):
-	var i = find_pattern(path)
+	var i = find_elment_index(path)
 	if i != -1:
 		var element = elementsList.get_child(i)
 		element.checkBox.pressed = true
@@ -181,6 +190,19 @@ func _on_tool_toggled(button_pressed, tool_name):
 	var node := toolList.get_node(tool_name)
 	if node != null:
 		node.get_node("status").visible = button_pressed
+		if button_pressed:
+			tool_mode = tool_name
+			toggle_tool()
+
+#切换工具
+func toggle_tool():
+	match tool_mode:
+		PAINT:
+			pass
+		SINGLE:
+			pass
+		ERASE:
+			pass
 
 #显示element属性
 func show_property(base_name:String,property:ElementProperty):
@@ -195,10 +217,22 @@ func show_property(base_name:String,property:ElementProperty):
 	rotate_min.value = property.rotateMin
 	rotate_max.value = property.rotateMax
 	
-
-
+#更新属性
 func _on_property_changed(value, key):
 	if selected_element_index == -1:
 		return
 	var element = elementsList.get_child(selected_element_index)
 	element.property.update(key,value)
+	match key:
+		"yOffsetMin":
+			yOffset_max.value = element.property.yOffsetMax
+		"scaleMin":
+			scale_max.value = element.property.scaleMax
+		"rotateMin":
+			rotate_max.value = element.property.rotateMax
+
+#获取element属性
+func get_element_property(path:String) -> ElementProperty:
+	var i = find_elment_index(path)
+	var element := elementsList.get_child(i)
+	return element.property

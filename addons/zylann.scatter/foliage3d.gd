@@ -1,7 +1,6 @@
 @tool
 extends Node3D
 
-#(Array, PackedScene)
 @export var _scenes:Array[PackedScene] = []
 
 

@@ -1,8 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://cf17kiadxg0d6"]
+[gd_scene load_steps=7 format=3 uid="uid://dgm4pdvj73ywm"]
 
-[ext_resource type="Script" path="res://addons/zylann.scatter/scatter3d.gd" id="1_c7aas"]
-[ext_resource type="PackedScene" uid="uid://414a16sqv27o" path="res://demo/elements/box.tscn" id="3_64x1i"]
-[ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="3_gsikh"]
+[ext_resource type="Script" path="res://addons/zylann.scatter/foliage3d.gd" id="1_y2at3"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
 size = Vector3(40, 0.25, 40)
@@ -17,11 +15,6 @@ size = Vector3(40.008, 0.250339, 40.0361)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yyrx4"]
 albedo_color = Color(1, 0, 0.027451, 1)
 roughness = 0.0
-
-[sub_resource type="BoxMesh" id="BoxMesh_musxv"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3vu4"]
-albedo_color = Color(0.576471, 0.556863, 0.921569, 1)
 
 [node name="demo" type="Node3D"]
 
@@ -41,54 +34,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.2547, 0.000169754, 14.2971
 mesh = SubResource( "SphereMesh_8tmav" )
 surface_material_override/0 = SubResource( "StandardMaterial3D_yyrx4" )
 
-[node name="Scatter3D" type="Node3D" parent="."]
-script = ExtResource( "1_c7aas" )
-_scenes = [ExtResource( "3_gsikh" ), ExtResource( "3_64x1i" )]
-
-[node name="box1" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.94455, 0.000169754, 6.49636)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22011" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.44937, 0.000169754, 13.7847)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22012" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.16541, 0.000169754, 9.54462)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22013" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.9544, 0.000169754, 6.89395)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22014" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4844, 0.000169754, 8.27279)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22015" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.77434, 0.000169754, -2.32056)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22016" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.250347, 0.000169754, 7.38535)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22017" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.6442, 0.000169754, -12.5609)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
-[node name="@box1@22018" parent="Scatter3D" instance=ExtResource( "3_gsikh" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8751, 0.000171661, 16.9266)
-mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
-
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75422, 17.9252)
+
+[node name="Foliage3D" type="Node3D" parent="."]
+script = ExtResource( "1_y2at3" )
+_scenes = []

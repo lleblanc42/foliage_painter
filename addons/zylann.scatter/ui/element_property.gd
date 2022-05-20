@@ -26,13 +26,22 @@ func update(key:String,value:float):
 			radius = value
 		"yOffsetMin":
 			yOffsetMin = value
+			#最大值不能小于最小值
+			if yOffsetMax < yOffsetMin:
+				yOffsetMax = yOffsetMin
 		"yOffsetMax":
 			yOffsetMax = value
 		"scaleMin":
 			scaleMin = value
+			#最大值不能小于最小值
+			if scaleMax < scaleMin:
+				scaleMax = scaleMin
 		"scaleMax":
 			scaleMax = value
 		"rotateMin":
 			rotateMin = value
+			#最大值不能小于最小值
+			if rotateMax < rotateMin:
+				rotateMax = scaleMin
 		"rotateMax":
 			rotateMax = value

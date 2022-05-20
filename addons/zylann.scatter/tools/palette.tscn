@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/zylann.scatter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="Texture2D" uid="uid://dvv3k46vtdkea" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
 [ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/zylann.scatter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Texture2D" uid="uid://b5eaewrrkvte" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)
@@ -110,7 +110,7 @@ text = "Remove"
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 offset_top = 123.0
 offset_right = 327.0
-offset_bottom = 814.0
+offset_bottom = 1042.0
 size_flags_vertical = 3
 theme_override_styles/bg = SubResource( "StyleBoxFlat_626v5" )
 
@@ -120,6 +120,7 @@ theme_override_constants/h_separation = 11
 columns = 4
 
 [node name="PropertyPanel" type="VBoxContainer" parent="VBoxContainer"]
+visible = false
 offset_top = 821.0
 offset_right = 327.0
 offset_bottom = 1042.0
@@ -197,8 +198,9 @@ text = "min"
 offset_left = 100.0
 offset_right = 183.0
 offset_bottom = 31.0
+min_value = -1000.0
 max_value = 1000.0
-step = 0.01
+step = 0.1
 
 [node name="Label4" type="Label" parent="VBoxContainer/PropertyPanel/YOffsetBox"]
 offset_left = 187.0
@@ -211,8 +213,9 @@ text = "max"
 offset_left = 225.0
 offset_right = 308.0
 offset_bottom = 31.0
+min_value = -1000.0
 max_value = 1000.0
-step = 0.01
+step = 0.1
 
 [node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/PropertyPanel"]
 offset_top = 155.0
