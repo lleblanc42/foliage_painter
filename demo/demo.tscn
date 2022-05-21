@@ -1,21 +1,26 @@
-[gd_scene load_steps=8 format=3 uid="uid://dgm4pdvj73ywm"]
+[gd_scene load_steps=10 format=3 uid="uid://dgm4pdvj73ywm"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/foliage3d.gd" id="1_y2at3"]
-[ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="2_q1vj1"]
+[ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="2_4q17q"]
+[ext_resource type="PackedScene" uid="uid://dry231rfgbx18" path="res://addons/zylann.scatter/mesh/brush.tscn" id="2_sh0iy"]
+[ext_resource type="Script" path="res://addons/zylann.scatter/mesh/brush.gd" id="3_oclbv"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
-size = Vector3(40, 0.25, 40)
+size = Vector3(120, 0.25, 120)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u1nyd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6qix4"]
-size = Vector3(40.008, 0.250339, 40.0361)
+size = Vector3(120, 0.25, 120)
 
-[sub_resource type="SphereMesh" id="SphereMesh_8tmav"]
+[sub_resource type="SphereMesh" id="SphereMesh_vdlqv"]
+radius = 1.0
+height = 2.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yyrx4"]
-albedo_color = Color(1, 0, 0.027451, 1)
-roughness = 0.0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ysa8"]
+transparency = 1
+albedo_color = Color(0.745098, 0.72549, 1, 0.490196)
+emission = Color(1, 1, 1, 1)
 
 [node name="demo" type="Node3D"]
 
@@ -30,17 +35,16 @@ metadata/_edit_lock_ = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Terrain/TerrainStatic"]
 shape = SubResource( "BoxShape3D_6qix4" )
 
-[node name="sphere" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5684, -0.0155182, 14.9588)
-mesh = SubResource( "SphereMesh_8tmav" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_yyrx4" )
-
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75422, 17.9252)
 
 [node name="Foliage3D" type="Node3D" parent="."]
 script = ExtResource( "1_y2at3" )
-_scenes = [ExtResource( "2_q1vj1" )]
-metadata/_edit_lock_ = true
+_scenes = [ExtResource( "2_4q17q" )]
 
-[node name="layer_box1_2247569959" type="Node3D" parent="Foliage3D"]
+[node name="Brush" type="MeshInstance3D" parent="Foliage3D" instance=ExtResource( "2_sh0iy" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.4969, 0, 12.314)
+visible = false
+mesh = SubResource( "SphereMesh_vdlqv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_4ysa8" )
+script = ExtResource( "3_oclbv" )

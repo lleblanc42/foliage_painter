@@ -2,24 +2,27 @@
 extends Control
 class_name Palette
 
-const PAINT = "paint"
-const SINGLE = "single"
-const ERASE = "erase"
+const PAINT = "Paint"
+const SINGLE = "Single"
+const ERASE = "Erase"
 
 const btn_group = preload("res://addons/zylann.scatter/ui/btn_group/element_group.tres")
 const element_res = preload("res://addons/zylann.scatter/ui/element.tscn")
-const Logger = preload("../util/logger.gd")
 
 signal patterns_selected(pattern_paths)
 signal pattern_added(path)
 signal patterns_removed(path)
+signal brush_size_change()
 
 #工具列表
 @onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/toolList
-#@onready var _item_list : ItemList = $VBoxContainer/ItemList
 #场景元素列表
 @onready var elementsList:GridContainer = $VBoxContainer/ScrollContainer/ElementsList
 @onready var _margin_spin_box : SpinBox = $VBoxContainer/MarginContainer/MarginSpinBox
+#工具名字
+@onready var toolName:Label = $VBoxContainer/ToolDetail/ToolName
+#笔刷大小
+@onready var brushSize:SpinBox = $VBoxContainer/ToolDetail/HBoxContainer/BrushSizeSpin
 #属性面板
 @onready var propertyPanel:VBoxContainer = $VBoxContainer/PropertyPanel
 
@@ -38,11 +41,12 @@ var selected_element_index:int = -1
 
 var _file_dialog = null
 var _preview_provider : EditorResourcePreview = null
-var _logger = Logger.get_for(self)
 #工具模式
-var tool_mode:String = "single"
+var tool_mode:String = SINGLE
 #操作模式
 var mode:int = 0
+#历史笔刷尺寸
+var _brush_size_history:int = 100
 
 func _ready():
 	selected_element_index = -1
@@ -55,8 +59,10 @@ func initTool():
 			node.get_node("status").visible = true
 			node.button_pressed = true
 			tool_mode = SINGLE
+			toolName.text = SINGLE
 		else:
 			node.get_node("status").visible = false
+		toggle_tool()
 
 func setup_dialogs(base_control):
 	_file_dialog = FileDialog.new()
@@ -76,20 +82,23 @@ func set_preview_provider(provider : EditorResourcePreview):
 
 
 func _exit_tree():
+	print("exit from tree")
 	if _file_dialog != null:
 		_file_dialog.queue_free()
 		_file_dialog = null
 
 func load_patterns(patterns):
-#	_item_list.clear()
 	for node in elementsList.get_children():
+		node.disconnect("element_select",_on_element_selected)
+		node.disconnect("show_property",_on_show_element_property)
 		elementsList.remove_child(node)
-	#print("Loading ", len(patterns), " patterns")
-	for scene in patterns:
-		add_pattern(scene.resource_path)
+
+	for dic in patterns:
+		pass
+		add_pattern(dic["path"],dic["selected"],dic["number"])
 
 
-func add_pattern(scene_path):
+func add_pattern(scene_path,is_selected:bool=false,number:int=0):
 	var element = element_res.instantiate()
 	var godot_theme = EditorPlugin.new().get_editor_interface().get_base_control().theme
 	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons")
@@ -100,10 +109,13 @@ func add_pattern(scene_path):
 	element.connect("show_property",_on_show_element_property)
 	element.name = pattern_name
 	element.icon.texture = default_icon
-	element.checkBox.visible = false
 	element.index = i
 	element.path = scene_path
 	element.button_group = btn_group
+	element.update_number(number)
+	if element and is_selected == true:
+		element.checkBox.button_pressed = true
+		element.selected = true
 	
 	_preview_provider.queue_resource_preview(scene_path, self, "_on_EditorResourcePreview_preview_loaded", i)
 
@@ -111,12 +123,8 @@ func add_pattern(scene_path):
 func _on_EditorResourcePreview_preview_loaded(path, texture,preview, index):
 	if texture != null:
 		elementsList.get_child(index).icon.texture = texture
-	else:
-		_logger.debug(str("No preview available for ", path))
 
 func _on_EditorResourcePreview_preview_invalidated(path):
-	# TODO Handle thumbnail invalidation
-	#`path` is actually the folder in which the file was, NOT the file itself... useful for FileSystemDock only :(
 	pass
 
 #显示选中的element的属性
@@ -128,10 +136,14 @@ func _on_show_element_property(index):
 	pass
 
 func remove_pattern(scene_path):
+	print("在remove里被调用")
 	var i = find_elment_index(scene_path)
 	if i != -1:
 #		_item_list.remove_item(i)
-		elementsList.remove_child(elementsList.get_child(i))
+		var node = elementsList.get_child(i)
+		node.disconnect("element_select",_on_element_selected)
+		node.disconnect("show_property",_on_show_element_property)
+		elementsList.remove_child(node)
 
 #根据资源地址查找资源在GridContainer里的索引
 func find_elment_index(path):
@@ -143,9 +155,8 @@ func select_pattern(path):
 	var i = find_elment_index(path)
 	if i != -1:
 		var element = elementsList.get_child(i)
-		element.checkBox.pressed = true
+		element.checkBox.button_pressed = true
 		element.selected = true
-#		_item_list.select(i)
 
 func _on_element_selected():
 	var selected = []
@@ -164,8 +175,6 @@ func _on_AddButton_pressed():
 
 func _on_RemoveButton_pressed():
 	var removed := []
-#	for item in _item_list.get_selected_items():
-#		removed.append(_item_list.get_item_metadata(item))
 	for node in elementsList.get_children():
 		if node.selected == true:
 			removed.append(node.path)
@@ -177,32 +186,34 @@ func _on_FileDialog_file_selected(fpath):
 	emit_signal("pattern_added", fpath)
 
 
-#func can_drop_data(position, data):
-#	return data is Dictionary and data.get("type") == "files"
-#
-#
-#func drop_data(position, data):
-#	for file in data.files:
-#		emit_signal("pattern_added", file)
-
-
 func _on_tool_toggled(button_pressed, tool_name):
-	var node := toolList.get_node(tool_name)
+	var node := toolList.get_node_or_null(tool_name)
 	if node != null:
 		node.get_node("status").visible = button_pressed
 		if button_pressed:
 			tool_mode = tool_name
+			toolName.text = tool_name
 			toggle_tool()
 
 #切换工具
 func toggle_tool():
 	match tool_mode:
 		PAINT:
-			pass
+			brushSize.value = _brush_size_history
+			brushSize.editable = true
 		SINGLE:
-			pass
+			brushSize.value = 20
+			brushSize.editable = false
 		ERASE:
-			pass
+			brushSize.value = _brush_size_history
+			brushSize.editable = true
+
+func _on_brush_size_spin_value_changed(value):
+	pass # Replace with function body.
+	print("brush_size: ",value)
+	if tool_mode != SINGLE:
+		_brush_size_history = value
+	emit_signal("brush_size_change")
 
 #显示element属性
 func show_property(base_name:String,property:ElementProperty):
@@ -236,3 +247,10 @@ func get_element_property(path:String) -> ElementProperty:
 	var i = find_elment_index(path)
 	var element := elementsList.get_child(i)
 	return element.property
+
+#更新场景上的实例数量
+func update_element_number(path:String,value:int):
+	var i = find_elment_index(path)
+	if i != -1:
+		var node = elementsList.get_child(i)
+		node.update_number(value)

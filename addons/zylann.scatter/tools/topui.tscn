@@ -1,29 +1,78 @@
-[gd_scene load_steps=4 format=3 uid="uid://cinqj7ed56wp6"]
+[gd_scene load_steps=7 format=3 uid="uid://cinqj7ed56wp6"]
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/topui.gd" id="1_gksi4"]
 [ext_resource type="Texture2D" uid="uid://coq3dm3c6khnq" path="res://addons/zylann.scatter/tools/icons/select.png" id="2_t60t4"]
+[ext_resource type="ButtonGroup" uid="uid://c8ut3maeljkms" path="res://addons/zylann.scatter/ui/btn_group/mode_group.tres" id="2_whs2j"]
 [ext_resource type="Texture2D" uid="uid://ccs6rjoe2vfon" path="res://addons/zylann.scatter/tools/icons/foliage.png" id="3_xx46d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dabuw"]
+bg_color = Color(0, 0.611765, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.513726, 0.8, 0.701961, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c23st"]
+bg_color = Color(0.168627, 0.168627, 0.168627, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.223529, 0.337255, 0.501961, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+shadow_size = 2
 
 [node name="topui" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( "1_gksi4" )
+metadata/_edit_lock_ = true
 
-[node name="MenuButton" type="MenuButton" parent="."]
-offset_right = 8.0
+[node name="SelectBtn" type="Button" parent="."]
+offset_left = 9.0
+offset_right = 130.0
 offset_bottom = 31.0
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 0
-theme_override_font_sizes/font_size = 16
+focus_mode = 0
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_styles/hover = SubResource( "StyleBoxFlat_dabuw" )
+theme_override_styles/pressed = SubResource( "StyleBoxFlat_dabuw" )
+theme_override_styles/normal = SubResource( "StyleBoxFlat_c23st" )
+toggle_mode = true
+button_pressed = true
+button_group = ExtResource( "2_whs2j" )
 text = "Select Mode"
-text_direction = 1
 icon = ExtResource( "2_t60t4" )
-item_count = 2
-popup/item_0/text = "Select Mode"
-popup/item_0/icon = ExtResource( "2_t60t4" )
-popup/item_0/id = 0
-popup/item_1/text = "Foliage Mode"
-popup/item_1/icon = ExtResource( "3_xx46d" )
-popup/item_1/id = 1
 
-[connection signal="tree_exiting" from="." to="." method="_on_topui_tree_exiting"]
+[node name="FoliageBtn" type="Button" parent="."]
+offset_left = 139.0
+offset_right = 269.0
+offset_bottom = 31.0
+focus_mode = 0
+theme_override_colors/icon_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_styles/hover = SubResource( "StyleBoxFlat_dabuw" )
+theme_override_styles/pressed = SubResource( "StyleBoxFlat_dabuw" )
+theme_override_styles/normal = SubResource( "StyleBoxFlat_c23st" )
+toggle_mode = true
+button_group = ExtResource( "2_whs2j" )
+text = "Foliage Mode"
+icon = ExtResource( "3_xx46d" )
+
+[connection signal="toggled" from="SelectBtn" to="." method="_on_mode_toggled" binds= [0]]
+[connection signal="toggled" from="FoliageBtn" to="." method="_on_mode_toggled" binds= [1]]

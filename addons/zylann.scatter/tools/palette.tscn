@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/zylann.scatter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://dvv3k46vtdkea" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
 [ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/zylann.scatter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://b5eaewrrkvte" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)
@@ -45,49 +45,86 @@ offset_bottom = 56.0
 theme_override_constants/h_separation = 14
 columns = 6
 
-[node name="paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+[node name="Paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 button_group = ExtResource( "3_yna7w" )
 
-[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/paint" index="0"]
+[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" index="0"]
 visible = false
 
-[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/paint" index="1"]
+[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" index="1"]
 texture = ExtResource( "3_30bq8" )
 
-[node name="single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+[node name="Single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 54.0
 offset_right = 94.0
 button_pressed = true
 button_group = ExtResource( "3_yna7w" )
 
-[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/single" index="1"]
+[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Single" index="1"]
 texture = ExtResource( "4_q04a5" )
 
-[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/single" index="2"]
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Single" index="2"]
 text = "Single"
 
-[node name="erase" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+[node name="Erase" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 108.0
 offset_right = 148.0
 button_group = ExtResource( "3_yna7w" )
 
-[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/erase" index="0"]
+[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" index="0"]
 visible = false
 
-[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/erase" index="2"]
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" index="2"]
 text = "Erase"
 
-[node name="Split" type="ColorRect" parent="VBoxContainer"]
-minimum_size = Vector2(0, 5)
+[node name="ToolDetail" type="VBoxContainer" parent="VBoxContainer"]
 offset_top = 73.0
 offset_right = 327.0
-offset_bottom = 78.0
-color = Color(0.12549, 0.12549, 0.12549, 1)
+offset_bottom = 148.0
+
+[node name="ToolName" type="Label" parent="VBoxContainer/ToolDetail"]
+offset_right = 327.0
+offset_bottom = 26.0
+text = "Single"
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/ToolDetail"]
+minimum_size = Vector2(0, 3)
+offset_top = 30.0
+offset_right = 327.0
+offset_bottom = 33.0
+color = Color(0.152941, 0.152941, 0.152941, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ToolDetail"]
+offset_top = 37.0
+offset_right = 327.0
+offset_bottom = 68.0
+
+[node name="Label" type="Label" parent="VBoxContainer/ToolDetail/HBoxContainer"]
+minimum_size = Vector2(100, 0)
+offset_top = 2.0
+offset_right = 100.0
+offset_bottom = 28.0
+text = "Brush Size"
+
+[node name="BrushSizeSpin" type="SpinBox" parent="VBoxContainer/ToolDetail/HBoxContainer"]
+offset_left = 104.0
+offset_right = 187.0
+offset_bottom = 31.0
+min_value = 1.0
+max_value = 8192.0
+value = 100.0
+
+[node name="ColorRect2" type="ColorRect" parent="VBoxContainer/ToolDetail"]
+minimum_size = Vector2(0, 3)
+offset_top = 72.0
+offset_right = 327.0
+offset_bottom = 75.0
+color = Color(0.152941, 0.152941, 0.152941, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 85.0
+offset_top = 155.0
 offset_right = 153.0
-offset_bottom = 116.0
+offset_bottom = 186.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 15
@@ -108,7 +145,7 @@ offset_bottom = 31.0
 text = "Remove"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-offset_top = 123.0
+offset_top = 193.0
 offset_right = 327.0
 offset_bottom = 1042.0
 size_flags_vertical = 3
@@ -322,9 +359,10 @@ max_value = 10.0
 step = 0.01
 allow_greater = true
 
-[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/paint" to="." method="_on_tool_toggled" binds= ["paint"]]
-[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/single" to="." method="_on_tool_toggled" binds= ["single"]]
-[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/erase" to="." method="_on_tool_toggled" binds= ["erase"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" to="." method="_on_tool_toggled" binds= ["Paint"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Single" to="." method="_on_tool_toggled" binds= ["Single"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" to="." method="_on_tool_toggled" binds= ["Erase"]]
+[connection signal="value_changed" from="VBoxContainer/ToolDetail/HBoxContainer/BrushSizeSpin" to="." method="_on_brush_size_spin_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
 [connection signal="value_changed" from="VBoxContainer/PropertyPanel/DensityBox/densitySpin" to="." method="_on_property_changed" binds= ["density"]]
@@ -336,6 +374,6 @@ allow_greater = true
 [connection signal="value_changed" from="VBoxContainer/PropertyPanel/RotateBox/minSpin" to="." method="_on_property_changed" binds= ["rotateMin"]]
 [connection signal="value_changed" from="VBoxContainer/PropertyPanel/RotateBox/MaxSpin" to="." method="_on_property_changed" binds= ["rotateMax"]]
 
-[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/paint"]
-[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/single"]
-[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/erase"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/Paint"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/Single"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/Erase"]

@@ -1,50 +1,52 @@
 @tool
 extends EditorPlugin
 
-enum TARGET_MODE {
+enum MODE {
 	SELECT_MODE = 0,
 	FOLIAGE_MODE = 1
 }
 
 const FOLIAGE_NAME:String = "Foliage3D"
+const BRUSH_NAME:String = "Brush"
 const Foliage3D = preload("res://addons/zylann.scatter/foliage3d.gd")
 const PaletteScene = preload("res://addons/zylann.scatter/tools/palette.tscn")
+var Brush3D = preload("res://addons/zylann.scatter/mesh/brush.tscn")
 #左侧素材列表
 var _palette:Palette = preload("res://addons/zylann.scatter/tools/palette.tscn").instantiate()
 #顶部模式选择UI
 var _topui = preload("res://addons/zylann.scatter/tools/topui.tscn").instantiate()
-#const Palette = preload("./palette.gd")
 const Util = preload("../util/util.gd")
-const Logger = preload("../util/logger.gd")
 
-const ACTION_PAINT = 0
-const ACTION_ERASE = 1
+#const ACTION_PAINT = 0
+#const ACTION_ERASE = 1
 
 #绘制根节点
 var foliage : Foliage3D
-var _selected_patterns := []
+var brush:MeshInstance3D
+var _selected_elements := []
 var _mouse_position := Vector2()
-var _editor_camera : Camera3D
+#var _editor_camera : Camera3D
 var _collision_mask := 1
 var _placed_instances = []
 #var _removed_instances = []
 #var _disable_undo := false
 var _pattern_margin := 0.0
-var _logger = Logger.get_for(self)
 var _current_action := -1
 var _cmd_pending_action := false
-var _error_dialog = null
 #可以绘制
 var start_paint:bool = true
 
+var mouse_left_pressed:bool = false
+var mouse_right_pressed:bool = false
 
 static func get_icon(name):
 	return load("res://addons/zylann.scatter/tools/icons/icon_" + name + ".svg")
 
 
 func _enter_tree():
-	_logger.debug("Scatter plugin Enter tree")
 	print("Scatter plugin Enter tree")
+	
+	set_physics_process(false)
 	
 	_topui.connect("toggle_mode",_on_toggle_mode)
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
@@ -62,19 +64,12 @@ func _enter_tree():
 	add_control_to_container(CustomControlContainer.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT,_palette)
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
 	_palette.call_deferred("setup_dialogs", base_control)
-
-	_error_dialog = AcceptDialog.new()
-	_error_dialog.size = Vector2(300, 200)
-#	_error_dialog.rect_min_size = Vector2(300, 200)
-	_error_dialog.hide()
-	_error_dialog.title = "Error"
-	base_control.add_child(_error_dialog)
+	
+	show_sphere(false)
 	
 	set_input_event_forwarding_always_enabled()
 
 func _exit_tree():
-	_logger.debug("Scatter plugin Exit tree")
-	_edit(null)
 
 	remove_control_from_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	remove_custom_type("Scatter3D")
@@ -84,142 +79,77 @@ func _exit_tree():
 		_palette.queue_free()
 		_palette = null
 
-	if _palette != null:
-		_error_dialog.queue_free()
-		_error_dialog = null
-
-
-#func _handles(obj):
-#	return obj != null and obj is Foliage3D
-
 func _handles(object):
 	pass
-#	print("hand")
-#	if _palette.mode == TARGET_MODE.SELECT_MODE:
-#		return false
-#	else:
-#		return true
-#	return false
 
 func _edit(obj):
 	pass
-#	print("obj: ",obj)
-#	foliage = obj
-#	if foliage:
-#		var patterns = foliage.get_patterns()
-#		_palette.load_patterns(patterns)
-#		set_physics_process(true)
-#	else:
-#		set_physics_process(false)
-
-
-#func _make_visible(visible):
-#	_palette.set_visible(visible)
-#	# TODO Workaround https://github.com/godotengine/godot/issues/6459
-#	# When the user selects another node, I want the plugin to release its references.
-#	if not visible:
-#		_edit(null)
 
 func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
-	if _palette.mode == TARGET_MODE.SELECT_MODE:
+	if _palette.mode == MODE.SELECT_MODE:
 		return false
 	if foliage == null:
 		return false
+	if _selected_elements.size() == 0:
+		show_sphere(false)
+		return false
+	
+	if mouse_right_pressed:
+		show_sphere(false)
+		if not (p_event is InputEventMouseButton and not p_event.pressed and p_event.button_index == MOUSE_BUTTON_RIGHT):
+			return false
+	elif mouse_right_pressed == false and brush.visible == false:
+		show_sphere(true)
 
-	var captured_event = false
-	if p_event is InputEventMouseButton:
-#		var mb:InputEventMouseButton = p_event as InputEventMouseButton
-		if p_event.button_index == MOUSE_BUTTON_LEFT:# or p_event.button_index == MOUSE_BUTTON_RIGHT:
-			if p_event.pressed:
-				match p_event.button_index:
-					MOUSE_BUTTON_LEFT:
-						print("left")
-						_current_action = ACTION_PAINT
-#					MOUSE_BUTTON_RIGHT:
-#						_current_action = ACTION_ERASE
-				_cmd_pending_action = true
-				start_paint = true
-				captured_event = true
-			else:
-				print("放开")
-				_cmd_pending_action = false
-				start_paint = false
-				_on_action_completed(_current_action)
-			# Need to check modifiers before capturing the event,
-			# because they are used in navigation schemes
-#			if (not p_event.ctrl_pressed) and (not p_event.alt_pressed):# and mb.button_index == BUTTON_LEFT:
-#				if p_event.pressed:
-#					match p_event.button_index:
-#						MOUSE_BUTTON_LEFT:
-#							_current_action = ACTION_PAINT
-##						MOUSE_BUTTON_RIGHT:
-##							_current_action = ACTION_ERASE
-#					_cmd_pending_action = true
-#
-#				captured_event = true
-#
-#				if p_event.pressed == false:
-#					# Just finished painting gesture
-#					_on_action_completed(_current_action)
-
-	elif p_event is InputEventMouseMotion:
+	#射线检测
+	if p_event is InputEventMouseMotion:
 		var mouse_position = p_event.position
 		var viewport = p_camera.get_viewport()
 		var viewport_container:SubViewportContainer = viewport.get_parent()
 		var screen_position = mouse_position * Vector2(viewport.size) / viewport_container.size
-
 		_mouse_position = screen_position
-		# Trigger action only if these buttons are held
-		_cmd_pending_action = p_event.button_mask & MOUSE_BUTTON_MASK_LEFT
 
-	_editor_camera = p_camera
+	var ray_origin = p_camera.project_ray_origin(_mouse_position)
+	var ray_dir = p_camera.project_ray_normal(_mouse_position)
+	var ray_distance = p_camera.far
+
+	var hit:Dictionary = ray_cast(ray_origin, ray_origin + ray_dir * ray_distance)
+
+	var captured_event = false
+	#鼠标按钮判定
+	if p_event is InputEventMouseButton:
+		if p_event.pressed:
+			if p_event.button_index == MOUSE_BUTTON_LEFT:
+				mouse_left_pressed = true
+				captured_event = true
+				_paint(hit)
+			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
+				mouse_right_pressed = true
+		else:
+			if p_event.button_index == MOUSE_BUTTON_LEFT:
+				mouse_left_pressed = false
+#				start_peint = false
+			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
+				mouse_right_pressed = false
+				
+	if _palette.tool_mode == _palette.PAINT:
+		start_paint = true
+	elif _palette.tool_mode == _palette.ERASE:
+		start_paint = true
+				
+	#如果鼠标左键按下
+	if p_event is InputEventMouseMotion and mouse_left_pressed and start_paint:
+		if _palette.tool_mode == _palette.PAINT:
+			if not hit.is_empty():
+				start_paint = false
+				_paint(hit)
+		elif _palette.tool_mode == _palette.ERASE:
+			pass
+#			_erase(ray_origin, ray_dir)
+	
 	return captured_event
 
-
-func _physics_process(_unused_delta):
-	if _editor_camera == null:
-		return
-	if not is_instance_valid(_editor_camera):
-		_editor_camera = null
-		return
-	if foliage == null:
-		return
-
-	var can_paint:bool = false
-	if _palette.tool_mode == _palette.SINGLE:
-		if start_paint:
-			can_paint = true
-	elif _palette.tool_mode == _palette.PAINT:
-		can_paint = true
-	elif _palette.tool_mode == _palette.ERASE:
-		pass
-		
-	if can_paint and _cmd_pending_action:
-		# Consume
-		_cmd_pending_action = false
-		start_paint = false
-		print("绘制一棵草")
-
-		var ray_origin = _editor_camera.project_ray_origin(_mouse_position)
-		var ray_dir = _editor_camera.project_ray_normal(_mouse_position)
-		var ray_distance = _editor_camera.far
-
-#		print("ray_origin: ",ray_origin)
-#		print("ray_dir: ",ray_dir)
-#		print("ray_distance: ",ray_distance)
-#		print("to" ,ray_origin + ray_dir * ray_distance)
-
-		match _current_action:
-			ACTION_PAINT:
-				_paint(ray_origin, ray_origin + ray_dir * ray_distance)
-			ACTION_ERASE:
-				_erase(ray_origin, ray_dir)
-
-
-func _paint(ray_origin: Vector3, ray_end: Vector3):
-	if len(_selected_patterns) == 0:
-		return
-
+func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 	var space_state =  get_viewport().world_3d.direct_space_state
 	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	pt.from = ray_origin
@@ -229,7 +159,32 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 	var hit = space_state.intersect_ray(pt)
 	
 	if hit.is_empty():
+		return hit
+	
+	var hit_instance_root
+	# Collider can be null if the hit is on something that has no associated node
+	if hit.collider != null:
+		hit_instance_root = Util.get_instance_root(hit.collider)
+	
+	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
+		var pos = hit.position
+		brush.position = hit.position
+	return hit
+
+func _paint(hit:Dictionary):
+	if len(_selected_elements) == 0:
 		return
+
+#	var space_state =  get_viewport().world_3d.direct_space_state
+#	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+#	pt.from = ray_origin
+#	pt.to = ray_origin + ray_end
+#	pt.exclude = []
+#	pt.collision_mask = _collision_mask
+#	var hit = space_state.intersect_ray(pt)
+#
+#	if hit.is_empty():
+#		return
 
 	var hit_instance_root
 	# Collider can be null if the hit is on something that has no associated node
@@ -238,14 +193,16 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 
 	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
 		var pos = hit.position
+		brush.position = hit.position
 		# Not accurate, you might still paint stuff too close to others,
 		# but should be good enough and cheap
 		var too_close = false
-		if len(_placed_instances) != 0:
+		if _palette.mode != MODE.SELECT_MODE and  len(_placed_instances) != 0:
 			var last_placed_transform := (_placed_instances[-1] as Node3D).global_transform
 			var margin = _pattern_margin + _palette.get_configured_margin()
 			if last_placed_transform.origin.distance_to(pos) < margin:
 				too_close = true
+				print("too_close: ",too_close)
 
 		if not too_close:
 			var instance:MeshInstance3D = _create_pattern_instance()
@@ -255,9 +212,9 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 			var base_name = path.get_file().get_basename()
 			var pash_hash:int = path.hash()
 			var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
-			print("layer_name: ",layer_name)
+#			print("layer_name: ",layer_name)
 			var layer = foliage.get_node_or_null(layer_name)
-			print("layer: ",layer)
+#			print("layer: ",layer)
 			if layer == null:
 				print("添加Layer")
 				layer = Node3D.new()
@@ -284,6 +241,8 @@ func _paint(ray_origin: Vector3, ray_end: Vector3):
 			instance.name = "%s_%d" % [base_name,layer.get_child_count()]
 	#			foliage.add_child(instance)
 			instance.owner = get_editor_interface().get_edited_scene_root()
+			var count = layer.get_child_count()
+			_palette.update_element_number(path,count)
 			_placed_instances.append(instance)
 
 
@@ -308,9 +267,9 @@ func _erase(ray_origin: Vector3, ray_dir: Vector3):
 #			_removed_instances.append(instance)
 
 
-func _on_action_completed(action: int):
-	if action == ACTION_PAINT:
-		pass
+#func _on_action_completed(action: int):
+#	if action == ACTION_PAINT:
+#		pass
 #		if len(_placed_instances) == 0:
 #			return
 		# TODO This will creep memory until the scene is closed...
@@ -328,8 +287,8 @@ func _on_action_completed(action: int):
 #		_disable_undo = false
 #		_placed_instances.clear()
 
-	elif action == ACTION_ERASE:
-		pass
+#	elif action == ACTION_ERASE:
+#		pass
 #		if len(_removed_instances) == 0:
 #			return
 #		var ur = get_undo_redo()
@@ -343,9 +302,6 @@ func _on_action_completed(action: int):
 #		_disable_undo = false
 #		_removed_instances.clear()
 
-
-#func resnap_instances():
-#	pass
 
 
 #func _redo_paint(parent_path, instances_data):
@@ -393,8 +349,8 @@ static func get_scatter_child_instance(node, scatter_root):
 
 
 func _set_selected_patterns(patterns):
-	if _selected_patterns != patterns:
-		_selected_patterns = patterns
+	if _selected_elements != patterns:
+		_selected_elements = patterns
 		var largest_aabb = AABB()
 		for pattern in patterns:
 			var temp = pattern.instantiate()
@@ -403,13 +359,12 @@ func _set_selected_patterns(patterns):
 			largest_aabb = largest_aabb.merge(Util.get_scene_aabb(temp))
 			temp.free()
 		_pattern_margin = largest_aabb.size.length() * 0.4
-		_logger.debug(str("Pattern margin is ", _pattern_margin))
 
 
 func _create_pattern_instance():
-	var rand:int = randi_range(0,_selected_patterns.size() - 1)
-	var ins = _selected_patterns[rand].instantiate()
-	var path = _selected_patterns[rand].get_meta("path")
+	var rand:int = randi_range(0,_selected_elements.size() - 1)
+	var ins = _selected_elements[rand].instantiate()
+	var path = _selected_elements[rand].get_meta("path")
 	ins.set_meta("path",path)
 	return ins
 
@@ -436,7 +391,8 @@ func _on_Palette_pattern_added(path):
 
 
 func _on_Palette_patterns_removed(paths):
-	pass
+	for path in paths:
+		_remove_pattern(path)
 #	var ur = get_undo_redo()
 #	ur.create_action("Remove scatter pattern")
 #	for path in paths:
@@ -446,13 +402,11 @@ func _on_Palette_patterns_removed(paths):
 
 
 func _add_pattern(path):
-	_logger.debug(str("Adding pattern ", path))
 	foliage.add_pattern(path)
 	_palette.add_pattern(path)
 
 
 func _remove_pattern(path):
-	_logger.debug(str("Removing pattern ", path))
 	foliage.remove_pattern(path)
 	_palette.remove_pattern(path)
 
@@ -461,7 +415,7 @@ func _verify_scene(fpath):
 	# Check it can be loaded
 	var scene = load(fpath)
 	if scene == null:
-		_show_error(tr("Could not load the scene. See the console for more info."))
+		print("Could not load the scene. See the console for more info.")
 		return false
 
 	# Check it's not already in the list
@@ -472,7 +426,7 @@ func _verify_scene(fpath):
 
 	# Check it's not the current scene itself
 	if Util.is_self_or_parent_scene(fpath, foliage):
-		_show_error("The selected scene can't be added recursively")
+		print("The selected scene can't be added recursively")
 		return false
 
 	# Check it inherits Node3D
@@ -481,7 +435,7 @@ func _verify_scene(fpath):
 	# Aaaah screw this
 	var scene_instance = scene.instantiate()
 	if not (scene_instance is Node3D):
-		_show_error(tr("The selected scene is not a Node3D, it can't be painted in a 3D scene."))
+		print("The selected scene is not a Node3D, it can't be painted in a 3D scene.")
 		scene_instance.free()
 		return false
 	scene_instance.free()
@@ -492,39 +446,69 @@ func _verify_scene(fpath):
 func _on_toggle_mode(id):
 	_palette.mode = id
 	match id:
-		TARGET_MODE.SELECT_MODE:
+		MODE.SELECT_MODE:
 			select_mode()
-		TARGET_MODE.FOLIAGE_MODE:
+		MODE.FOLIAGE_MODE:
 			foliage_mode()
 
 func select_mode():
+#	set_physics_process(false)
 	_palette.set_visible(false)
-	set_physics_process(false)
+	show_sphere(false)
 
 func foliage_mode():
 	#获取主场景
 	var root = get_editor_interface().get_edited_scene_root()
-	
-	var has_foliage_node:bool = false
-	for node in root.get_children():
-		if(node.name == FOLIAGE_NAME):
-			has_foliage_node = true
-			foliage = node
-			break
-	if !has_foliage_node:
+	var f = root.get_node_or_null(FOLIAGE_NAME)
+	if f == null:
 		print("没有Foliage3D")
 		foliage = Foliage3D.new()
 		foliage.name = FOLIAGE_NAME
 		root.add_child(foliage)
 		foliage.owner = root
+	else:
+		foliage = f
 	
-#	var patterns = foliage.get_patterns()
-#	_palette.load_patterns(patterns)
+	var b = foliage.get_node_or_null(BRUSH_NAME)
+	if b == null:
+		print("没有Brush")
+		brush = Brush3D.instantiate()
+		brush.name = BRUSH_NAME
+		foliage.add_child(brush)
+		brush.owner = root
+	else:
+		brush = b
+	
+	readd_element()
 	_palette.set_visible(true)
-	set_physics_process(true)
-#	set_input_event_forwarding_always_enabled()
+	show_sphere(true)
+#	set_physics_process(true)
 
-func _show_error(msg):
-	_error_dialog.dialog_text = msg
-	_error_dialog.popup_centered_minsize()
+#切换工具时重新给面板赋值
+func readd_element():
+	var element_list:Array[Dictionary] = []
+	var elements = foliage.get_elements()
+	for scene in elements:
+		var dic:Dictionary = Dictionary()
+		dic["path"] = scene.resource_path
+		var select:bool = false
+		for s in _selected_elements:
+			if s.get_meta("path") == scene.resource_path:
+				select = true
+				break
+		dic["selected"] = select
+		var base_name = scene.resource_path.get_file().get_basename()
+		var pash_hash:int = scene.resource_path.hash()
+		var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
+#			print("layer_name: ",layer_name)
+		var layer = foliage.get_node_or_null(layer_name)
+		var num:int = 0
+		if layer:
+			num = layer.get_child_count()
+		dic["number"] = num
+		element_list.append(dic)
+	_palette.load_patterns(element_list)
 
+func show_sphere(value:bool):
+	if brush:
+		brush.visible = value

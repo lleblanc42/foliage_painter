@@ -3,10 +3,8 @@ extends Node3D
 
 @export var _scenes:Array[PackedScene] = []
 
-
 func _ready():
 	_remove_dangling_patterns()
-
 
 func _remove_dangling_patterns():
 	# Remove null scenes in case they failed to load for some reason
@@ -23,15 +21,12 @@ func _remove_dangling_patterns():
 		notify_property_list_changed()
 #		property_list_changed_notify()
 
-
-func get_patterns():
+func get_elements():
 	return _scenes
-
 
 func add_pattern(path):
 	_scenes.append(load(path))
 	notify_property_list_changed()
-
 
 func remove_pattern(path):
 	for i in len(_scenes):
@@ -46,3 +41,8 @@ func has_pattern(path):
 		if scene.resource_path == path:
 			return true
 	return false
+	
+func clear_pattern():
+	while _scenes.size() > 0:
+		_scenes.remove_at(0)
+	notify_property_list_changed()
