@@ -413,6 +413,7 @@ func _remove_element(path):
 
 func _on_Brush_size_changed():
 	pass
+	brush.update_size(_palette.brushSize.value)
 
 func _verify_element(fpath):
 	# Check it can be loaded
@@ -481,6 +482,7 @@ func foliage_mode():
 		brush.owner = root
 	else:
 		brush = b
+	brush.update_size(_palette.brushSize.value)
 	
 	readd_element()
 	_palette.set_visible(true)
