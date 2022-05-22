@@ -1,9 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://dgm4pdvj73ywm"]
+[gd_scene load_steps=13 format=3 uid="uid://o6gb2ut13vx4"]
 
-[ext_resource type="Script" path="res://addons/zylann.scatter/foliage3d.gd" id="1_y2at3"]
+[ext_resource type="Script" path="res://addons/foliage_painter/ui/foliage3d.gd" id="1_y2at3"]
 [ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="2_4q17q"]
-[ext_resource type="PackedScene" uid="uid://dry231rfgbx18" path="res://addons/zylann.scatter/mesh/brush.tscn" id="2_sh0iy"]
-[ext_resource type="Script" path="res://addons/zylann.scatter/mesh/brush.gd" id="3_oclbv"]
+[ext_resource type="PackedScene" path="res://addons/foliage_painter/mesh/brush.tscn" id="2_sh0iy"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
 size = Vector3(120, 0.25, 120)
@@ -21,6 +20,16 @@ height = 2.0
 transparency = 1
 albedo_color = Color(0.745098, 0.72549, 1, 0.490196)
 emission = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_musxv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3vu4"]
+albedo_color = Color(0.576471, 0.556863, 0.921569, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vxrlo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_54yh4"]
+albedo_color = Color(0.576471, 0.556863, 0.921569, 1)
 
 [node name="demo" type="Node3D"]
 
@@ -42,9 +51,910 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75422, 17.9252)
 script = ExtResource( "1_y2at3" )
 _scenes = [ExtResource( "2_4q17q" )]
 
-[node name="Brush" type="MeshInstance3D" parent="Foliage3D" instance=ExtResource( "2_sh0iy" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.4969, 0, 12.314)
+[node name="Brush" parent="Foliage3D" instance=ExtResource( "2_sh0iy" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.51425, 0, -58.3985)
 visible = false
 mesh = SubResource( "SphereMesh_vdlqv" )
 surface_material_override/0 = SubResource( "StandardMaterial3D_4ysa8" )
-script = ExtResource( "3_oclbv" )
+
+[node name="layer_box1_2247569959" type="Node3D" parent="Foliage3D"]
+
+[node name="box1_1" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.10134, 0, -9.7067)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_2" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.73892, 0, 3.79842)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_3" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.9303, 0, -7.68823)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_4" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.91138, 0, -28.5556)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_5" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.69047, 0, 2.25797)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_6" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.5958, 0, 6.0207)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_7" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.83782, 0, -8.72771)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_8" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.3067, 0, -16.8947)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_9" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.2403, 3.8147e-06, -15.7531)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_10" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.3345, 3.8147e-06, -14.9936)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_11" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.5755, 0, -13.2663)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_12" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.3851, 0, -9.84619)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_13" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.8491, 0, -6.11147)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_14" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9497, 0, -2.92305)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_15" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.9694, 0, 0.17267)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_16" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.7879, 0, 2.75854)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_17" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.815, 0, 4.65694)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_18" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.8949, 0, 6.45285)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_19" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.9999, 0, 7.94976)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_20" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.1799, 0, 9.18787)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_21" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.4531, 0, 10.1335)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_22" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.662, 0, 10.9798)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_23" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.695, 0, 11.8401)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_24" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3689, 0, 12.7483)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_25" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.8117, 0, 13.5971)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_26" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.3722, 0, 14.264)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_27" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4362, 0, 14.8561)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_28" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.98895, 0, 15.3217)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_29" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.91667, 0, 15.5531)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_30" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4812, 0, 15.3392)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_31" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.76094, 0, 15.0463)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_32" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.43561, 0, 14.514)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_33" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.65087, 0, 13.9269)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_34" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.52289, 0, 13.3718)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_35" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.94285, 0, 12.9641)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_36" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7342, 0, 12.6202)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_37" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7645, 0, -17.4028)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_38" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4917, 0, -17.4797)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_39" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.4265, 0, -17.3263)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_40" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.1111, 0, -17.3616)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_41" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.7284, 0, -17.4995)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_42" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.4545, 0, -17.5369)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_43" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.3747, 0, -17.2654)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_44" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.8993, 0, -16.5205)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_45" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.6903, 0, -15.5035)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_46" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.3713, 0, -14.298)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_47" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.4442, 0, -12.9709)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_48" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.0924, 0, -11.3554)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_49" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.5087, 0, -9.59741)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_50" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.6887, 0, -8.07151)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_51" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.7106, 0, -6.16289)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_52" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.5231, 0, -4.48684)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_53" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.1387, 0, -3.01735)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_54" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.7966, 0, -1.68221)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_55" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.3298, 0, -0.525459)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_56" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.6402, 0, 0.760731)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_57" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.7569, 0, 2.29507)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_58" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34.7096, 0, 3.85077)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_59" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.6906, 0, 5.21829)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_60" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.5386, 0, 6.72958)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_61" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.345, 0, 8.2988)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_62" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.0427, 0, 9.81379)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_63" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.9051, 0, 11.2506)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_64" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.9098, 0, 12.4671)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_65" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.1816, 0, 13.3259)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_66" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.536, 0, 14.1081)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_67" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3697, 0, 7.19996)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_68" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6207, 0, 6.10139)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_69" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1135, 0, 5.25901)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_70" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5266, 0, 4.4665)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_71" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.9434, 0, 3.37675)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_72" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.219, 0, 2.18983)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_73" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5343, 0, 0.876326)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_74" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5665, 0, -0.619719)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_75" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2917, 0, -2.48545)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_76" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.0135, 0, -4.29206)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_77" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.6681, 0, -6.10556)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_78" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.55381, 0, -7.66497)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_79" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.62445, 0, -9.021)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_80" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.57981, 0, -10.5221)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_81" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.72857, 0, -12.0026)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_82" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.09326, 0, -13.3461)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_83" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.36637, 0, -14.6145)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_84" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.52578, 0, -16.032)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_85" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.84132, 0, -17.276)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_86" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.06612, 0, -18.4257)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_87" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.25523, 0, -19.7348)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_88" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.09462, 0, -20.9184)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_89" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.244989, 0, -22.1726)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_90" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.06661, 0, -23.4179)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_91" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.32862, 0, -24.7098)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_92" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.89906, 0, -26.0129)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_93" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.51789, 0, -27.3563)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_94" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.43547, 0, -28.558)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_95" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.15231, 0, -29.497)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_96" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8344, 0, -30.136)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_97" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.8144, 0, -31.0919)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_98" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.603, 0, -31.9232)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_99" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.6223, 0, -32.7512)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_100" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.6824, 0, -33.5962)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_101" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.7294, 0, -34.2831)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_102" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6111, 0, -35.0026)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_103" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.8968, 0, -35.4259)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_104" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.3116, 0, 5.48923)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_105" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.34249, 0, 4.77169)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_106" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27573, 0, 3.97312)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_107" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.558688, 0, 2.64169)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_108" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.68828, 0, 0.881348)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_109" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.91415, 0, -1.15189)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_110" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.28439, 0, -3.58653)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_111" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.68864, 0, -6.22028)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_112" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.9944, 0, -8.88295)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_113" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.0946, 0, -11.5652)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_114" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.8031, 0, -13.5549)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_115" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.9885, 0, -15.3446)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_116" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.0168, 0, -16.855)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_117" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.2127, 0, -18.5396)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_118" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.2295, 3.8147e-06, -19.9068)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_119" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.1041, 0, -21.3364)
+mesh = SubResource( "BoxMesh_musxv" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_120" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.261, 0, 7.33727)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_121" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.3803, 0, 17.481)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_122" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.92355, 0, 7.57898)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_123" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.90916, 0, 9.61369)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_124" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.1046, 0, 12.7748)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_125" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.3105, 0, -8.53795)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_126" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.36254, 0, -10.9448)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_127" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.4545, 0, -23.16)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_128" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.1947, 0, -33.959)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_129" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.9266, 0, -34.3142)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_130" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4365, 0, -33.6752)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_131" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5596, 0, -32.526)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_132" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.6541, 0, -31.131)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_133" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.2472, 0, -29.8782)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_134" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.0658, 0, -28.5664)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_135" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.0004, 0, -26.6788)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_136" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 33.1362, 0, -25.04)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_137" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.7918, 0, -23.548)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_138" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.6802, 0, -22.6063)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_139" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.2716, 0, -22.1058)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_140" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.0968, 0, -21.1953)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_141" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.5807, 0, -46.0604)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_142" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.1367, 0, -46.0165)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_143" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.0483, 0, -45.7301)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_144" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.7805, 0, -45.0645)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_145" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.2527, 0, -44.0456)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_146" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4141, 0, -42.3226)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_147" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.41592, 0, -40.4998)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_148" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.61189, 0, -38.906)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_149" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.28383, 0, -37.6603)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"
+
+[node name="box1_150" type="MeshInstance3D" parent="Foliage3D/layer_box1_2247569959" instance=ExtResource( "2_4q17q" )]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.72324, 0, -37.0393)
+mesh = SubResource( "BoxMesh_vxrlo" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_54yh4" )
+metadata/path = "res://demo/elements/box1.tscn"

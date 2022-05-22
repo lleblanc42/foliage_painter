@@ -12,12 +12,12 @@ _global_script_classes=[{
 "base": "RefCounted",
 "class": &"ElementProperty",
 "language": &"GDScript",
-"path": "res://addons/zylann.scatter/ui/element_property.gd"
+"path": "res://addons/foliage_painter/ui/element_property.gd"
 }, {
 "base": "Control",
 "class": &"Palette",
 "language": &"GDScript",
-"path": "res://addons/zylann.scatter/tools/palette.gd"
+"path": "res://addons/foliage_painter/ui/palette.gd"
 }]
 _global_script_class_icons={
 "ElementProperty": "",
@@ -27,7 +27,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Scatter plugin"
-config/icon="res://addons/zylann.scatter/tools/icons/icon_scatter3d_node.svg"
+config/icon="res://addons/foliage_painter/icons/icon_scatter3d_node.svg"
 config/features=PackedStringArray("4.0")
 
 [display]

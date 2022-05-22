@@ -1,10 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://4288psv8yhbx"]
+[gd_scene load_steps=7 format=3 uid="uid://b2roa2qw1r57p"]
 
-[ext_resource type="Script" path="res://addons/zylann.scatter/tools/palette.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/zylann.scatter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/zylann.scatter/tools/icons/paint32.png" id="3_30bq8"]
-[ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/zylann.scatter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/zylann.scatter/tools/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Script" path="res://addons/foliage_painter/ui/palette.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/foliage_painter/ui/toolItem.tscn" id="2_fnbg1"]
+[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/foliage_painter/ui/btn_group/tool_group.tres" id="3_yna7w"]
+[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)
@@ -32,50 +32,41 @@ color = Color(0.156863, 0.156863, 0.156863, 1)
 [node name="ToolContainer" type="MarginContainer" parent="VBoxContainer/ToolBG"]
 offset_right = 148.0
 offset_bottom = 46.0
-theme_override_constants/margin_top = 10
+theme_override_constants/margin_top = 7
 theme_override_constants/margin_left = 11
 metadata/_edit_layout_mode = 1
 
 [node name="toolList" type="GridContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
 minimum_size = Vector2(0, 32)
 offset_left = 11.0
-offset_top = 10.0
+offset_top = 7.0
 offset_right = 159.0
-offset_bottom = 56.0
+offset_bottom = 53.0
 theme_override_constants/h_separation = 14
 columns = 6
 
 [node name="Paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
+offset_right = 40.0
 button_group = ExtResource( "3_yna7w" )
+icon = ExtResource( "3_30bq8" )
 
-[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" index="0"]
-visible = false
-
-[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" index="1"]
-texture = ExtResource( "3_30bq8" )
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" index="0"]
+text = "Paint"
 
 [node name="Single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 54.0
 offset_right = 94.0
 button_pressed = true
 button_group = ExtResource( "3_yna7w" )
+icon = ExtResource( "4_q04a5" )
 
-[node name="icon" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Single" index="1"]
-texture = ExtResource( "4_q04a5" )
-
-[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Single" index="2"]
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Single" index="0"]
 text = "Single"
 
 [node name="Erase" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
 offset_left = 108.0
 offset_right = 148.0
 button_group = ExtResource( "3_yna7w" )
-
-[node name="status" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" index="0"]
-visible = false
-
-[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" index="2"]
-text = "Erase"
 
 [node name="ToolDetail" type="VBoxContainer" parent="VBoxContainer"]
 offset_top = 73.0
@@ -112,7 +103,8 @@ offset_right = 187.0
 offset_bottom = 31.0
 min_value = 1.0
 max_value = 8192.0
-value = 100.0
+value = 20.0
+editable = false
 
 [node name="ColorRect2" type="ColorRect" parent="VBoxContainer/ToolDetail"]
 minimum_size = Vector2(0, 3)

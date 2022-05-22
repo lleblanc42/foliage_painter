@@ -8,14 +8,14 @@ enum MODE {
 
 const FOLIAGE_NAME:String = "Foliage3D"
 const BRUSH_NAME:String = "Brush"
-const Foliage3D = preload("res://addons/zylann.scatter/foliage3d.gd")
-const PaletteScene = preload("res://addons/zylann.scatter/tools/palette.tscn")
-var Brush3D = preload("res://addons/zylann.scatter/mesh/brush.tscn")
+const Foliage3D = preload("./ui/foliage3d.gd")
+const PaletteScene = preload("./ui/palette.tscn")
+var Brush3D = preload("./mesh/brush.tscn")
 #左侧素材列表
-var _palette:Palette = preload("res://addons/zylann.scatter/tools/palette.tscn").instantiate()
+var _palette:Palette = preload("./ui/palette.tscn").instantiate()
 #顶部模式选择UI
-var _topui = preload("res://addons/zylann.scatter/tools/topui.tscn").instantiate()
-const Util = preload("../util/util.gd")
+var _topui = preload("./ui/topui.tscn").instantiate()
+const Util = preload("./util/util.gd")
 
 #const ACTION_PAINT = 0
 #const ACTION_ERASE = 1
@@ -40,7 +40,7 @@ var mouse_left_pressed:bool = false
 var mouse_right_pressed:bool = false
 
 static func get_icon(name):
-	return load("res://addons/zylann.scatter/tools/icons/icon_" + name + ".svg")
+	return load("res://addons/foliage_painter/icons/icon_" + name + ".svg")
 
 
 func _enter_tree():
@@ -57,15 +57,16 @@ func _enter_tree():
 	
 	var base_control = get_editor_interface().get_base_control()
 
-	_palette.connect("patterns_selected", _on_Palette_patterns_selected)
-	_palette.connect("pattern_added", _on_Palette_pattern_added)
-	_palette.connect("patterns_removed", _on_Palette_patterns_removed)
+	_palette.connect("elements_selected", _on_Palette_element_selected)
+	_palette.connect("element_added", _on_Palette_element_added)
+	_palette.connect("elements_removed", _on_Palette_patterns_removed)
+	_palette.connect("brush_size_changed", _on_Brush_size_changed)
 	_palette.hide()
 	add_control_to_container(CustomControlContainer.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT,_palette)
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
 	_palette.call_deferred("setup_dialogs", base_control)
 	
-	show_sphere(false)
+	show_brush(false)
 	
 	set_input_event_forwarding_always_enabled()
 
@@ -91,15 +92,15 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 	if foliage == null:
 		return false
 	if _selected_elements.size() == 0:
-		show_sphere(false)
+		show_brush(false)
 		return false
 	
 	if mouse_right_pressed:
-		show_sphere(false)
+		show_brush(false)
 		if not (p_event is InputEventMouseButton and not p_event.pressed and p_event.button_index == MOUSE_BUTTON_RIGHT):
 			return false
 	elif mouse_right_pressed == false and brush.visible == false:
-		show_sphere(true)
+		show_brush(true)
 
 	#射线检测
 	if p_event is InputEventMouseMotion:
@@ -205,7 +206,7 @@ func _paint(hit:Dictionary):
 				print("too_close: ",too_close)
 
 		if not too_close:
-			var instance:MeshInstance3D = _create_pattern_instance()
+			var instance:MeshInstance3D = _create_element_instance()
 			var path = instance.get_meta("path")
 
 			#get scene path hash code
@@ -348,7 +349,7 @@ static func get_scatter_child_instance(node, scatter_root):
 	return null
 
 
-func _set_selected_patterns(patterns):
+func _set_selected_elements(patterns):
 	if _selected_elements != patterns:
 		_selected_elements = patterns
 		var largest_aabb = AABB()
@@ -361,7 +362,7 @@ func _set_selected_patterns(patterns):
 		_pattern_margin = largest_aabb.size.length() * 0.4
 
 
-func _create_pattern_instance():
+func _create_element_instance():
 	var rand:int = randi_range(0,_selected_elements.size() - 1)
 	var ins = _selected_elements[rand].instantiate()
 	var path = _selected_elements[rand].get_meta("path")
@@ -369,19 +370,19 @@ func _create_pattern_instance():
 	return ins
 
 
-func _on_Palette_patterns_selected(pattern_paths):
+func _on_Palette_element_selected(pattern_paths):
 	var scenes = []
 	for file in pattern_paths:
 		var packet = load(file)
 		packet.set_meta("path",file)
 		scenes.append(packet)
-	_set_selected_patterns(scenes)
+	_set_selected_elements(scenes)
 
 
-func _on_Palette_pattern_added(path):
-	if not _verify_scene(path):
+func _on_Palette_element_added(path):
+	if not _verify_element(path):
 		return
-	_add_pattern(path)
+	_add_element(path)
 	# TODO Duh, may not work if the file was moved or renamed... I'm tired of this
 #	var ur = get_undo_redo()
 #	ur.create_action("Add scatter pattern")
@@ -392,7 +393,7 @@ func _on_Palette_pattern_added(path):
 
 func _on_Palette_patterns_removed(paths):
 	for path in paths:
-		_remove_pattern(path)
+		_remove_element(path)
 #	var ur = get_undo_redo()
 #	ur.create_action("Remove scatter pattern")
 #	for path in paths:
@@ -401,17 +402,19 @@ func _on_Palette_patterns_removed(paths):
 #	ur.commit_action()
 
 
-func _add_pattern(path):
+func _add_element(path):
 	foliage.add_pattern(path)
 	_palette.add_pattern(path)
 
 
-func _remove_pattern(path):
-	foliage.remove_pattern(path)
-	_palette.remove_pattern(path)
+func _remove_element(path):
+	foliage.remove_element(path)
+	_palette.remove_element(path)
 
+func _on_Brush_size_changed():
+	pass
 
-func _verify_scene(fpath):
+func _verify_element(fpath):
 	# Check it can be loaded
 	var scene = load(fpath)
 	if scene == null:
@@ -419,10 +422,10 @@ func _verify_scene(fpath):
 		return false
 
 	# Check it's not already in the list
-#	if foliage.has_pattern(fpath):
-#		_palette.select_pattern(fpath)
-#		_show_error(tr("The selected scene is already in the palette"))
-#		return false
+	if foliage.has_element(fpath):
+		_palette.select_element(fpath)
+		print("The selected scene is already in the palette")
+		return false
 
 	# Check it's not the current scene itself
 	if Util.is_self_or_parent_scene(fpath, foliage):
@@ -454,7 +457,7 @@ func _on_toggle_mode(id):
 func select_mode():
 #	set_physics_process(false)
 	_palette.set_visible(false)
-	show_sphere(false)
+	show_brush(false)
 
 func foliage_mode():
 	#获取主场景
@@ -481,7 +484,7 @@ func foliage_mode():
 	
 	readd_element()
 	_palette.set_visible(true)
-	show_sphere(true)
+	show_brush(true)
 #	set_physics_process(true)
 
 #切换工具时重新给面板赋值
@@ -507,8 +510,8 @@ func readd_element():
 			num = layer.get_child_count()
 		dic["number"] = num
 		element_list.append(dic)
-	_palette.load_patterns(element_list)
+	_palette.load_elements(element_list)
 
-func show_sphere(value:bool):
+func show_brush(value:bool):
 	if brush:
 		brush.visible = value

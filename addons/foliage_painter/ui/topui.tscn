@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cinqj7ed56wp6"]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://addons/zylann.scatter/tools/topui.gd" id="1_gksi4"]
-[ext_resource type="Texture2D" uid="uid://coq3dm3c6khnq" path="res://addons/zylann.scatter/tools/icons/select.png" id="2_t60t4"]
-[ext_resource type="ButtonGroup" uid="uid://c8ut3maeljkms" path="res://addons/zylann.scatter/ui/btn_group/mode_group.tres" id="2_whs2j"]
-[ext_resource type="Texture2D" uid="uid://ccs6rjoe2vfon" path="res://addons/zylann.scatter/tools/icons/foliage.png" id="3_xx46d"]
+[ext_resource type="Script" path="res://addons/foliage_painter/ui/topui.gd" id="1_gksi4"]
+[ext_resource type="Texture2D" path="res://addons/foliage_painter/icons/select.png" id="2_t60t4"]
+[ext_resource type="ButtonGroup" uid="uid://c8ut3maeljkms" path="res://addons/foliage_painter/ui/btn_group/mode_group.tres" id="2_whs2j"]
+[ext_resource type="Texture2D" path="res://addons/foliage_painter/icons/foliage.png" id="3_xx46d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dabuw"]
 bg_color = Color(0, 0.611765, 1, 1)

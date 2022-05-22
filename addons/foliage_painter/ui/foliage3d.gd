@@ -19,16 +19,15 @@ func _remove_dangling_patterns():
 			i += 1
 	if changed:
 		notify_property_list_changed()
-#		property_list_changed_notify()
 
 func get_elements():
 	return _scenes
 
-func add_pattern(path):
+func add_element(path):
 	_scenes.append(load(path))
 	notify_property_list_changed()
 
-func remove_pattern(path):
+func remove_element(path):
 	for i in len(_scenes):
 		if _scenes[i].resource_path == path:
 			_scenes.remove_at(i)
@@ -36,13 +35,8 @@ func remove_pattern(path):
 			break
 
 
-func has_pattern(path):
+func has_element(path):
 	for scene in _scenes:
 		if scene.resource_path == path:
 			return true
 	return false
-	
-func clear_pattern():
-	while _scenes.size() > 0:
-		_scenes.remove_at(0)
-	notify_property_list_changed()

@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dry231rfgbx18"]
+[gd_scene load_steps=4 format=3]
 
-[ext_resource type="Script" path="res://addons/zylann.scatter/mesh/brush.gd" id="1_fay1c"]
+[ext_resource type="Script" path="res://addons/foliage_painter/mesh/brush.gd" id="1_fay1c"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_vdlqv"]
 radius = 1.0

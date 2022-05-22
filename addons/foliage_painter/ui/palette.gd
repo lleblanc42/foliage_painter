@@ -6,13 +6,13 @@ const PAINT = "Paint"
 const SINGLE = "Single"
 const ERASE = "Erase"
 
-const btn_group = preload("res://addons/zylann.scatter/ui/btn_group/element_group.tres")
-const element_res = preload("res://addons/zylann.scatter/ui/element.tscn")
+const btn_group = preload("./btn_group/element_group.tres")
+const element_res = preload("element.tscn")
 
-signal patterns_selected(pattern_paths)
-signal pattern_added(path)
-signal patterns_removed(path)
-signal brush_size_change()
+signal elements_selected(pattern_paths)
+signal element_added(path)
+signal elements_removed(path)
+signal brush_size_changed()
 
 #工具列表
 @onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/toolList
@@ -56,12 +56,13 @@ func _ready():
 func initTool():
 	for node in toolList.get_children():
 		if node.name == SINGLE:
-			node.get_node("status").visible = true
 			node.button_pressed = true
 			tool_mode = SINGLE
 			toolName.text = SINGLE
+			node.get_node("nameLabel")
 		else:
-			node.get_node("status").visible = false
+			pass
+#			node.button_pressed = false
 		toggle_tool()
 
 func setup_dialogs(base_control):
@@ -87,7 +88,7 @@ func _exit_tree():
 		_file_dialog.queue_free()
 		_file_dialog = null
 
-func load_patterns(patterns):
+func load_elements(patterns):
 	for node in elementsList.get_children():
 		node.disconnect("element_select",_on_element_selected)
 		node.disconnect("show_property",_on_show_element_property)
@@ -95,10 +96,10 @@ func load_patterns(patterns):
 
 	for dic in patterns:
 		pass
-		add_pattern(dic["path"],dic["selected"],dic["number"])
+		add_element(dic["path"],dic["selected"],dic["number"])
 
 
-func add_pattern(scene_path,is_selected:bool=false,number:int=0):
+func add_element(scene_path,is_selected:bool=false,number:int=0):
 	var element = element_res.instantiate()
 	var godot_theme = EditorPlugin.new().get_editor_interface().get_base_control().theme
 	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons")
@@ -135,7 +136,7 @@ func _on_show_element_property(index):
 	show_property(element.name,element.property)
 	pass
 
-func remove_pattern(scene_path):
+func remove_element(scene_path):
 	print("在remove里被调用")
 	var i = find_elment_index(scene_path)
 	if i != -1:
@@ -151,7 +152,7 @@ func find_elment_index(path):
 		if child.path == path:
 			return child.index
 
-func select_pattern(path):
+func select_element(path):
 	var i = find_elment_index(path)
 	if i != -1:
 		var element = elementsList.get_child(i)
@@ -163,7 +164,7 @@ func _on_element_selected():
 	for node in elementsList.get_children():
 		if node.selected == true:
 			selected.append(node.path)
-	emit_signal("patterns_selected", selected)
+	emit_signal("elements_selected", selected)
 
 func get_configured_margin() -> float:
 	return _margin_spin_box.value
@@ -178,18 +179,18 @@ func _on_RemoveButton_pressed():
 	for node in elementsList.get_children():
 		if node.selected == true:
 			removed.append(node.path)
-	emit_signal("patterns_removed", removed)
+	emit_signal("elements_removed", removed)
 
 
 func _on_FileDialog_file_selected(fpath):
 	print("fpath: ",fpath)
-	emit_signal("pattern_added", fpath)
+	emit_signal("element_added", fpath)
 
 
 func _on_tool_toggled(button_pressed, tool_name):
 	var node := toolList.get_node_or_null(tool_name)
 	if node != null:
-		node.get_node("status").visible = button_pressed
+#		node.get_node("status").visible = button_pressed
 		if button_pressed:
 			tool_mode = tool_name
 			toolName.text = tool_name
@@ -213,7 +214,7 @@ func _on_brush_size_spin_value_changed(value):
 	print("brush_size: ",value)
 	if tool_mode != SINGLE:
 		_brush_size_history = value
-	emit_signal("brush_size_change")
+	emit_signal("brush_size_changed")
 
 #显示element属性
 func show_property(base_name:String,property:ElementProperty):
