@@ -15,7 +15,6 @@ var Brush3D = preload("./mesh/brush.tscn")
 var _palette:Palette = preload("./ui/palette.tscn").instantiate()
 #顶部模式选择UI
 var _topui = preload("./ui/topui.tscn").instantiate()
-const Util = preload("./util/util.gd")
 
 #const ACTION_PAINT = 0
 #const ACTION_ERASE = 1
@@ -30,7 +29,7 @@ var _collision_mask := 1
 var _placed_instances = []
 #var _removed_instances = []
 #var _disable_undo := false
-var _pattern_margin := 0.0
+#var _pattern_margin := 0.0
 var _current_action := -1
 var _cmd_pending_action := false
 #可以绘制
@@ -165,7 +164,7 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 	var hit_instance_root
 	# Collider can be null if the hit is on something that has no associated node
 	if hit.collider != null:
-		hit_instance_root = Util.get_instance_root(hit.collider)
+		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
 	
 	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
 		var pos = hit.position
@@ -190,7 +189,7 @@ func _paint(hit:Dictionary):
 	var hit_instance_root
 	# Collider can be null if the hit is on something that has no associated node
 	if hit.collider != null:
-		hit_instance_root = Util.get_instance_root(hit.collider)
+		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
 
 	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
 		var pos = hit.position
@@ -199,9 +198,11 @@ func _paint(hit:Dictionary):
 		# but should be good enough and cheap
 		var too_close = false
 		if _palette.mode != MODE.SELECT_MODE and  len(_placed_instances) != 0:
-			var last_placed_transform := (_placed_instances[-1] as Node3D).global_transform
-			var margin = _pattern_margin + _palette.get_configured_margin()
-			if last_placed_transform.origin.distance_to(pos) < margin:
+			var node:Node3D = _placed_instances[-1]
+			var last_path = node.get_meta("path")
+			var last_property:ElementProperty = _palette.get_element_property(last_path)
+			var last_placed_transform := node.global_transform
+			if last_placed_transform.origin.distance_to(pos) < last_property.radius:
 				too_close = true
 				print("too_close: ",too_close)
 
@@ -357,9 +358,9 @@ func _set_selected_elements(patterns):
 			var temp = pattern.instantiate()
 			# TODO This causes errors because of accessing `global_transform` outside the tree... Oo
 			# See https://github.com/godotengine/godot/issues/30445
-			largest_aabb = largest_aabb.merge(Util.get_scene_aabb(temp))
+			largest_aabb = largest_aabb.merge(FoliagePrinterUtil.get_scene_aabb(temp))
 			temp.free()
-		_pattern_margin = largest_aabb.size.length() * 0.4
+#		_pattern_margin = largest_aabb.size.length() * 0.4
 
 
 func _create_element_instance():
@@ -429,7 +430,7 @@ func _verify_element(fpath):
 		return false
 
 	# Check it's not the current scene itself
-	if Util.is_self_or_parent_scene(fpath, foliage):
+	if FoliagePrinterUtil.is_self_or_parent_scene(fpath, foliage):
 		print("The selected scene can't be added recursively")
 		return false
 

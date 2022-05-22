@@ -8,9 +8,9 @@ height = 2.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ysa8"]
 transparency = 1
-albedo_color = Color(0.745098, 0.72549, 1, 0.490196)
-emission_enabled = true
-emission = Color(0.745098, 0.882353, 1, 1)
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(1, 0.996078, 0.85098, 0.490196)
 
 [node name="Brush" type="MeshInstance3D"]
 mesh = SubResource( "SphereMesh_vdlqv" )

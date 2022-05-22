@@ -1,4 +1,5 @@
 @tool
+class_name FoliagePrinterUtil
 
 static func get_scene_aabb(node, aabb=AABB(), parent_transform=Transform3D()):
 	if not node.visible:

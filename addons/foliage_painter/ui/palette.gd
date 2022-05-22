@@ -18,23 +18,23 @@ signal brush_size_changed()
 @onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/toolList
 #场景元素列表
 @onready var elementsList:GridContainer = $VBoxContainer/ScrollContainer/ElementsList
-@onready var _margin_spin_box : SpinBox = $VBoxContainer/MarginContainer/MarginSpinBox
+#@onready var _margin_spin_box : SpinBox = $VBoxContainer/MarginContainer/MarginSpinBox
 #工具名字
 @onready var toolName:Label = $VBoxContainer/ToolDetail/ToolName
 #笔刷大小
 @onready var brushSize:SpinBox = $VBoxContainer/ToolDetail/HBoxContainer/BrushSizeSpin
 #属性面板
-@onready var propertyPanel:VBoxContainer = $VBoxContainer/PropertyPanel
+@onready var propertyPanel:VBoxContainer = $VBoxContainer/PropertyBG/PropertyPanel
 
-@onready var element_name:Label = $VBoxContainer/PropertyPanel/NameLabel
-@onready var density:SpinBox = $VBoxContainer/PropertyPanel/DensityBox/densitySpin
-@onready var radius:SpinBox = $VBoxContainer/PropertyPanel/RadiusBox/radiusSpin
-@onready var yOffset_min:SpinBox = $VBoxContainer/PropertyPanel/YOffsetBox/minSpin
-@onready var yOffset_max:SpinBox = $VBoxContainer/PropertyPanel/YOffsetBox/maxSpin
-@onready var scale_min:SpinBox = $VBoxContainer/PropertyPanel/ScaleBox/minSpin
-@onready var scale_max:SpinBox = $VBoxContainer/PropertyPanel/ScaleBox/MaxSpin
-@onready var rotate_min:SpinBox = $VBoxContainer/PropertyPanel/RotateBox/minSpin
-@onready var rotate_max:SpinBox = $VBoxContainer/PropertyPanel/RotateBox/MaxSpin
+@onready var element_name:Label = $VBoxContainer/PropertyBG/PropertyPanel/NameLabel
+@onready var density:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/DensityBox/densitySpin
+@onready var radius:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/RadiusBox/radiusSpin
+@onready var yOffset_min:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/minSpin
+@onready var yOffset_max:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/maxSpin
+@onready var scale_min:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/ScaleBox/minSpin
+@onready var scale_max:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/ScaleBox/MaxSpin
+@onready var rotate_min:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/RotateBox/minSpin
+@onready var rotate_max:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/RotateBox/MaxSpin
 
 #正在被选择显示属性的element index
 var selected_element_index:int = -1
@@ -166,8 +166,8 @@ func _on_element_selected():
 			selected.append(node.path)
 	emit_signal("elements_selected", selected)
 
-func get_configured_margin() -> float:
-	return _margin_spin_box.value
+#func get_configured_margin() -> float:
+#	return _margin_spin_box.value
 
 
 func _on_AddButton_pressed():

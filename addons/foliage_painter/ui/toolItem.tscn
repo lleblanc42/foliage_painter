@@ -13,7 +13,9 @@ corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
-expand_margin_bottom = 8.0
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 12.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t5m28"]
 bg_color = Color(0.14902, 0.14902, 0.14902, 1)
@@ -26,7 +28,9 @@ corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
-expand_margin_bottom = 8.0
+expand_margin_left = 4.0
+expand_margin_right = 4.0
+expand_margin_bottom = 12.0
 
 [node name="ToolItem" type="Button"]
 minimum_size = Vector2(40, 46)
@@ -51,6 +55,8 @@ offset_right = 1.0
 offset_bottom = 13.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Erase"
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 1
+text = "Single"
 horizontal_alignment = 1
 metadata/_edit_layout_mode = 1
