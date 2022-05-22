@@ -12,7 +12,7 @@ Installation
 --------------
 
 This is a regular editor plugin.
-Copy the contents of `addons/zylann.scatter` into the same folder in your project, and activate it in your project settings.
+Copy the contents of `addons/foliage_painter` into the same folder in your project, and activate it in your project settings.
 
 
 How to use
