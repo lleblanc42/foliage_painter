@@ -1,6 +1,12 @@
 @tool
 extends Node3D
 
+signal show_block(bool)
+
+@export var _checkBox:bool = false:
+	set(value):
+		_checkBox = value
+		emit_signal("show_block",value)
 @export var _scenes:Array[PackedScene] = []
 
 func _ready():
@@ -40,3 +46,6 @@ func has_element(path):
 		if scene.resource_path == path:
 			return true
 	return false
+	
+func get_show_block() -> bool:
+	return _checkBox

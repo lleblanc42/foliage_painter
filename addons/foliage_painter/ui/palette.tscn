@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://addons/foliage_painter/ui/palette.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/foliage_painter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="Texture2D" uid="uid://dolyrbnhxjmb" path="res://addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
 [ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/foliage_painter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Texture2D" uid="uid://dm06gw6o1w3pi" path="res://addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)
@@ -115,7 +115,7 @@ color = Color(0.152941, 0.152941, 0.152941, 1)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 offset_top = 155.0
-offset_right = 153.0
+offset_right = 279.0
 offset_bottom = 186.0
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -130,11 +130,17 @@ offset_right = 67.0
 offset_bottom = 31.0
 text = "Add..."
 
-[node name="RemoveButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="RemoveButton2" type="Button" parent="VBoxContainer/HBoxContainer"]
 offset_left = 82.0
 offset_right = 153.0
 offset_bottom = 31.0
 text = "Remove"
+
+[node name="UpdateButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+offset_left = 168.0
+offset_right = 279.0
+offset_bottom = 31.0
+text = "Update Block"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 offset_top = 193.0
@@ -359,7 +365,8 @@ step = 0.05
 [connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" to="." method="_on_tool_toggled" binds= ["Erase"]]
 [connection signal="value_changed" from="VBoxContainer/ToolDetail/HBoxContainer/BrushSizeSpin" to="." method="_on_brush_size_spin_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_RemoveButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton2" to="." method="_on_RemoveButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/UpdateButton" to="." method="_on_update_button_pressed"]
 [connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/DensityBox/densitySpin" to="." method="_on_property_changed" binds= ["density"]]
 [connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/RadiusBox/radiusSpin" to="." method="_on_property_changed" binds= ["radius"]]
 [connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/minSpin" to="." method="_on_property_changed" binds= ["yOffsetMin"]]

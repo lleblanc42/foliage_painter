@@ -8,20 +8,21 @@ enum MODE {
 
 const FOLIAGE_NAME:String = "Foliage3D"
 const BRUSH_NAME:String = "Brush"
+const BLOCK_NAME:String = "Block"
 const Foliage3D = preload("./ui/foliage3d.gd")
 const PaletteScene = preload("./ui/palette.tscn")
+#const Octree = preload("./scripts/octree.gd")
 var Brush3D = preload("./mesh/brush.tscn")
 #左侧素材列表
 var _palette:Palette = preload("./ui/palette.tscn").instantiate()
 #顶部模式选择UI
 var _topui = preload("./ui/topui.tscn").instantiate()
 
-#const ACTION_PAINT = 0
-#const ACTION_ERASE = 1
-
 #绘制根节点
 var foliage : Foliage3D
 var brush:MeshInstance3D
+#分块计算逻辑
+var block:Block = null
 var _selected_elements := []
 var _mouse_position := Vector2()
 #var _editor_camera : Camera3D
@@ -29,7 +30,6 @@ var _collision_mask := 1
 var _placed_instances = []
 #var _removed_instances = []
 #var _disable_undo := false
-#var _pattern_margin := 0.0
 var _current_action := -1
 var _cmd_pending_action := false
 #可以绘制
@@ -37,6 +37,7 @@ var start_paint:bool = true
 
 var mouse_left_pressed:bool = false
 var mouse_right_pressed:bool = false
+
 
 static func get_icon(name):
 	return load("res://addons/foliage_painter/icons/icon_" + name + ".svg")
@@ -50,8 +51,6 @@ func _enter_tree():
 	_topui.connect("toggle_mode",_on_toggle_mode)
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	
-	# The class is globally named but still need to register it just so the node creation dialog gets it
-	# https://github.com/godotengine/godot/issues/30048
 	add_custom_type("Foliage3D", "Node3D", Foliage3D, get_icon("scatter3d_node"))
 	
 	var base_control = get_editor_interface().get_base_control()
@@ -65,6 +64,8 @@ func _enter_tree():
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
 	_palette.call_deferred("setup_dialogs", base_control)
 	
+	#初始化分块计算逻辑
+	init_block()
 	show_brush(false)
 	
 	set_input_event_forwarding_always_enabled()
@@ -122,19 +123,17 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			if p_event.button_index == MOUSE_BUTTON_LEFT:
 				mouse_left_pressed = true
 				captured_event = true
-				_paint(hit)
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = true
 		else:
 			if p_event.button_index == MOUSE_BUTTON_LEFT:
 				mouse_left_pressed = false
-#				start_peint = false
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = false
-				
-	if _palette.tool_mode == _palette.PAINT:
-		start_paint = true
-	elif _palette.tool_mode == _palette.ERASE:
+	
+	if _palette.tool_mode == _palette.SINGLE:
+		_paint(hit)
+	else:
 		start_paint = true
 				
 	#如果鼠标左键按下
@@ -210,13 +209,9 @@ func _paint(hit:Dictionary):
 			var instance:MeshInstance3D = _create_element_instance()
 			var path = instance.get_meta("path")
 
-			#get scene path hash code
-			var base_name = path.get_file().get_basename()
-			var pash_hash:int = path.hash()
-			var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
-#			print("layer_name: ",layer_name)
+			var layer_name:String = get_layer_name(path)
 			var layer = foliage.get_node_or_null(layer_name)
-#			print("layer: ",layer)
+			
 			if layer == null:
 				print("添加Layer")
 				layer = Node3D.new()
@@ -240,7 +235,7 @@ func _paint(hit:Dictionary):
 			instance.scale = Vector3(s,s,s)
 			
 			layer.add_child(instance)
-			instance.name = "%s_%d" % [base_name,layer.get_child_count()]
+#			instance.name = "%s_%d" % [base_name,layer.get_child_count()]
 	#			foliage.add_child(instance)
 			instance.owner = get_editor_interface().get_edited_scene_root()
 			var count = layer.get_child_count()
@@ -337,10 +332,14 @@ func _erase(ray_origin: Vector3, ray_dir: Vector3):
 #	for instance in instances_data:
 #		parent.add_child(instance)
 
+func init_block():
+	block = Block.new(8,40,1)
+	if foliage:
+		block.update(foliage)
 
 # Goes up the tree from the given node and finds the first Scatter layer,
 # then return the immediate child of it from which the node is child of
-static func get_scatter_child_instance(node, scatter_root):
+func get_scatter_child_instance(node, scatter_root):
 	var parent = node
 	while parent != null:
 		parent = node.get_parent()
@@ -465,6 +464,7 @@ func foliage_mode():
 	#获取主场景
 	var root = get_editor_interface().get_edited_scene_root()
 	var f = root.get_node_or_null(FOLIAGE_NAME)
+	#植被根节点
 	if f == null:
 		print("没有Foliage3D")
 		foliage = Foliage3D.new()
@@ -473,7 +473,7 @@ func foliage_mode():
 		foliage.owner = root
 	else:
 		foliage = f
-	
+	#刷子
 	var b = foliage.get_node_or_null(BRUSH_NAME)
 	if b == null:
 		print("没有Brush")
@@ -503,11 +503,11 @@ func readd_element():
 				select = true
 				break
 		dic["selected"] = select
-		var base_name = scene.resource_path.get_file().get_basename()
-		var pash_hash:int = scene.resource_path.hash()
-		var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
-#			print("layer_name: ",layer_name)
-		var layer = foliage.get_node_or_null(layer_name)
+		var layer = get_layer(scene.resource_path)
+#		var base_name = scene.resource_path.get_file().get_basename()
+#		var pash_hash:int = scene.resource_path.hash()
+#		var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
+#		var layer = foliage.get_node_or_null(layer_name)
 		var num:int = 0
 		if layer:
 			num = layer.get_child_count()
@@ -515,6 +515,20 @@ func readd_element():
 		element_list.append(dic)
 	_palette.load_elements(element_list)
 
+#显示刷子
 func show_brush(value:bool):
 	if brush:
 		brush.visible = value
+
+#根据地址获取layer name
+func get_layer_name(path:String) -> String:
+	var base_name = path.get_basename()
+	var pash_hash:int = path.hash()
+	var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
+	return layer_name
+
+#根据地址获取layer
+func get_layer(path:String) -> Node3D:
+	var layer_name:String = get_layer_name(path)
+	var layer = foliage.get_node_or_null(layer_name)
+	return layer

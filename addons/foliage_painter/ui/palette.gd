@@ -255,3 +255,7 @@ func update_element_number(path:String,value:int):
 	if i != -1:
 		var node = elementsList.get_child(i)
 		node.update_number(value)
+
+#更新八叉树数据
+func _on_update_button_pressed():
+	pass # Replace with function body.

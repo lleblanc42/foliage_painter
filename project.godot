@@ -10,6 +10,21 @@ config_version=5
 
 _global_script_classes=[{
 "base": "RefCounted",
+"class": &"Block",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/block/block.gd"
+}, {
+"base": "RefCounted",
+"class": &"BlockNode",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/block/block_node.gd"
+}, {
+"base": "RefCounted",
+"class": &"BlockSearcher",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/block/searcher.gd"
+}, {
+"base": "RefCounted",
 "class": &"ElementProperty",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/element_property.gd"
@@ -19,17 +34,17 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/util.gd"
 }, {
-"base": "Reference",
+"base": "RefCounted",
 "class": &"Octree",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/octree.gd"
 }, {
-"base": "Reference",
+"base": "RefCounted",
 "class": &"OctreeNode",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/octree_node.gd"
 }, {
-"base": "Reference",
+"base": "RefCounted",
 "class": &"OctreeSearcher",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/searcher.gd"
@@ -45,6 +60,9 @@ _global_script_classes=[{
 "path": "res://addons/foliage_painter/scripts/thread_queue.gd"
 }]
 _global_script_class_icons={
+"Block": "",
+"BlockNode": "",
+"BlockSearcher": "",
 "ElementProperty": "",
 "FoliagePrinterUtil": "",
 "Octree": "",
