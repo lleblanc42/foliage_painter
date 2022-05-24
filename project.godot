@@ -12,22 +12,46 @@ _global_script_classes=[{
 "base": "RefCounted",
 "class": &"ElementProperty",
 "language": &"GDScript",
-"path": "res://addons/foliage_painter/ui/element_property.gd"
+"path": "res://addons/foliage_painter/scripts/element_property.gd"
 }, {
 "base": "RefCounted",
 "class": &"FoliagePrinterUtil",
 "language": &"GDScript",
-"path": "res://addons/foliage_painter/util/util.gd"
+"path": "res://addons/foliage_painter/scripts/util.gd"
+}, {
+"base": "Reference",
+"class": &"Octree",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/octree.gd"
+}, {
+"base": "Reference",
+"class": &"OctreeNode",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/octree_node.gd"
+}, {
+"base": "Reference",
+"class": &"OctreeSearcher",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/searcher.gd"
 }, {
 "base": "Control",
 "class": &"Palette",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/ui/palette.gd"
+}, {
+"base": "RefCounted",
+"class": &"ThreadQueue",
+"language": &"GDScript",
+"path": "res://addons/foliage_painter/scripts/thread_queue.gd"
 }]
 _global_script_class_icons={
 "ElementProperty": "",
 "FoliagePrinterUtil": "",
-"Palette": ""
+"Octree": "",
+"OctreeNode": "",
+"OctreeSearcher": "",
+"Palette": "",
+"ThreadQueue": ""
 }
 
 [application]
