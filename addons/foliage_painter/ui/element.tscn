@@ -1,9 +1,9 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=9 format=3 uid="uid://bfj1vrqsqy18e"]
 
 [ext_resource type="Texture2D" uid="uid://ghvinfm7mlxl" path="res://icon.png" id="1_bstac"]
 [ext_resource type="Script" path="res://addons/foliage_painter/ui/element.gd" id="2_erivp"]
-[ext_resource type="Texture2D" path="res://addons/foliage_painter/icons/checkbox-check.png" id="3_5rm75"]
-[ext_resource type="Texture2D" path="res://addons/foliage_painter/icons/checkbox-no.png" id="4_tr2fl"]
+[ext_resource type="Texture2D" uid="uid://7n5xvcf706o4" path="res://addons/foliage_painter/icons/checkbox-check.png" id="3_5rm75"]
+[ext_resource type="Texture2D" uid="uid://c1i7gmd8q5dr6" path="res://addons/foliage_painter/icons/checkbox-no.png" id="4_tr2fl"]
 
 [sub_resource type="Gradient" id="Gradient_npcs4"]
 offsets = PackedFloat32Array(0.00642398, 0.997859)

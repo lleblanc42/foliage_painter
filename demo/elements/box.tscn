@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://414a16sqv27o"]
-
-[ext_resource type="ArrayMesh" uid="uid://behvh1n4gq8q7" path="res://demo/assets/meshes/box.obj" id="1_uhmvd"]
-
-[node name="box" type="MeshInstance3D"]
-mesh = ExtResource( "1_uhmvd" )

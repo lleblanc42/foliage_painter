@@ -2,9 +2,9 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_musxv"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x3vu4"]
-albedo_color = Color(0.576471, 0.556863, 0.921569, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0atoy"]
+albedo_color = Color(0, 1, 0.137255, 1)
 
 [node name="box1" type="MeshInstance3D"]
 mesh = SubResource( "BoxMesh_musxv" )
-surface_material_override/0 = SubResource( "StandardMaterial3D_x3vu4" )
+surface_material_override/0 = SubResource( "StandardMaterial3D_0atoy" )

@@ -26,12 +26,12 @@ var block:Block = null
 var _selected_elements := []
 var _mouse_position := Vector2()
 #var _editor_camera : Camera3D
-var _collision_mask := 1
-var _placed_instances = []
+#var _collision_mask := 1
+#var _placed_instances = []
 #var _removed_instances = []
 #var _disable_undo := false
-var _current_action := -1
-var _cmd_pending_action := false
+#var _current_action := -1
+#var _cmd_pending_action := false
 #可以绘制
 var start_paint:bool = true
 
@@ -115,6 +115,8 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 	var ray_distance = p_camera.far
 
 	var hit:Dictionary = ray_cast(ray_origin, ray_origin + ray_dir * ray_distance)
+	if hit.is_empty():
+		return
 
 	var captured_event = false
 	#鼠标按钮判定
@@ -123,6 +125,10 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			if p_event.button_index == MOUSE_BUTTON_LEFT:
 				mouse_left_pressed = true
 				captured_event = true
+				if _palette.tool_mode == _palette.SINGLE or _palette.tool_mode == _palette.PAINT:
+					_paint(hit)
+				else:
+					_erase()
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = true
 		else:
@@ -131,20 +137,16 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = false
 	
-	if _palette.tool_mode == _palette.SINGLE:
-		_paint(hit)
-	else:
+	if _palette.tool_mode == _palette.PAINT or _palette.tool_mode == _palette.ERASE:
 		start_paint = true
 				
 	#如果鼠标左键按下
 	if p_event is InputEventMouseMotion and mouse_left_pressed and start_paint:
+		start_paint = false
 		if _palette.tool_mode == _palette.PAINT:
-			if not hit.is_empty():
-				start_paint = false
-				_paint(hit)
+			_paint(hit)
 		elif _palette.tool_mode == _palette.ERASE:
-			pass
-#			_erase(ray_origin, ray_dir)
+			_erase()
 	
 	return captured_event
 
@@ -154,7 +156,7 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 	pt.from = ray_origin
 	pt.to = ray_origin + ray_end
 	pt.exclude = []
-	pt.collision_mask = _collision_mask
+	pt.collision_mask = 1
 	var hit = space_state.intersect_ray(pt)
 	
 	if hit.is_empty():
@@ -173,15 +175,7 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 func _paint(hit:Dictionary):
 	if len(_selected_elements) == 0:
 		return
-
-#	var space_state =  get_viewport().world_3d.direct_space_state
-#	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-#	pt.from = ray_origin
-#	pt.to = ray_origin + ray_end
-#	pt.exclude = []
-#	pt.collision_mask = _collision_mask
-#	var hit = space_state.intersect_ray(pt)
-#
+	
 #	if hit.is_empty():
 #		return
 
@@ -196,19 +190,18 @@ func _paint(hit:Dictionary):
 		# Not accurate, you might still paint stuff too close to others,
 		# but should be good enough and cheap
 		var too_close = false
-		if _palette.mode != MODE.SELECT_MODE and  len(_placed_instances) != 0:
-			var node:Node3D = _placed_instances[-1]
-			var last_path = node.get_meta("path")
-			var last_property:ElementProperty = _palette.get_element_property(last_path)
-			var last_placed_transform := node.global_transform
-			if last_placed_transform.origin.distance_to(pos) < last_property.radius:
-				too_close = true
-				print("too_close: ",too_close)
+#		if _palette.mode != MODE.SELECT_MODE:
+##			var node:Node3D = _placed_instances[-1]
+#			var last_path = node.get_meta("path")
+##			var last_property:ElementProperty = _palette.get_element_property(last_path)
+##			var last_placed_transform := node.global_transform
+#			if last_placed_transform.origin.distance_to(pos) < last_property.radius:
+#				too_close = true
+#				print("too_close: ",too_close)
 
 		if not too_close:
 			var instance:MeshInstance3D = _create_element_instance()
 			var path = instance.get_meta("path")
-
 			var layer_name:String = get_layer_name(path)
 			var layer = foliage.get_node_or_null(layer_name)
 			
@@ -238,30 +231,49 @@ func _paint(hit:Dictionary):
 #			instance.name = "%s_%d" % [base_name,layer.get_child_count()]
 	#			foliage.add_child(instance)
 			instance.owner = get_editor_interface().get_edited_scene_root()
+			#添加到分块算法里
+			block.add_element(instance)
 			var count = layer.get_child_count()
 			_palette.update_element_number(path,count)
-			_placed_instances.append(instance)
+#			_placed_instances.append(instance)
 
 
-func _erase(ray_origin: Vector3, ray_dir: Vector3):
-#	var time_before := Time.get_ticks_usec()
-	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, foliage.get_world_3d().scenario)
-#	print("hits: ",hits)
-	if len(hits) > 0:
-		var instance = null
-		for hit_object_id in hits:
-			var hit = instance_from_id(hit_object_id)
-#			print("hit: ",hit," hit.name: ",hit.name)
-			if hit is Node3D:
-				instance = get_scatter_child_instance(hit, foliage)
-				if instance != null:
-					break
-
-#		print("Hits: ", len(hits), ", instance: ", instance)
-		if instance != null:
-			assert(instance.get_parent() == foliage)
-			instance.get_parent().remove_child(instance)
-#			_removed_instances.append(instance)
+func _erase():
+	pass
+	if brush == null:
+		return
+	
+	var brush_position:Vector3 = brush.position
+	var radius:float = brush.get_radius()
+	
+	var results:Array = block.search(brush_position,radius)
+	print("找到了几个: ",len(results))
+	for element in results:
+		var e:MeshInstance3D = element as MeshInstance3D
+		e.get_surface_override_material(0)
+		
+		var new_mat:StandardMaterial3D = StandardMaterial3D.new()
+		new_mat.albedo_color = Color(1.0,0.0,0.0,1.0)
+		e.set_surface_override_material(0,new_mat)
+	
+##	var time_before := Time.get_ticks_usec()
+#	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, foliage.get_world_3d().scenario)
+##	print("hits: ",hits)
+#	if len(hits) > 0:
+#		var instance = null
+#		for hit_object_id in hits:
+#			var hit = instance_from_id(hit_object_id)
+##			print("hit: ",hit," hit.name: ",hit.name)
+#			if hit is Node3D:
+#				instance = get_scatter_child_instance(hit, foliage)
+#				if instance != null:
+#					break
+#
+##		print("Hits: ", len(hits), ", instance: ", instance)
+#		if instance != null:
+#			assert(instance.get_parent() == foliage)
+#			instance.get_parent().remove_child(instance)
+##			_removed_instances.append(instance)
 
 
 #func _on_action_completed(action: int):
@@ -403,8 +415,8 @@ func _on_Palette_patterns_removed(paths):
 
 
 func _add_element(path):
-	foliage.add_pattern(path)
-	_palette.add_pattern(path)
+	foliage.add_element(path)
+	_palette.add_element(path)
 
 
 func _remove_element(path):
@@ -522,7 +534,7 @@ func show_brush(value:bool):
 
 #根据地址获取layer name
 func get_layer_name(path:String) -> String:
-	var base_name = path.get_basename()
+	var base_name = path.get_file().get_basename()
 	var pash_hash:int = path.hash()
 	var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
 	return layer_name

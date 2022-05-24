@@ -6,3 +6,6 @@ func update_size(value:int):
 	f /= 100.0
 	mesh.radius = f
 	mesh.height = f * 2
+
+func get_radius() -> float:
+	return mesh.radius

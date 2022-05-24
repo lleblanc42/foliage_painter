@@ -17,7 +17,7 @@ var path:String = ""
 
 var selected:bool = false
 
-var property:ElementProperty = preload("element_property.gd").new()
+var property:ElementProperty = preload("../scripts/element_property.gd").new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

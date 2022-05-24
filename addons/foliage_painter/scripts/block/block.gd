@@ -9,6 +9,7 @@ var _max_items:int = 40
 var _depth:int = 2
 #节点字典
 var _nodes:Dictionary
+var searching:bool = false
 
 func _init(size := 8.0, max_items := 40,depth := 2):
 	_nodes = Dictionary()
@@ -16,18 +17,34 @@ func _init(size := 8.0, max_items := 40,depth := 2):
 	_depth = depth
 
 #添加到节点里
-func add_scene(node:Node3D):
-	var _key:String = _get_key(node.position)
+func add_element(element:Node3D):
+	var _key:String = _get_key(element.position)
 	if not _nodes.has(_key):
-		var num:Vector2 = _get_block_num(node.position)
+		var num:Vector2 = _get_block_num(element.position)
 		_nodes[_key] = BlockNode.new(null,num,_size,_max_items,_depth)
-	_nodes[_key].add_element(node)
+	_nodes[_key].add_element(element)
+	print("nodes数量: ",_nodes.size())
+	for key in _nodes.keys():
+		print("key: ",key)
 	
-func remove_scene(node:Node3D):
+func remove_element(element:Node3D):
 	pass
 	
-func search(position:Vector3,radius:float):
+func search(position:Vector3,radius:float) -> Array:
+	if searching == true:
+		print("上一次还没搜索完")
+		return []
+		
+	searching = true
 	var selected_block = _get_all_cover_block(position,radius)
+	print("刷过的图块：",len(selected_block))
+	print(selected_block)
+	var selected_elements:Array = []
+	for node in selected_block:
+		var results:Array = node.get_all_cover_element(position,radius)
+		selected_elements.append_array(results)
+	searching = false
+	return selected_elements
 	
 func update(root_node:Node3D):
 	pass
@@ -56,6 +73,8 @@ func _get_node_by_num(num:Vector2) -> String:
 
 #获得所有和刷子有交集的分块
 func _get_all_cover_block(position:Vector3,radius:float) -> Array:
+	print("坐标: ",position)
+	print("radius: ",radius)
 	#先计算可能会覆盖多少个分块
 	var selected_blocks:Array[BlockNode] = []
 	#刷子-X-Z方向的坐标
@@ -66,6 +85,12 @@ func _get_all_cover_block(position:Vector3,radius:float) -> Array:
 	var left_top_num:Vector2 = _get_block_num(left_top_postion)
 	#右下解的块num
 	var right_bottom_num:Vector2 = _get_block_num(right_bottom_postion)
+	
+	print("left_top_postion: ",left_top_postion)
+	print("right_bottom_postion ",right_bottom_postion)
+	print("left_top_num: ",left_top_num)
+	print("right_bottom_num: ",right_bottom_num)
+	
 	if left_top_num == right_bottom_num:
 		var node = get_cover_node(position,radius,left_top_num)
 		if node:
@@ -89,8 +114,10 @@ func _get_all_cover_block(position:Vector3,radius:float) -> Array:
 	
 func get_cover_node(position:Vector3,radius:float,num:Vector2) -> BlockNode:
 	var key:String = _get_node_by_num(num)
+	print("key: ",key)
 	if _nodes.has(key):
-		var node = _nodes[key]
+		print("有这个节点")
+		var node:BlockNode = _nodes[key]
 		var is_cover:bool = node.check_node_cover(position,radius)
 		if is_cover:
 			return node

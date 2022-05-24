@@ -20,11 +20,6 @@ _global_script_classes=[{
 "path": "res://addons/foliage_painter/scripts/block/block_node.gd"
 }, {
 "base": "RefCounted",
-"class": &"BlockSearcher",
-"language": &"GDScript",
-"path": "res://addons/foliage_painter/scripts/block/searcher.gd"
-}, {
-"base": "RefCounted",
 "class": &"ElementProperty",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/element_property.gd"
@@ -62,7 +57,6 @@ _global_script_classes=[{
 _global_script_class_icons={
 "Block": "",
 "BlockNode": "",
-"BlockSearcher": "",
 "ElementProperty": "",
 "FoliagePrinterUtil": "",
 "Octree": "",
