@@ -42,5 +42,3 @@ static func is_self_or_parent_scene(fpath, node):
 			return true
 		node = node.get_parent()
 	return false
-
-

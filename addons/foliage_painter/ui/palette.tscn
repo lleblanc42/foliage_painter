@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://addons/foliage_painter/ui/palette.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/foliage_painter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://dolyrbnhxjmb" path="res://addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
 [ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/foliage_painter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://dm06gw6o1w3pi" path="res://addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
+[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
 bg_color = Color(0.180392, 0.180392, 0.180392, 1)

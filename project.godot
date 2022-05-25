@@ -29,21 +29,6 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/util.gd"
 }, {
-"base": "RefCounted",
-"class": &"Octree",
-"language": &"GDScript",
-"path": "res://addons/foliage_painter/scripts/octree.gd"
-}, {
-"base": "RefCounted",
-"class": &"OctreeNode",
-"language": &"GDScript",
-"path": "res://addons/foliage_painter/scripts/octree_node.gd"
-}, {
-"base": "RefCounted",
-"class": &"OctreeSearcher",
-"language": &"GDScript",
-"path": "res://addons/foliage_painter/scripts/searcher.gd"
-}, {
 "base": "Control",
 "class": &"Palette",
 "language": &"GDScript",
@@ -59,9 +44,6 @@ _global_script_class_icons={
 "BlockNode": "",
 "ElementProperty": "",
 "FoliagePrinterUtil": "",
-"Octree": "",
-"OctreeNode": "",
-"OctreeSearcher": "",
 "Palette": "",
 "ThreadQueue": ""
 }

@@ -217,6 +217,16 @@ func _on_brush_size_spin_value_changed(value):
 		_brush_size_history = value
 	emit_signal("brush_size_changed")
 
+func on_change_brush_size(value):
+	_brush_size_history = brushSize.value
+	var temp = _brush_size_history + value
+	if temp < 1:
+		temp = 1
+	if temp > 8192:
+		temp = 8192
+	brushSize.value = temp
+	emit_signal("brush_size_changed")
+
 #显示element属性
 func show_property(base_name:String,property:ElementProperty):
 	element_name.text = base_name

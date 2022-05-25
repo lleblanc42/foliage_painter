@@ -14,8 +14,8 @@ albedo_color = Color(0.266667, 0.215686, 0.188235, 1)
 size = Vector3(120, 0.25, 120)
 
 [sub_resource type="SphereMesh" id="SphereMesh_vdlqv"]
-radius = 0.2
-height = 0.4
+radius = 9.7
+height = 19.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ysa8"]
 transparency = 1
@@ -49,9 +49,7 @@ script = ExtResource( "1_y2at3" )
 _scenes = [ExtResource( "2_4q17q" )]
 
 [node name="Brush" parent="Foliage3D" instance=ExtResource( "2_sh0iy" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.33453, -0.029, -31.9419)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45.6277, -0.029, -59.2337)
 visible = false
 mesh = SubResource( "SphereMesh_vdlqv" )
 surface_material_override/0 = SubResource( "StandardMaterial3D_4ysa8" )
-
-[node name="layer_box1_2247569959" type="Node3D" parent="Foliage3D"]

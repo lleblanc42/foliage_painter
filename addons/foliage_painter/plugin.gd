@@ -6,11 +6,14 @@ enum MODE {
 	FOLIAGE_MODE = 1
 }
 
+#最大面积100m * 100m
+var MAX_CALCULATE_AREA:float = 10000
 const FOLIAGE_NAME:String = "Foliage3D"
 const BRUSH_NAME:String = "Brush"
 const BLOCK_NAME:String = "Block"
 const Foliage3D = preload("./ui/foliage3d.gd")
 const PaletteScene = preload("./ui/palette.tscn")
+const TIME_LIMIT:float = 0.05
 #const Octree = preload("./scripts/octree.gd")
 var Brush3D = preload("./mesh/brush.tscn")
 #左侧素材列表
@@ -34,7 +37,8 @@ var _mouse_position := Vector2()
 #var _cmd_pending_action := false
 #可以绘制
 var start_paint:bool = true
-
+#按键CD
+var shortcut_cd:float = 0
 var mouse_left_pressed:bool = false
 var mouse_right_pressed:bool = false
 
@@ -87,6 +91,18 @@ func _handles(object):
 func _edit(obj):
 	pass
 
+func _process(delta):
+	if shortcut_cd <= TIME_LIMIT:
+		shortcut_cd += delta
+	if Input.is_key_pressed(KEY_BRACKETLEFT):
+		if _palette.mode == MODE.FOLIAGE_MODE and _palette.tool_mode != _palette.SINGLE and brush.visible == true and shortcut_cd >= TIME_LIMIT:
+			shortcut_cd = 0
+			_palette.on_change_brush_size(-10)
+	elif Input.is_key_pressed(KEY_BRACKETRIGHT):
+		if _palette.mode == MODE.FOLIAGE_MODE and _palette.tool_mode != _palette.SINGLE and brush.visible == true and shortcut_cd >= TIME_LIMIT:
+			shortcut_cd = 0
+			_palette.on_change_brush_size(10)
+ 
 func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 	if _palette.mode == MODE.SELECT_MODE:
 		return false
@@ -523,10 +539,6 @@ func readd_element():
 				break
 		dic["selected"] = select
 		var layer = get_layer(scene.resource_path)
-#		var base_name = scene.resource_path.get_file().get_basename()
-#		var pash_hash:int = scene.resource_path.hash()
-#		var layer_name:String = "layer_%s_%d" % [base_name,pash_hash]
-#		var layer = foliage.get_node_or_null(layer_name)
 		var num:int = 0
 		if layer:
 			num = layer.get_child_count()
@@ -551,3 +563,34 @@ func get_layer(path:String) -> Node3D:
 	var layer_name:String = get_layer_name(path)
 	var layer = foliage.get_node_or_null(layer_name)
 	return layer
+
+#计算该生成多少个点
+func calculate_points():
+	var radius:float = brush.get_radius()
+	var area:float = PI * pow(radius,2)
+	var proportion:float = area / MAX_CALCULATE_AREA
+#	var points = []
+	
+	for element in _selected_elements:
+		var property:ElementProperty = _palette.get_element_property(element.get_meta("path"))
+		var cur_density:int = int(round(property.density * proportion))
+		if cur_density == 0:
+			continue
+		var points:Array[Vector3] = generatePointInCycle(cur_density,brush.position,radius)
+		
+		
+
+#生成点
+func generatePointInCycle(point_num:int,position:Vector3,radius:float) -> Array:
+	var points:Array[Vector3] = []
+	var x:float
+	var z:float
+	for i in range(1,point_num + 1):
+		while true:
+			x = randf_range(-radius,radius)
+			z = randf_range(-radius,radius)
+			if pow(x,2) + pow(z,2) < pow(radius,2):
+				points.append(Vector3(x + position.x,position.y,z + position.z))
+				break
+	print(points)
+	return points
