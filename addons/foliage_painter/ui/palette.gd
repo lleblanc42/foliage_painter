@@ -13,6 +13,7 @@ signal elements_selected(pattern_paths)
 signal element_added(path)
 signal elements_removed(path)
 signal brush_size_changed()
+signal update_block_data()
 
 #工具列表
 @onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/toolList
@@ -256,6 +257,6 @@ func update_element_number(path:String,value:int):
 		var node = elementsList.get_child(i)
 		node.update_number(value)
 
-#更新八叉树数据
+#更新分块数据
 func _on_update_button_pressed():
-	pass # Replace with function body.
+	emit_signal("update_block_data")

@@ -29,9 +29,9 @@ func add_element(element:Node3D):
 		var child_node = _nodes[_get_node_index(element.position)]
 		child_node.add_element()
 	else:
-		var _key:String = element.to_string()
+		var _key = element.get_instance_id()
 		_data[_key] = element
-		print("添加一个物体,格子索引：%d - %d" % [_block_num.x,_block_num.y])
+#		print("添加一个物体,格子索引：%d - %d" % [_block_num.x,_block_num.y])
 		if _data.size() >= _max_items and _depth > 0:
 			_create_nodes()
 			for key in _data.keys():
@@ -98,7 +98,7 @@ func _get_node_index(position:Vector3) -> int:
 #检查节点是否在刷子范围之内
 func check_node_cover(brush_pos:Vector3,radius:float) -> bool:
 	var position:Vector3 = _get_position()
-	print("节点的坐标：",position)
+#	print("节点的坐标：",position)
 	#左上角
 #	var left_top:Vector3 = position
 	#左下角
@@ -108,28 +108,39 @@ func check_node_cover(brush_pos:Vector3,radius:float) -> bool:
 	#右下角
 #	var right_bottom:Vector3 = Vector3(position.x + _size,position.y,position.z + _size)
 	
-	print("左下角坐标: ",left_bottom)
-	print("右上角坐标: ",right_top)
+#	print("左下角坐标: ",left_bottom)
+#	print("右上角坐标: ",right_top)
 	
 #	var is_cover:bool = false
+	#x1 左下角 left_bottom
+	#x2 右上角 right_top
+	var x1 = left_bottom.x
+	var y1 = left_bottom.z
+	var x2 = right_top.x
+	var y2 = right_top.z
+	var cx = brush_pos.x
+	var cy = brush_pos.z
 	var minx:float
 	var miny:float
-	minx = min(abs(right_top.x - brush_pos.x),abs(left_bottom.x - brush_pos.x))
-	miny = min(abs(right_top.z - brush_pos.z),abs(left_bottom.z - brush_pos.z))
+	minx = min(abs(x1 - cx),abs(x2 - cx))
+	miny = min(abs(y1 - cy),abs(y2 - cy))
 	if pow(minx,2) + pow(miny,2) < pow(radius,2):
 #		is_cover = true
-		print("相交啦")
+#		print("相交啦")
 		return true
 	
 	var _center:Vector3 = _get_center()
-	if ((abs(_center.x - brush_pos.x) < abs(left_bottom.x - right_top.x) / 2 + radius) && abs(brush_pos.z - _center.z) < abs(left_bottom.y - right_top.y) / 2):
+#	print("中心点坐标: ",_center)
+	var x0 = _center.x
+	var y0 = _center.z
+	if ((abs(x0 - cx) < abs(x2 - x1) / 2 + radius) && abs(cy - y0) < abs(y2 - y1) / 2):
 #		is_cover = true
-		print("相交啦")
+#		print("相交啦")
 		return true
 	
-	if ((abs(_center.z - brush_pos.z) < abs(left_bottom.y - right_top.y) / 2 + radius) && abs(brush_pos.x - _center.x) < abs(left_bottom.x - right_top.x) / 2):
+	if ((abs(y0 - cy) < abs(y2 - y1) / 2 + radius) && abs(cx - x0) < abs(x2 - x1) / 2):
 #		is_cover = true
-		print("相交啦")
+#		print("相交啦")
 		return true
 	
 	
@@ -159,7 +170,7 @@ func check_node_cover(brush_pos:Vector3,radius:float) -> bool:
 #	return false
 	
 #获得节点内所有在刷子范围内的物体
-func get_all_cover_element(brush_pos:Vector3,radius:float) -> Array:
+func get_all_cover_element(brush_pos:Vector3,radius:float,is_remove:bool = false) -> Array:
 	var all_elements:Array = []
 	if not _nodes.is_empty():
 		for node in _nodes:
@@ -169,7 +180,33 @@ func get_all_cover_element(brush_pos:Vector3,radius:float) -> Array:
 		for key in _data.keys():
 			var element:Node3D = _data[key]
 			var dis = element.position.distance_to(brush_pos)
+#			var temp:String = "笔刷的位置: %s，物体的位置: %s,距离: %f" % [brush_pos,element.position,dis]
+#			print(temp)
 			if dis <= radius:
+#				print("半径: %f,距离: %f" % [radius,dis])
+				if is_remove == true:
+					_data.erase(key)
 				all_elements.append(element)
-	
+		
 	return all_elements
+	
+func is_empty() -> bool:
+	if not _nodes.is_empty():
+		var empty:bool = true
+		for node in _nodes:
+			var e = node.is_empty()
+			if e == false:
+				empty = false
+				break
+		return empty
+	else:
+		return _data.is_empty()
+	return false
+	
+func print_elements():
+	pass
+	print("_block_num: ",_block_num)
+	for key in _data.keys():
+		var s:String = "key: %s position: " % key
+		print(s,_data[key].position)
+	print("----------------------")

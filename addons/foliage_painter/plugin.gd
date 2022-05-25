@@ -59,6 +59,7 @@ func _enter_tree():
 	_palette.connect("element_added", _on_Palette_element_added)
 	_palette.connect("elements_removed", _on_Palette_patterns_removed)
 	_palette.connect("brush_size_changed", _on_Brush_size_changed)
+	_palette.connect("update_block_data",_on_update_block_data)
 	_palette.hide()
 	add_control_to_container(CustomControlContainer.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT,_palette)
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
@@ -246,15 +247,19 @@ func _erase():
 	var brush_position:Vector3 = brush.position
 	var radius:float = brush.get_radius()
 	
-	var results:Array = block.search(brush_position,radius)
+	var results:Array = block.search(brush_position,radius,true)
 	print("找到了几个: ",len(results))
-	for element in results:
-		var e:MeshInstance3D = element as MeshInstance3D
-		e.get_surface_override_material(0)
-		
-		var new_mat:StandardMaterial3D = StandardMaterial3D.new()
-		new_mat.albedo_color = Color(1.0,0.0,0.0,1.0)
-		e.set_surface_override_material(0,new_mat)
+	for e in results:
+		var element:Node3D = e as Node3D
+		var parent:Node3D = element.get_parent_node_3d()
+		if parent:
+			parent.remove_child(element)
+#		var e:MeshInstance3D = element as MeshInstance3D
+#		e.get_surface_override_material(0)
+#
+#		var new_mat:StandardMaterial3D = StandardMaterial3D.new()
+#		new_mat.albedo_color = Color(1.0,0.0,0.0,1.0)
+#		e.set_surface_override_material(0,new_mat)
 	
 ##	var time_before := Time.get_ticks_usec()
 #	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, foliage.get_world_3d().scenario)
@@ -424,8 +429,10 @@ func _remove_element(path):
 	_palette.remove_element(path)
 
 func _on_Brush_size_changed():
-	pass
 	brush.update_size(_palette.brushSize.value)
+
+func _on_update_block_data():
+	block.print_all_block()
 
 func _verify_element(fpath):
 	# Check it can be loaded
