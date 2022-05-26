@@ -43,6 +43,8 @@ var mouse_left_pressed:bool = false
 var mouse_right_pressed:bool = false
 #摄像机
 var _viewport_camera:Camera3D = null
+#一次绘制完成
+var _paint_complete:bool = true
 
 static func get_icon(name):
 	return load("res://addons/foliage_painter/icons/icon_" + name + ".svg")
@@ -147,7 +149,8 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 					if _viewport_camera == null:
 						_viewport_camera = p_camera
 #					_paint_test(hit.position)
-					_paint_single(hit.position)
+					var element:MeshInstance3D = _random_element_instance()
+					_draw_single(hit.position,element)
 				else:
 					_erase()
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
@@ -165,7 +168,7 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 	if p_event is InputEventMouseMotion and mouse_left_pressed and start_paint:
 		start_paint = false
 		if _palette.tool_mode == _palette.PAINT:
-			_paint_single(hit.position)
+			_paint()
 		elif _palette.tool_mode == _palette.ERASE:
 			_erase()
 	
@@ -176,8 +179,8 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	pt.from = ray_origin
 	pt.to = ray_origin + ray_end
-	pt.exclude = []
-	pt.collision_mask = 1
+#	pt.exclude = []
+#	pt.collision_mask = 1
 	var hit = space_state.intersect_ray(pt)
 	
 	if hit.is_empty():
@@ -194,7 +197,8 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 		brush.position = hit.position
 	return hit
 
-func _paint_test(position:Vector3):
+#根据射线获得与地形相交的点坐标
+func _get_raycast_position(position:Vector3) -> Dictionary:
 	var radius:float = brush.get_radius()
 	var space_state =  get_viewport().world_3d.direct_space_state
 	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
@@ -204,55 +208,38 @@ func _paint_test(position:Vector3):
 	
 	if hits.is_empty():
 		print("什么都没碰到")
+		return Dictionary()
+	
+	var hit_instance_root
+	if hits.collider != null:
+		hit_instance_root = FoliagePrinterUtil.get_instance_root(hits.collider)
+	
+	if hits.collider == null or not (hit_instance_root.has_meta("path")):
+		return hits
+#	print("hits: ",hits)
+	return Dictionary()
+
+func _paint():
+	if not _paint_complete:
 		return
-	print("hits: ",hits)
-	var instance:MeshInstance3D = _create_element_instance()
-	var path = instance.get_meta("path")
-	var layer_name:String = get_layer_name(path)
-	var layer = foliage.get_node_or_null(layer_name)
+	_paint_complete = false
+	var datas:Array[Dictionary] = calculate_points()
+	#TODO 清除掉已经刷过的地方
 	
-	if layer == null:
-		print("添加Layer")
-		layer = Node3D.new()
-		layer.name = layer_name
-		foliage.add_child(layer)
-		layer.owner = get_editor_interface().get_edited_scene_root()
+	#绘制
+	for dic in datas:
+		var poins:Vector3 = dic["points"]
+		for pos in poins:
+			var instance = dic["element"].instantiate()
+			var path:String = dic["element"].get_meta("path")
+			instance.set_meta("path",path)
+			_draw_single(pos,instance)
+	_paint_complete = true
 
-	instance.position = hits["position"]
-	
-	layer.add_child(instance)
-	instance.owner = get_editor_interface().get_edited_scene_root()
-	#添加到分块算法里
-	block.add_element(instance)
-	var count = layer.get_child_count()
-	_palette.update_element_number(path,count)
-
-func _paint_single(pos:Vector3):
+func _draw_single(pos:Vector3,instance:Node3D):
 	if len(_selected_elements) == 0:
 		return
 
-#	var hit_instance_root
-	# Collider can be null if the hit is on something that has no associated node
-#	if hit.collider != null:
-#		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
-#
-#	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
-#	var pos = hit.position
-#		brush.position = hit.position
-	# Not accurate, you might still paint stuff too close to others,
-	# but should be good enough and cheap
-#	var too_close = false
-##		if _palette.mode != MODE.SELECT_MODE:
-###			var node:Node3D = _placed_instances[-1]
-##			var last_path = node.get_meta("path")
-###			var last_property:ElementProperty = _palette.get_element_property(last_path)
-###			var last_placed_transform := node.global_transform
-##			if last_placed_transform.origin.distance_to(pos) < last_property.radius:
-##				too_close = true
-##				print("too_close: ",too_close)
-#
-#	if not too_close:
-	var instance:MeshInstance3D = _create_element_instance()
 	var path = instance.get_meta("path")
 	var layer_name:String = get_layer_name(path)
 	var layer = foliage.get_node_or_null(layer_name)
@@ -404,7 +391,8 @@ func _set_selected_elements(patterns):
 #		_pattern_margin = largest_aabb.size.length() * 0.4
 
 
-func _create_element_instance():
+#随机获得一个element
+func _random_element_instance():
 	var rand:int = randi_range(0,_selected_elements.size() - 1)
 	var ins = _selected_elements[rand].instantiate()
 	var path = _selected_elements[rand].get_meta("path")
@@ -574,11 +562,11 @@ func get_layer(path:String) -> Node3D:
 	return layer
 
 #计算该生成多少个点
-func calculate_points():
+func calculate_points() -> Array:
 	var radius:float = brush.get_radius()
 	var area:float = PI * pow(radius,2)
 	var proportion:float = area / MAX_CALCULATE_AREA
-#	var points = []
+	var datas:Array[Dictionary] = []
 	
 	for element in _selected_elements:
 		var property:ElementProperty = _palette.get_element_property(element.get_meta("path"))
@@ -586,9 +574,12 @@ func calculate_points():
 		if cur_density == 0:
 			continue
 		var points:Array[Vector3] = generatePointInCycle(cur_density,brush.position,radius)
-		
-		
-
+		var dic:Dictionary = Dictionary()
+		dic["element"] = element
+		dic["points"] = points
+		datas.append(dic)
+	return datas
+	
 #生成点
 func generatePointInCycle(point_num:int,position:Vector3,radius:float) -> Array:
 	var points:Array[Vector3] = []
@@ -599,7 +590,10 @@ func generatePointInCycle(point_num:int,position:Vector3,radius:float) -> Array:
 			x = randf_range(-radius,radius)
 			z = randf_range(-radius,radius)
 			if pow(x,2) + pow(z,2) < pow(radius,2):
-				points.append(Vector3(x + position.x,position.y,z + position.z))
+				var pos:Vector3 = Vector3(x + position.x,position.y,z + position.z)
+				var hits:Dictionary = _get_raycast_position(pos)
+				if not hits.is_empty():
+					points.append(hits.position)
 				break
 	print(points)
 	return points
