@@ -41,7 +41,8 @@ var start_paint:bool = true
 var shortcut_cd:float = 0
 var mouse_left_pressed:bool = false
 var mouse_right_pressed:bool = false
-
+#摄像机
+var _viewport_camera:Camera3D = null
 
 static func get_icon(name):
 	return load("res://addons/foliage_painter/icons/icon_" + name + ".svg")
@@ -143,7 +144,10 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 				mouse_left_pressed = true
 				captured_event = true
 				if _palette.tool_mode == _palette.SINGLE or _palette.tool_mode == _palette.PAINT:
-					_paint(hit)
+					if _viewport_camera == null:
+						_viewport_camera = p_camera
+#					_paint_test(hit.position)
+					_paint_single(hit.position)
 				else:
 					_erase()
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
@@ -154,14 +158,14 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = false
 	
-	if _palette.tool_mode == _palette.PAINT or _palette.tool_mode == _palette.ERASE:
-		start_paint = true
+#	if _palette.tool_mode == _palette.PAINT or _palette.tool_mode == _palette.ERASE:
+#		start_paint = true
 				
 	#如果鼠标左键按下
 	if p_event is InputEventMouseMotion and mouse_left_pressed and start_paint:
 		start_paint = false
 		if _palette.tool_mode == _palette.PAINT:
-			_paint(hit)
+			_paint_single(hit.position)
 		elif _palette.tool_mode == _palette.ERASE:
 			_erase()
 	
@@ -184,76 +188,106 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 	if hit.collider != null:
 		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
 	
-	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
+#	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
+	if hit.collider == null or not (hit_instance_root.has_meta("path")):
 		var pos = hit.position
 		brush.position = hit.position
 	return hit
 
-func _paint(hit:Dictionary):
+func _paint_test(position:Vector3):
+	var radius:float = brush.get_radius()
+	var space_state =  get_viewport().world_3d.direct_space_state
+	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+	pt.from = Vector3(position.x+2,position.y + radius,position.z+2)
+	pt.to = Vector3(position.x+2,position.y - radius,position.z+2)
+	var hits = space_state.intersect_ray(pt)
+	
+	if hits.is_empty():
+		print("什么都没碰到")
+		return
+	print("hits: ",hits)
+	var instance:MeshInstance3D = _create_element_instance()
+	var path = instance.get_meta("path")
+	var layer_name:String = get_layer_name(path)
+	var layer = foliage.get_node_or_null(layer_name)
+	
+	if layer == null:
+		print("添加Layer")
+		layer = Node3D.new()
+		layer.name = layer_name
+		foliage.add_child(layer)
+		layer.owner = get_editor_interface().get_edited_scene_root()
+
+	instance.position = hits["position"]
+	
+	layer.add_child(instance)
+	instance.owner = get_editor_interface().get_edited_scene_root()
+	#添加到分块算法里
+	block.add_element(instance)
+	var count = layer.get_child_count()
+	_palette.update_element_number(path,count)
+
+func _paint_single(pos:Vector3):
 	if len(_selected_elements) == 0:
 		return
-	
-#	if hit.is_empty():
-#		return
 
-	var hit_instance_root
+#	var hit_instance_root
 	# Collider can be null if the hit is on something that has no associated node
-	if hit.collider != null:
-		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
+#	if hit.collider != null:
+#		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
+#
+#	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
+#	var pos = hit.position
+#		brush.position = hit.position
+	# Not accurate, you might still paint stuff too close to others,
+	# but should be good enough and cheap
+#	var too_close = false
+##		if _palette.mode != MODE.SELECT_MODE:
+###			var node:Node3D = _placed_instances[-1]
+##			var last_path = node.get_meta("path")
+###			var last_property:ElementProperty = _palette.get_element_property(last_path)
+###			var last_placed_transform := node.global_transform
+##			if last_placed_transform.origin.distance_to(pos) < last_property.radius:
+##				too_close = true
+##				print("too_close: ",too_close)
+#
+#	if not too_close:
+	var instance:MeshInstance3D = _create_element_instance()
+	var path = instance.get_meta("path")
+	var layer_name:String = get_layer_name(path)
+	var layer = foliage.get_node_or_null(layer_name)
+	
+	if layer == null:
+		print("添加Layer")
+		layer = Node3D.new()
+		layer.name = layer_name
+		foliage.add_child(layer)
+		layer.owner = get_editor_interface().get_edited_scene_root()
 
-	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
-		var pos = hit.position
-		brush.position = hit.position
-		# Not accurate, you might still paint stuff too close to others,
-		# but should be good enough and cheap
-		var too_close = false
-#		if _palette.mode != MODE.SELECT_MODE:
-##			var node:Node3D = _placed_instances[-1]
-#			var last_path = node.get_meta("path")
-##			var last_property:ElementProperty = _palette.get_element_property(last_path)
-##			var last_placed_transform := node.global_transform
-#			if last_placed_transform.origin.distance_to(pos) < last_property.radius:
-#				too_close = true
-#				print("too_close: ",too_close)
-
-		if not too_close:
-			var instance:MeshInstance3D = _create_element_instance()
-			var path = instance.get_meta("path")
-			var layer_name:String = get_layer_name(path)
-			var layer = foliage.get_node_or_null(layer_name)
-			
-			if layer == null:
-				print("添加Layer")
-				layer = Node3D.new()
-				layer.name = layer_name
-				foliage.add_child(layer)
-				layer.owner = get_editor_interface().get_edited_scene_root()
-
-			#user property
-			var property:ElementProperty = _palette.get_element_property(path)
-			#random y offset from min ~ max
-			var yOffset:float = randf_range(property.yOffsetMin,property.yOffsetMax)
-			#10 times smaller,so -1000 to 1000 is -10 meter to 10 meter
-			yOffset /= 10
-			instance.position = pos + Vector3(0,yOffset,0)
-			#random roate from min ~ max
-			var angle:float = randf_range(property.rotateMin,property.rotateMax)
-			var rad:float = deg2rad(angle)
-			instance.rotate_y(rad)
-			#random scale from min ~ max
-			var s:float = randf_range(property.scaleMin,property.scaleMax)
-			instance.scale = Vector3(s,s,s)
-			
-			layer.add_child(instance)
+	#user property
+	var property:ElementProperty = _palette.get_element_property(path)
+	#random y offset from min ~ max
+	var yOffset:float = randf_range(property.yOffsetMin,property.yOffsetMax)
+	#10 times smaller,so -1000 to 1000 is -10 meter to 10 meter
+	yOffset /= 10
+	instance.position = pos + Vector3(0,yOffset,0)
+	#random roate from min ~ max
+	var angle:float = randf_range(property.rotateMin,property.rotateMax)
+	var rad:float = deg2rad(angle)
+	instance.rotate_y(rad)
+	#random scale from min ~ max
+	var s:float = randf_range(property.scaleMin,property.scaleMax)
+	instance.scale = Vector3(s,s,s)
+	
+	layer.add_child(instance)
 #			instance.name = "%s_%d" % [base_name,layer.get_child_count()]
-	#			foliage.add_child(instance)
-			instance.owner = get_editor_interface().get_edited_scene_root()
-			#添加到分块算法里
-			block.add_element(instance)
-			var count = layer.get_child_count()
-			_palette.update_element_number(path,count)
+#			foliage.add_child(instance)
+	instance.owner = get_editor_interface().get_edited_scene_root()
+	#添加到分块算法里
+	block.add_element(instance)
+	var count = layer.get_child_count()
+	_palette.update_element_number(path,count)
 #			_placed_instances.append(instance)
-
 
 func _erase():
 	pass
@@ -270,31 +304,6 @@ func _erase():
 		var parent:Node3D = element.get_parent_node_3d()
 		if parent:
 			parent.remove_child(element)
-#		var e:MeshInstance3D = element as MeshInstance3D
-#		e.get_surface_override_material(0)
-#
-#		var new_mat:StandardMaterial3D = StandardMaterial3D.new()
-#		new_mat.albedo_color = Color(1.0,0.0,0.0,1.0)
-#		e.set_surface_override_material(0,new_mat)
-	
-##	var time_before := Time.get_ticks_usec()
-#	var hits := RenderingServer.instances_cull_ray(ray_origin, ray_dir, foliage.get_world_3d().scenario)
-##	print("hits: ",hits)
-#	if len(hits) > 0:
-#		var instance = null
-#		for hit_object_id in hits:
-#			var hit = instance_from_id(hit_object_id)
-##			print("hit: ",hit," hit.name: ",hit.name)
-#			if hit is Node3D:
-#				instance = get_scatter_child_instance(hit, foliage)
-#				if instance != null:
-#					break
-#
-##		print("Hits: ", len(hits), ", instance: ", instance)
-#		if instance != null:
-#			assert(instance.get_parent() == foliage)
-#			instance.get_parent().remove_child(instance)
-##			_removed_instances.append(instance)
 
 
 #func _on_action_completed(action: int):
