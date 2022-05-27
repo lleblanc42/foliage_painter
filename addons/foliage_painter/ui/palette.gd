@@ -149,9 +149,13 @@ func remove_element(scene_path):
 
 #根据资源地址查找资源在GridContainer里的索引
 func find_elment_index(path):
-	for child in elementsList.get_children():
+	for i in range(0,elementsList.get_child_count()):
+		var child = elementsList.get_child(i)
 		if child.path == path:
-			return child.index
+			return i
+#	for child in elementsList.get_children():
+#		if child.path == path:
+#			return child.index
 
 func select_element(path):
 	var i = find_elment_index(path)

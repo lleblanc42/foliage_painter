@@ -42,7 +42,7 @@ var shortcut_cd:float = 0
 var mouse_left_pressed:bool = false
 var mouse_right_pressed:bool = false
 #摄像机
-var _viewport_camera:Camera3D = null
+#var _viewport_camera:Camera3D = null
 #一次绘制完成
 var _paint_complete:bool = true
 
@@ -145,13 +145,14 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			if p_event.button_index == MOUSE_BUTTON_LEFT:
 				mouse_left_pressed = true
 				captured_event = true
-				if _palette.tool_mode == _palette.SINGLE or _palette.tool_mode == _palette.PAINT:
-					if _viewport_camera == null:
-						_viewport_camera = p_camera
-#					_paint_test(hit.position)
-					var element:MeshInstance3D = _random_element_instance()
-					_draw_single(hit.position,element)
-				else:
+#				if _palette.tool_mode == _palette.SINGLE:
+##					if _viewport_camera == null:
+##						_viewport_camera = p_camera
+#					var element:MeshInstance3D = _random_element_instance()
+#					_draw_single(hit.position,element)
+				if _palette.tool_mode == _palette.PAINT:
+					_paint()
+				elif _palette.tool_mode == _palette.ERASE:
 					_erase()
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = true
@@ -220,21 +221,23 @@ func _get_raycast_position(position:Vector3) -> Dictionary:
 	return Dictionary()
 
 func _paint():
-	if not _paint_complete:
-		return
+	print("进方法了")
+#	if not _paint_complete:
+#		return
 	_paint_complete = false
 	var datas:Array[Dictionary] = calculate_points()
+	print("datas: ",datas)
 	#TODO 清除掉已经刷过的地方
 	
 	#绘制
-	for dic in datas:
-		var poins:Vector3 = dic["points"]
-		for pos in poins:
-			var instance = dic["element"].instantiate()
-			var path:String = dic["element"].get_meta("path")
-			instance.set_meta("path",path)
-			_draw_single(pos,instance)
-	_paint_complete = true
+#	for dic in datas:
+#		var poins:Vector3 = dic["points"]
+#		for pos in poins:
+#			var instance = dic["element"].instantiate()
+#			var path:String = dic["element"].get_meta("path")
+#			instance.set_meta("path",path)
+#			_draw_single(pos,instance)
+#	_paint_complete = true
 
 func _draw_single(pos:Vector3,instance:Node3D):
 	if len(_selected_elements) == 0:
@@ -595,5 +598,4 @@ func generatePointInCycle(point_num:int,position:Vector3,radius:float) -> Array:
 				if not hits.is_empty():
 					points.append(hits.position)
 				break
-	print(points)
 	return points
