@@ -23,9 +23,9 @@ func add_element(element:Node3D):
 		var num:Vector2 = _get_block_num(element.position)
 		_nodes[_key] = BlockNode.new(null,num,_size,_max_items,_depth)
 	_nodes[_key].add_element(element)
-	print("nodes数量: ",_nodes.size())
-	for key in _nodes.keys():
-		print("key: ",key)
+#	print("nodes数量: ",_nodes.size())
+#	for key in _nodes.keys():
+#		print("key: ",key)
 	
 #func remove_element(element:Node3D):
 #	pass

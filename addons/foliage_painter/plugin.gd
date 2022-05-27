@@ -230,14 +230,14 @@ func _paint():
 	#TODO 清除掉已经刷过的地方
 	
 	#绘制
-#	for dic in datas:
-#		var poins:Vector3 = dic["points"]
-#		for pos in poins:
-#			var instance = dic["element"].instantiate()
-#			var path:String = dic["element"].get_meta("path")
-#			instance.set_meta("path",path)
-#			_draw_single(pos,instance)
-#	_paint_complete = true
+	for dic in datas:
+		var poins:Array[Vector3] = dic["points"]
+		for pos in poins:
+			var instance = dic["element"].instantiate()
+			var path:String = dic["element"].get_meta("path")
+			instance.set_meta("path",path)
+			_draw_single(pos,instance)
+	_paint_complete = true
 
 func _draw_single(pos:Vector3,instance:Node3D):
 	if len(_selected_elements) == 0:
@@ -288,7 +288,7 @@ func _erase():
 	var radius:float = brush.get_radius()
 	
 	var results:Array = block.search(brush_position,radius,true)
-	print("找到了几个: ",len(results))
+#	print("找到了几个: ",len(results))
 	for e in results:
 		var element:Node3D = e as Node3D
 		var parent:Node3D = element.get_parent_node_3d()
@@ -567,8 +567,11 @@ func get_layer(path:String) -> Node3D:
 #计算该生成多少个点
 func calculate_points() -> Array:
 	var radius:float = brush.get_radius()
+	print("半径: ",radius)
 	var area:float = PI * pow(radius,2)
+	print("面积: ",area)
 	var proportion:float = area / MAX_CALCULATE_AREA
+	print("占比: ",proportion)
 	var datas:Array[Dictionary] = []
 	
 	for element in _selected_elements:
