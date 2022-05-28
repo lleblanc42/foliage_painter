@@ -10,11 +10,16 @@ var _depth:int = 2
 #节点字典
 var _nodes:Dictionary
 var searching:bool = false
+var _searcher:BlockSearcher
 
 func _init(size := 8.0, max_items := 40,depth := 2):
 	_nodes = Dictionary()
 	_size = size
 	_depth = depth
+
+func instantiate_searcher(thread_queue: ThreadQueue) -> BlockSearcher:
+	_searcher = BlockSearcher.new(thread_queue)
+	return _searcher
 
 #添加到节点里
 func add_element(element:Node3D):

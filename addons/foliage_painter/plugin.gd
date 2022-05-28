@@ -7,7 +7,7 @@ enum MODE {
 }
 
 #最大面积100m * 100m
-var MAX_CALCULATE_AREA:float = 10000
+const MAX_CALCULATE_AREA:float = 100
 const FOLIAGE_NAME:String = "Foliage3D"
 const BRUSH_NAME:String = "Brush"
 const BLOCK_NAME:String = "Block"
@@ -149,7 +149,7 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 ##					if _viewport_camera == null:
 ##						_viewport_camera = p_camera
 #					var element:MeshInstance3D = _random_element_instance()
-#					_draw_single(hit.position,element)
+#					_single(hit.position,element)
 				if _palette.tool_mode == _palette.PAINT:
 					_paint()
 				elif _palette.tool_mode == _palette.ERASE:
@@ -203,8 +203,8 @@ func _get_raycast_position(position:Vector3) -> Dictionary:
 	var radius:float = brush.get_radius()
 	var space_state =  get_viewport().world_3d.direct_space_state
 	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-	pt.from = Vector3(position.x+2,position.y + radius,position.z+2)
-	pt.to = Vector3(position.x+2,position.y - radius,position.z+2)
+	pt.from = Vector3(position.x,position.y + radius,position.z)
+	pt.to = Vector3(position.x,position.y - radius,position.z)
 	var hits = space_state.intersect_ray(pt)
 	
 	if hits.is_empty():
@@ -221,14 +221,18 @@ func _get_raycast_position(position:Vector3) -> Dictionary:
 	return Dictionary()
 
 func _paint():
-	print("进方法了")
-#	if not _paint_complete:
-#		return
+	if not _paint_complete:
+		return
 	_paint_complete = false
+	var start_time = Time.get_ticks_msec()
 	var datas:Array[Dictionary] = calculate_points()
-	print("datas: ",datas)
+#	print("datas: ",datas)
 	#TODO 清除掉已经刷过的地方
-	
+	var end_time = Time.get_ticks_msec()
+	var a = end_time - start_time
+	var temp1:String = "算点->开始时间: %f,结束时间: %f,时间差: %f" % [start_time,end_time,a]
+	print("------------")
+	print(temp1)
 	#绘制
 	for dic in datas:
 		var poins:Array[Vector3] = dic["points"]
@@ -236,10 +240,25 @@ func _paint():
 			var instance = dic["element"].instantiate()
 			var path:String = dic["element"].get_meta("path")
 			instance.set_meta("path",path)
-			_draw_single(pos,instance)
+			_draw(pos,instance)
+		var e_path = dic["element"].get_meta("path")
+		var layer = get_layer(e_path)
+		var count = layer.get_child_count()
+		_palette.update_element_number(e_path,count)
 	_paint_complete = true
+	var end_time1 = Time.get_ticks_msec()
+	var b = end_time1 - end_time
+	var temp2:String = "射线检测->开始时间: %f,结束时间: %f,时间差: %f" % [end_time,end_time1,b]
+	print(temp2)
+	
+func _single(pos:Vector3,instance:Node3D):
+	_draw(pos,instance)
+	var e_path = instance.get_meta("path")
+	var layer = get_layer(e_path)
+	var count = layer.get_child_count()
+	_palette.update_element_number(e_path,count)
 
-func _draw_single(pos:Vector3,instance:Node3D):
+func _draw(pos:Vector3,instance:Node3D):
 	if len(_selected_elements) == 0:
 		return
 
@@ -275,26 +294,35 @@ func _draw_single(pos:Vector3,instance:Node3D):
 	instance.owner = get_editor_interface().get_edited_scene_root()
 	#添加到分块算法里
 	block.add_element(instance)
-	var count = layer.get_child_count()
-	_palette.update_element_number(path,count)
-#			_placed_instances.append(instance)
+#	var count = layer.get_child_count()
+#	_palette.update_element_number(path,count)
 
 func _erase():
 	pass
 	if brush == null:
 		return
-	
+	var start_time = Time.get_ticks_msec()
 	var brush_position:Vector3 = brush.position
 	var radius:float = brush.get_radius()
 	
 	var results:Array = block.search(brush_position,radius,true)
+	var end_time = Time.get_ticks_msec()
+	
+	var a = end_time - start_time
+	var temp1:String = "检测查找->开始时间: %f,结束时间: %f,时间差: %f" % [start_time,end_time,a]
+	print("------------")
+	print(temp1)
 #	print("找到了几个: ",len(results))
 	for e in results:
 		var element:Node3D = e as Node3D
 		var parent:Node3D = element.get_parent_node_3d()
 		if parent:
 			parent.remove_child(element)
-
+	#TODO 更新实例的数量
+	var end_time1 = Time.get_ticks_msec()
+	var b = end_time1 - end_time
+	var temp2:String = "开始删除->开始时间: %f,结束时间: %f,时间差: %f" % [end_time,end_time1,b]
+	print(temp2)
 
 #func _on_action_completed(action: int):
 #	if action == ACTION_PAINT:
@@ -567,16 +595,13 @@ func get_layer(path:String) -> Node3D:
 #计算该生成多少个点
 func calculate_points() -> Array:
 	var radius:float = brush.get_radius()
-	print("半径: ",radius)
 	var area:float = PI * pow(radius,2)
-	print("面积: ",area)
 	var proportion:float = area / MAX_CALCULATE_AREA
-	print("占比: ",proportion)
 	var datas:Array[Dictionary] = []
 	
 	for element in _selected_elements:
 		var property:ElementProperty = _palette.get_element_property(element.get_meta("path"))
-		var cur_density:int = int(round(property.density * proportion))
+		var cur_density:int = int(round(property.density * proportion * 10.0))
 		if cur_density == 0:
 			continue
 		var points:Array[Vector3] = generatePointInCycle(cur_density,brush.position,radius)

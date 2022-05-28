@@ -26,8 +26,9 @@ func _init(p:BlockNode=null,_num:Vector2=Vector2.ZERO,size: float = 8.0, max_ite
 
 func add_element(element:Node3D):
 	if not _nodes.is_empty():
-		var child_node = _nodes[_get_node_index(element.position)]
-		child_node.add_element()
+		var index:int = _get_node_index(element.position)
+		var child_node = _nodes[index]
+		child_node.add_element(element)
 	else:
 		var _key = element.get_instance_id()
 		_data[_key] = element
@@ -50,6 +51,7 @@ func _create_nodes():
 	_nodes.append(BlockNode.new(self,Vector2(1,0),half_size,half_max_items,next_depth))
 	_nodes.append(BlockNode.new(self,Vector2(0,1),half_size,half_max_items,next_depth))
 	_nodes.append(BlockNode.new(self,Vector2(1,1),half_size,half_max_items,next_depth))
+		
 	
 #获取当前节点在世界空间里的位置
 func _get_position() -> Vector3:
@@ -174,7 +176,7 @@ func get_all_cover_element(brush_pos:Vector3,radius:float,is_remove:bool = false
 	var all_elements:Array = []
 	if not _nodes.is_empty():
 		for node in _nodes:
-			var results = node.get_all_cover_element()
+			var results = node.get_all_cover_element(brush_pos,radius)
 			all_elements.append_array(results)
 	else:
 		for key in _data.keys():
