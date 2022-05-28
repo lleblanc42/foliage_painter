@@ -206,7 +206,7 @@ offset_left = 64.0
 offset_right = 147.0
 offset_bottom = 31.0
 max_value = 1000.0
-step = 0.01
+value = 10.0
 
 [node name="RadiusBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
 offset_top = 85.0
@@ -226,6 +226,7 @@ offset_right = 148.0
 offset_bottom = 31.0
 max_value = 1000.0
 step = 0.01
+value = 30.0
 
 [node name="YOffsetBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
 offset_top = 120.0

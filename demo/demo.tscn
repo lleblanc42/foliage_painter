@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://addons/foliage_painter/ui/foliage3d.gd" id="1_y2at3"]
 [ext_resource type="PackedScene" uid="uid://rrqc27qv5vmx" path="res://demo/elements/box1.tscn" id="2_4q17q"]
-[ext_resource type="PackedScene" uid="uid://bw0s4dh10i2k8" path="res://demo/elements/capsule1.tscn" id="2_bnb0q"]
 [ext_resource type="PackedScene" uid="uid://e7dqep2f0d78" path="res://addons/foliage_painter/mesh/brush.tscn" id="2_sh0iy"]
+[ext_resource type="PackedScene" uid="uid://btmu1rxean7gt" path="res://demo/elements/box_2.tscn" id="3_fi63q"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_jkts7"]
 size = Vector3(120, 0.25, 120)
@@ -15,8 +15,8 @@ albedo_color = Color(0.266667, 0.215686, 0.188235, 1)
 size = Vector3(120, 0.25, 120)
 
 [sub_resource type="SphereMesh" id="SphereMesh_vdlqv"]
-radius = 1.7
-height = 3.4
+radius = 1.6
+height = 3.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ysa8"]
 transparency = 1
@@ -47,12 +47,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75422, 17.9252)
 
 [node name="Foliage3D" type="Node3D" parent="."]
 script = ExtResource( "1_y2at3" )
-_scenes = [ExtResource( "2_4q17q" ), ExtResource( "2_bnb0q" )]
+_scenes = [ExtResource( "2_4q17q" ), ExtResource( "3_fi63q" )]
 
 [node name="Brush" parent="Foliage3D" instance=ExtResource( "2_sh0iy" )]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.4428, -0.029, -29.7911)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5393, -0.029, -0.0184078)
 visible = false
 mesh = SubResource( "SphereMesh_vdlqv" )
 surface_material_override/0 = SubResource( "StandardMaterial3D_4ysa8" )
-
-[node name="layer_capsule1_4106517675" type="Node3D" parent="Foliage3D"]

@@ -145,13 +145,13 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			if p_event.button_index == MOUSE_BUTTON_LEFT:
 				mouse_left_pressed = true
 				captured_event = true
-#				if _palette.tool_mode == _palette.SINGLE:
-##					if _viewport_camera == null:
-##						_viewport_camera = p_camera
-#					var element:MeshInstance3D = _random_element_instance()
-#					_single(hit.position,element)
-				if _palette.tool_mode == _palette.PAINT:
-					_paint()
+				if _palette.tool_mode == _palette.SINGLE:
+#					if _viewport_camera == null:
+#						_viewport_camera = p_camera
+					var element:MeshInstance3D = _random_element_instance()
+					_single(hit.position,element)
+#				if _palette.tool_mode == _palette.PAINT:
+#					_paint()
 				elif _palette.tool_mode == _palette.ERASE:
 					_erase()
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
@@ -162,8 +162,8 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 			elif p_event.button_index == MOUSE_BUTTON_RIGHT:
 				mouse_right_pressed = false
 	
-#	if _palette.tool_mode == _palette.PAINT or _palette.tool_mode == _palette.ERASE:
-#		start_paint = true
+	if _palette.tool_mode == _palette.PAINT or _palette.tool_mode == _palette.ERASE:
+		start_paint = true
 				
 	#如果鼠标左键按下
 	if p_event is InputEventMouseMotion and mouse_left_pressed and start_paint:
@@ -190,7 +190,7 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 	var hit_instance_root
 	# Collider can be null if the hit is on something that has no associated node
 	if hit.collider != null:
-		hit_instance_root = FoliagePrinterUtil.get_instance_root(hit.collider)
+		hit_instance_root = FoliagePainterUtil.get_instance_root(hit.collider)
 	
 #	if hit.collider == null or not (hit_instance_root.get_parent() is Foliage3D):
 	if hit.collider == null or not (hit_instance_root.has_meta("path")):
@@ -198,70 +198,62 @@ func ray_cast(ray_origin: Vector3, ray_end: Vector3) -> Dictionary:
 		brush.position = hit.position
 	return hit
 
-#根据射线获得与地形相交的点坐标
-func _get_raycast_position(position:Vector3) -> Dictionary:
-	var radius:float = brush.get_radius()
-	var space_state =  get_viewport().world_3d.direct_space_state
-	var pt:PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-	pt.from = Vector3(position.x,position.y + radius,position.z)
-	pt.to = Vector3(position.x,position.y - radius,position.z)
-	var hits = space_state.intersect_ray(pt)
-	
-	if hits.is_empty():
-		print("什么都没碰到")
-		return Dictionary()
-	
-	var hit_instance_root
-	if hits.collider != null:
-		hit_instance_root = FoliagePrinterUtil.get_instance_root(hits.collider)
-	
-	if hits.collider == null or not (hit_instance_root.has_meta("path")):
-		return hits
-#	print("hits: ",hits)
-	return Dictionary()
-
 func _paint():
 	if not _paint_complete:
 		return
 	_paint_complete = false
-	var start_time = Time.get_ticks_msec()
+#	var start_time = Time.get_ticks_msec()
 	var datas:Array[Dictionary] = calculate_points()
-#	print("datas: ",datas)
+	
 	#TODO 清除掉已经刷过的地方
-	var end_time = Time.get_ticks_msec()
-	var a = end_time - start_time
-	var temp1:String = "算点->开始时间: %f,结束时间: %f,时间差: %f" % [start_time,end_time,a]
-	print("------------")
-	print(temp1)
+	var brush_position:Vector3 = brush.position
+	var radius:float = brush.get_radius()
+	#筛掉所有已绘制的部分
+	for data in datas:
+		var e_path:String = data["element"].get_meta("path")
+		var points:Array[Vector3] = data["points"]
+		var path_list:Array[String] = [e_path]
+		var results:Array = block.search(brush_position,radius,path_list)
+		var property:ElementProperty = _palette.get_element_property(e_path)
+		var r:float = property.radius / 100.0
+		for ele in results:
+			for p in points:
+				var dis:float = p.distance_to(ele.position)
+				
+				if dis < r:
+					points.erase(p)
+#	var end_time = Time.get_ticks_msec()
+#	var a = end_time - start_time
+#	var temp1:String = "算点->开始时间: %f,结束时间: %f,时间差: %f" % [start_time,end_time,a]
+#	print("------------")
+#	print(temp1)
+	
 	#绘制
 	for dic in datas:
 		var poins:Array[Vector3] = dic["points"]
+		var path:String = dic["element"].get_meta("path")
+		var layer_name:String = get_layer_name(path)
+		var layer = foliage.get_node_or_null(layer_name)
+		
+		if layer == null:
+			print("add Layer")
+			layer = Node3D.new()
+			layer.name = layer_name
+			foliage.add_child(layer)
+			layer.owner = get_editor_interface().get_edited_scene_root()
 		for pos in poins:
 			var instance = dic["element"].instantiate()
-			var path:String = dic["element"].get_meta("path")
 			instance.set_meta("path",path)
-			_draw(pos,instance)
-		var e_path = dic["element"].get_meta("path")
-		var layer = get_layer(e_path)
+			_draw(pos,instance,path,layer)
 		var count = layer.get_child_count()
-		_palette.update_element_number(e_path,count)
+		_palette.update_element_number(path,count)
 	_paint_complete = true
-	var end_time1 = Time.get_ticks_msec()
-	var b = end_time1 - end_time
-	var temp2:String = "射线检测->开始时间: %f,结束时间: %f,时间差: %f" % [end_time,end_time1,b]
-	print(temp2)
+#	var end_time1 = Time.get_ticks_msec()
+#	var b = end_time1 - end_time
+#	var temp2:String = "摆放模型->开始时间: %f,结束时间: %f,时间差: %f" % [end_time,end_time1,b]
+#	print(temp2)
 	
 func _single(pos:Vector3,instance:Node3D):
-	_draw(pos,instance)
-	var e_path = instance.get_meta("path")
-	var layer = get_layer(e_path)
-	var count = layer.get_child_count()
-	_palette.update_element_number(e_path,count)
-
-func _draw(pos:Vector3,instance:Node3D):
-	if len(_selected_elements) == 0:
-		return
-
 	var path = instance.get_meta("path")
 	var layer_name:String = get_layer_name(path)
 	var layer = foliage.get_node_or_null(layer_name)
@@ -272,6 +264,23 @@ func _draw(pos:Vector3,instance:Node3D):
 		layer.name = layer_name
 		foliage.add_child(layer)
 		layer.owner = get_editor_interface().get_edited_scene_root()
+	_draw(pos,instance,path,layer)
+	var e_path = instance.get_meta("path")
+#	var layer = get_layer(e_path)
+	var count = layer.get_child_count()
+	_palette.update_element_number(path,count)
+
+func _draw(pos:Vector3,instance:Node3D,path:String,layer:Node3D):
+#	var path = instance.get_meta("path")
+#	var layer_name:String = get_layer_name(path)
+#	var layer = foliage.get_node_or_null(layer_name)
+#
+#	if layer == null:
+#		print("添加Layer")
+#		layer = Node3D.new()
+#		layer.name = layer_name
+#		foliage.add_child(layer)
+#		layer.owner = get_editor_interface().get_edited_scene_root()
 
 	#user property
 	var property:ElementProperty = _palette.get_element_property(path)
@@ -289,8 +298,6 @@ func _draw(pos:Vector3,instance:Node3D):
 	instance.scale = Vector3(s,s,s)
 	
 	layer.add_child(instance)
-#			instance.name = "%s_%d" % [base_name,layer.get_child_count()]
-#			foliage.add_child(instance)
 	instance.owner = get_editor_interface().get_edited_scene_root()
 	#添加到分块算法里
 	block.add_element(instance)
@@ -301,28 +308,36 @@ func _erase():
 	pass
 	if brush == null:
 		return
-	var start_time = Time.get_ticks_msec()
+#	var start_time = Time.get_ticks_msec()
 	var brush_position:Vector3 = brush.position
 	var radius:float = brush.get_radius()
 	
-	var results:Array = block.search(brush_position,radius,true)
-	var end_time = Time.get_ticks_msec()
-	
-	var a = end_time - start_time
-	var temp1:String = "检测查找->开始时间: %f,结束时间: %f,时间差: %f" % [start_time,end_time,a]
-	print("------------")
-	print(temp1)
+	var path_list:Array[String] = FoliagePainterUtil.get_path_list(_selected_elements)
+	var results:Array = block.search(brush_position,radius,path_list,true)
+	if results.size() == 0:
+		return
+#	var end_time = Time.get_ticks_msec()
+#	var a = end_time - start_time
+#	var temp1:String = "检测查找->开始时间: %f,结束时间: %f,时间差: %f" % [start_time,end_time,a]
+#	print("------------")
+#	print(temp1)
 #	print("找到了几个: ",len(results))
 	for e in results:
 		var element:Node3D = e as Node3D
 		var parent:Node3D = element.get_parent_node_3d()
 		if parent:
 			parent.remove_child(element)
+			if parent.get_child_count() == 0:
+				parent.queue_free()
+	for path in path_list:
+		var layer = get_layer(path)
+		var count = layer.get_child_count()
+		_palette.update_element_number(path,count)
 	#TODO 更新实例的数量
-	var end_time1 = Time.get_ticks_msec()
-	var b = end_time1 - end_time
-	var temp2:String = "开始删除->开始时间: %f,结束时间: %f,时间差: %f" % [end_time,end_time1,b]
-	print(temp2)
+#	var end_time1 = Time.get_ticks_msec()
+#	var b = end_time1 - end_time
+#	var temp2:String = "开始删除->开始时间: %f,结束时间: %f,时间差: %f" % [end_time,end_time1,b]
+#	print(temp2)
 
 #func _on_action_completed(action: int):
 #	if action == ACTION_PAINT:
@@ -393,7 +408,7 @@ func _erase():
 #		parent.add_child(instance)
 
 func init_block():
-	block = Block.new(8,40,1)
+	block = Block.new(8,400,2)
 	if foliage:
 		block.update(foliage)
 
@@ -412,13 +427,13 @@ func get_scatter_child_instance(node, scatter_root):
 func _set_selected_elements(patterns):
 	if _selected_elements != patterns:
 		_selected_elements = patterns
-		var largest_aabb = AABB()
-		for pattern in patterns:
-			var temp = pattern.instantiate()
-			# TODO This causes errors because of accessing `global_transform` outside the tree... Oo
-			# See https://github.com/godotengine/godot/issues/30445
-			largest_aabb = largest_aabb.merge(FoliagePrinterUtil.get_scene_aabb(temp))
-			temp.free()
+#		var largest_aabb = AABB()
+#		for pattern in patterns:
+#			var temp = pattern.instantiate()
+#			# TODO This causes errors because of accessing `global_transform` outside the tree... Oo
+#			# See https://github.com/godotengine/godot/issues/30445
+#			largest_aabb = largest_aabb.merge(FoliagePainterUtil.get_scene_aabb(temp))
+#			temp.free()
 #		_pattern_margin = largest_aabb.size.length() * 0.4
 
 
@@ -492,7 +507,7 @@ func _verify_element(fpath):
 		return false
 
 	# Check it's not the current scene itself
-	if FoliagePrinterUtil.is_self_or_parent_scene(fpath, foliage):
+	if FoliagePainterUtil.is_self_or_parent_scene(fpath, foliage):
 		print("The selected scene can't be added recursively")
 		return false
 
@@ -598,32 +613,17 @@ func calculate_points() -> Array:
 	var area:float = PI * pow(radius,2)
 	var proportion:float = area / MAX_CALCULATE_AREA
 	var datas:Array[Dictionary] = []
+	var space_state =  get_viewport().world_3d.direct_space_state
 	
 	for element in _selected_elements:
 		var property:ElementProperty = _palette.get_element_property(element.get_meta("path"))
+		var min_distance:float = property.radius / 100.0
 		var cur_density:int = int(round(property.density * proportion * 10.0))
 		if cur_density == 0:
 			continue
-		var points:Array[Vector3] = generatePointInCycle(cur_density,brush.position,radius)
+		var points:Array[Vector3] = FoliagePainterUtil.generatePointInCycle1(space_state,cur_density,brush.position,radius,min_distance)
 		var dic:Dictionary = Dictionary()
 		dic["element"] = element
 		dic["points"] = points
 		datas.append(dic)
 	return datas
-	
-#生成点
-func generatePointInCycle(point_num:int,position:Vector3,radius:float) -> Array:
-	var points:Array[Vector3] = []
-	var x:float
-	var z:float
-	for i in range(1,point_num + 1):
-		while true:
-			x = randf_range(-radius,radius)
-			z = randf_range(-radius,radius)
-			if pow(x,2) + pow(z,2) < pow(radius,2):
-				var pos:Vector3 = Vector3(x + position.x,position.y,z + position.z)
-				var hits:Dictionary = _get_raycast_position(pos)
-				if not hits.is_empty():
-					points.append(hits.position)
-				break
-	return points

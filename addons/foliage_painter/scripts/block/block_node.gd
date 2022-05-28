@@ -172,15 +172,19 @@ func check_node_cover(brush_pos:Vector3,radius:float) -> bool:
 #	return false
 	
 #获得节点内所有在刷子范围内的物体
-func get_all_cover_element(brush_pos:Vector3,radius:float,is_remove:bool = false) -> Array:
+func get_all_cover_element(brush_pos:Vector3,radius:float,path_list:Array[String],is_remove:bool = false) -> Array:
 	var all_elements:Array = []
 	if not _nodes.is_empty():
 		for node in _nodes:
-			var results = node.get_all_cover_element(brush_pos,radius)
+			var results = node.get_all_cover_element(brush_pos,radius,path_list,is_remove)
 			all_elements.append_array(results)
 	else:
 		for key in _data.keys():
 			var element:Node3D = _data[key]
+			var path:String = element.get_meta("path")
+			var index:int = path_list.find(path)
+			if index == -1:
+				continue
 			var dis = element.position.distance_to(brush_pos)
 #			var temp:String = "笔刷的位置: %s，物体的位置: %s,距离: %f" % [brush_pos,element.position,dis]
 #			print(temp)

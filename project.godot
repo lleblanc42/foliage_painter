@@ -30,7 +30,7 @@ _global_script_classes=[{
 "path": "res://addons/foliage_painter/scripts/element_property.gd"
 }, {
 "base": "RefCounted",
-"class": &"FoliagePrinterUtil",
+"class": &"FoliagePainterUtil",
 "language": &"GDScript",
 "path": "res://addons/foliage_painter/scripts/util.gd"
 }, {
@@ -49,7 +49,7 @@ _global_script_class_icons={
 "BlockNode": "",
 "BlockSearcher": "",
 "ElementProperty": "",
-"FoliagePrinterUtil": "",
+"FoliagePainterUtil": "",
 "Palette": "",
 "ThreadQueue": ""
 }

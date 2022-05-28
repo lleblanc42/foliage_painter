@@ -1,9 +1,9 @@
 class_name ElementProperty
 
-#密度
-var density:float = 0.0
-#间距
-var radius:float = 0.0
+#密度 (10m x 10m area number)
+var density:float = 10.0
+#间距(cm)
+var radius:float = 30.0
 #高度随机偏移
 #最小偏移
 var yOffsetMin:float = 0.0

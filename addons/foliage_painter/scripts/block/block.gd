@@ -37,7 +37,7 @@ func add_element(element:Node3D):
 	
 #搜索
 #is_remove is false only do search,is_remove is true do search and remove
-func search(position:Vector3,radius:float,is_remove:bool = false) -> Array:
+func search(position:Vector3,radius:float,path_list:Array[String],is_remove:bool = false) -> Array:
 	if searching == true:
 		print("上一次还没搜索完")
 		return []
@@ -47,7 +47,7 @@ func search(position:Vector3,radius:float,is_remove:bool = false) -> Array:
 #	print("刷过的图块：",selected_block)
 	var selected_elements:Array = []
 	for node in selected_block:
-		var results:Array = node.get_all_cover_element(position,radius,is_remove)
+		var results:Array = node.get_all_cover_element(position,radius,path_list,is_remove)
 		selected_elements.append_array(results)
 	if is_remove:
 		erase_empty_block()
