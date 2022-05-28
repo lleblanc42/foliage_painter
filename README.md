@@ -24,6 +24,8 @@ How to use
   - This will create scene instances as child of the `Foliage3D` node.
 
 
+original project:https://github.com/Zylann/godot_scatter_plugin
+
 License
 ---------
 
