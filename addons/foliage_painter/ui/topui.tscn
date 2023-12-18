@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/foliage_painter/ui/topui.gd" id="1_gksi4"]
 [ext_resource type="Texture2D" path="res://addons/foliage_painter/icons/select.png" id="2_t60t4"]
-[ext_resource type="ButtonGroup" uid="uid://c8ut3maeljkms" path="res://addons/foliage_painter/ui/btn_group/mode_group.tres" id="2_whs2j"]
+[ext_resource type="ButtonGroup" uid="uid://c8ut3maeljkms" path="res://Addons/foliage_painter-master/addons/foliage_painter/ui/btn_group/mode_group.tres" id="2_whs2j"]
 [ext_resource type="Texture2D" path="res://addons/foliage_painter/icons/foliage.png" id="3_xx46d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dabuw"]

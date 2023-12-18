@@ -6,9 +6,9 @@ signal element_select()
 #选择素材
 signal show_property(index)
 
-@onready var icon:TextureRect = $icon
-@onready var checkBox:CheckBox = $CheckBox
-@onready var count:Label = $count
+var icon: TextureRect
+var checkBox: CheckBox
+var count: Label
 
 #在列表里的索引
 var index:int = 0
@@ -17,12 +17,12 @@ var path:String = ""
 
 var selected:bool = false
 
-var property:ElementProperty = preload("../scripts/element_property.gd").new()
+var property: Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	set_color(100)
-	connect("toggled",_on_element_toggled)
+	self.toggled.connect(_on_element_toggled)
 
 func _on_check_box_toggled(button_pressed):
 	if button_pressed == true:

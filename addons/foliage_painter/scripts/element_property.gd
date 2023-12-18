@@ -1,4 +1,5 @@
 class_name ElementProperty
+extends Node
 
 #密度 (10m x 10m area number)
 var density:float = 10.0

@@ -11,15 +11,15 @@ const MAX_CALCULATE_AREA:float = 100
 const FOLIAGE_NAME:String = "Foliage3D"
 const BRUSH_NAME:String = "Brush"
 const BLOCK_NAME:String = "Block"
-const Foliage3D = preload("./ui/foliage3d.gd")
-const PaletteScene = preload("./ui/palette.tscn")
+const Foliage3D = preload("res://Addons/foliage_painter/ui/foliage3d.gd")
+const PaletteScene = preload("res://Addons/foliage_painter/ui/palette.tscn")
 const TIME_LIMIT:float = 0.05
 #const Octree = preload("./scripts/octree.gd")
-var Brush3D = preload("./mesh/brush.tscn")
+var Brush3D = preload("res://Addons/foliage_painter/mesh/brush.tscn")
 #左侧素材列表
-var _palette:Palette = preload("./ui/palette.tscn").instantiate()
+var _palette = preload("res://Addons/foliage_painter/ui/palette.tscn").instantiate()
 #顶部模式选择UI
-var _topui = preload("./ui/topui.tscn").instantiate()
+var _topui = preload("res://Addons/foliage_painter/ui/topui.tscn").instantiate()
 
 #绘制根节点
 var foliage : Foliage3D
@@ -55,18 +55,19 @@ func _enter_tree():
 	
 	set_physics_process(false)
 	
-	_topui.connect("toggle_mode",_on_toggle_mode)
+	_topui.toggle_mode.connect(_on_toggle_mode)
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU,_topui)
 	
 	add_custom_type("Foliage3D", "Node3D", Foliage3D, get_icon("scatter3d_node"))
 	
 	var base_control = get_editor_interface().get_base_control()
 
+	_palette.get_script()
 	_palette.connect("elements_selected", _on_Palette_element_selected)
 	_palette.connect("element_added", _on_Palette_element_added)
 	_palette.connect("elements_removed", _on_Palette_patterns_removed)
 	_palette.connect("brush_size_changed", _on_Brush_size_changed)
-	_palette.connect("update_block_data",_on_update_block_data)
+	_palette.connect("update_block_data", _on_update_block_data)
 	_palette.hide()
 	add_control_to_container(CustomControlContainer.CONTAINER_SPATIAL_EDITOR_SIDE_LEFT,_palette)
 	_palette.set_preview_provider(get_editor_interface().get_resource_previewer())
@@ -148,7 +149,7 @@ func _forward_3d_gui_input(p_camera:Camera3D, p_event:InputEvent):
 				if _palette.tool_mode == _palette.SINGLE:
 #					if _viewport_camera == null:
 #						_viewport_camera = p_camera
-					var element:MeshInstance3D = _random_element_instance()
+					var element = _random_element_instance()
 					_single(hit.position,element)
 #				if _palette.tool_mode == _palette.PAINT:
 #					_paint()
@@ -291,7 +292,7 @@ func _draw(pos:Vector3,instance:Node3D,path:String,layer:Node3D):
 	instance.position = pos + Vector3(0,yOffset,0)
 	#random roate from min ~ max
 	var angle:float = randf_range(property.rotateMin,property.rotateMax)
-	var rad:float = deg2rad(angle)
+	var rad:float = deg_to_rad(angle)
 	instance.rotate_y(rad)
 	#random scale from min ~ max
 	var s:float = randf_range(property.scaleMin,property.scaleMax)

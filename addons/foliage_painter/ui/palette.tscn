@@ -1,382 +1,335 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2roa2qw1r57p"]
+[gd_scene load_steps=6 format=3 uid="uid://b2roa2qw1r57p"]
 
-[ext_resource type="Script" path="res://addons/foliage_painter/ui/palette.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://c7312lyi42l7o" path="res://addons/foliage_painter/ui/toolItem.tscn" id="2_fnbg1"]
-[ext_resource type="Texture2D" uid="uid://xt5whyyef3ag" path="res://addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
-[ext_resource type="ButtonGroup" uid="uid://cy1k0gkfxtp34" path="res://addons/foliage_painter/ui/btn_group/tool_group.tres" id="3_yna7w"]
-[ext_resource type="Texture2D" uid="uid://dlja4edv6dr58" path="res://addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626v5"]
-bg_color = Color(0.180392, 0.180392, 0.180392, 1)
+[ext_resource type="Script" path="res://Addons/foliage_painter/ui/palette.gd" id="1"]
+[ext_resource type="PackedScene" path="res://Addons/foliage_painter/ui/toolItem.tscn" id="2_fnbg1"]
+[ext_resource type="Texture2D" path="res://Addons/foliage_painter/icons/paint32.png" id="3_30bq8"]
+[ext_resource type="ButtonGroup" path="res://Addons/foliage_painter/ui/btn_group/tool_group.tres" id="3_yna7w"]
+[ext_resource type="Texture2D" path="res://Addons/foliage_painter/icons/foliage32.png" id="4_q04a5"]
 
 [node name="Palette" type="Control"]
-minimum_size = Vector2(327, 0)
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -1612.0
-script = ExtResource( "1" )
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
 metadata/_edit_use_custom_anchors = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 320.0
 mouse_filter = 2
 theme_override_constants/separation = 7
 
 [node name="ToolBG" type="ColorRect" parent="VBoxContainer"]
-minimum_size = Vector2(0, 66)
-offset_right = 327.0
-offset_bottom = 66.0
+layout_mode = 2
+size_flags_vertical = 3
 color = Color(0.156863, 0.156863, 0.156863, 1)
 
-[node name="ToolContainer" type="MarginContainer" parent="VBoxContainer/ToolBG"]
-offset_right = 148.0
-offset_bottom = 46.0
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_left = 11
-metadata/_edit_layout_mode = 1
+[node name="ToolContainer" type="GridContainer" parent="VBoxContainer/ToolBG"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 279.0
+grow_vertical = 2
 
-[node name="toolList" type="GridContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
-minimum_size = Vector2(0, 32)
-offset_left = 11.0
-offset_top = 7.0
-offset_right = 159.0
-offset_bottom = 53.0
-theme_override_constants/h_separation = 14
-columns = 6
+[node name="ToolListContainer" type="CenterContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
+layout_mode = 2
 
-[node name="Paint" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
-offset_right = 40.0
-button_group = ExtResource( "3_yna7w" )
-icon = ExtResource( "3_30bq8" )
+[node name="toolList" type="GridContainer" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 14
+columns = 3
 
-[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" index="0"]
+[node name="Paint" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList" instance=ExtResource("2_fnbg1")]
+layout_mode = 2
+button_group = ExtResource("3_yna7w")
+icon = ExtResource("3_30bq8")
+
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Paint" index="0"]
+visible = false
+layout_mode = 0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -2.0
+offset_top = 50.0
+offset_right = 39.0
+offset_bottom = 76.0
+grow_horizontal = 1
+grow_vertical = 1
+text = ""
+
+[node name="Single" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList" instance=ExtResource("2_fnbg1")]
+layout_mode = 2
+button_pressed = true
+button_group = ExtResource("3_yna7w")
+icon = ExtResource("4_q04a5")
+
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Single" index="0"]
+visible = false
+layout_mode = 0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -5.0
+offset_top = 14.0
+offset_right = 6.0
+offset_bottom = 40.0
+grow_horizontal = 1
+grow_vertical = 1
+text = ""
+
+[node name="Erase" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList" instance=ExtResource("2_fnbg1")]
+layout_mode = 2
+button_group = ExtResource("3_yna7w")
+
+[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Erase" index="0"]
+visible = false
+layout_mode = 0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -3.0
+offset_top = 14.0
+offset_right = 4.0
+offset_bottom = 40.0
+grow_horizontal = 1
+grow_vertical = 1
+text = ""
+
+[node name="PaintLabel" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList"]
+layout_mode = 2
 text = "Paint"
 
-[node name="Single" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
-offset_left = 54.0
-offset_right = 94.0
-button_pressed = true
-button_group = ExtResource( "3_yna7w" )
-icon = ExtResource( "4_q04a5" )
-
-[node name="Erase" parent="VBoxContainer/ToolBG/ToolContainer/toolList" instance=ExtResource( "2_fnbg1" )]
-offset_left = 108.0
-offset_right = 148.0
-button_group = ExtResource( "3_yna7w" )
-
-[node name="nameLabel" parent="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" index="0"]
-text = "Erase"
-
-[node name="ToolDetail" type="VBoxContainer" parent="VBoxContainer"]
-offset_top = 73.0
-offset_right = 327.0
-offset_bottom = 148.0
-
-[node name="ToolName" type="Label" parent="VBoxContainer/ToolDetail"]
-offset_right = 327.0
-offset_bottom = 26.0
+[node name="SingleLabel" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList"]
+layout_mode = 2
 text = "Single"
 
-[node name="ColorRect" type="ColorRect" parent="VBoxContainer/ToolDetail"]
-minimum_size = Vector2(0, 3)
-offset_top = 30.0
-offset_right = 327.0
-offset_bottom = 33.0
+[node name="EraseLabel" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList"]
+layout_mode = 2
+text = "Erase"
+
+[node name="ToolDetail" type="VBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
+layout_mode = 2
+
+[node name="ToolName" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/ToolDetail"]
+layout_mode = 2
+text = "Single"
+
+[node name="ColorRect" type="ColorRect" parent="VBoxContainer/ToolBG/ToolContainer/ToolDetail"]
+layout_mode = 2
 color = Color(0.152941, 0.152941, 0.152941, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ToolDetail"]
-offset_top = 37.0
-offset_right = 327.0
-offset_bottom = 68.0
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/ToolDetail"]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/ToolDetail/HBoxContainer"]
-minimum_size = Vector2(100, 0)
-offset_top = 2.0
-offset_right = 100.0
-offset_bottom = 28.0
+[node name="Label" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/ToolDetail/HBoxContainer"]
+layout_mode = 2
 text = "Brush Size"
 
-[node name="BrushSizeSpin" type="SpinBox" parent="VBoxContainer/ToolDetail/HBoxContainer"]
-offset_left = 104.0
-offset_right = 187.0
-offset_bottom = 31.0
+[node name="BrushSizeSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/ToolDetail/HBoxContainer"]
+layout_mode = 2
 min_value = 1.0
 max_value = 8192.0
 value = 20.0
 editable = false
 
-[node name="ColorRect2" type="ColorRect" parent="VBoxContainer/ToolDetail"]
-minimum_size = Vector2(0, 3)
-offset_top = 72.0
-offset_right = 327.0
-offset_bottom = 75.0
+[node name="ColorRect2" type="ColorRect" parent="VBoxContainer/ToolBG/ToolContainer/ToolDetail"]
+layout_mode = 2
 color = Color(0.152941, 0.152941, 0.152941, 1)
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-offset_top = 155.0
-offset_right = 279.0
-offset_bottom = 186.0
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
+layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 theme_override_constants/separation = 15
 
-[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/HBoxContainer"]
-offset_bottom = 31.0
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/ToolBG/ToolContainer/HBoxContainer"]
+layout_mode = 2
 
-[node name="AddButton" type="Button" parent="VBoxContainer/HBoxContainer"]
-offset_left = 15.0
-offset_right = 67.0
-offset_bottom = 31.0
+[node name="AddButton" type="Button" parent="VBoxContainer/ToolBG/ToolContainer/HBoxContainer"]
+layout_mode = 2
 text = "Add..."
 
-[node name="RemoveButton2" type="Button" parent="VBoxContainer/HBoxContainer"]
-offset_left = 82.0
-offset_right = 153.0
-offset_bottom = 31.0
+[node name="RemoveButton2" type="Button" parent="VBoxContainer/ToolBG/ToolContainer/HBoxContainer"]
+layout_mode = 2
 text = "Remove"
 
-[node name="UpdateButton" type="Button" parent="VBoxContainer/HBoxContainer"]
-offset_left = 168.0
-offset_right = 279.0
-offset_bottom = 31.0
+[node name="UpdateButton" type="Button" parent="VBoxContainer/ToolBG/ToolContainer/HBoxContainer"]
+layout_mode = 2
 text = "Update Block"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-offset_top = 193.0
-offset_right = 327.0
-offset_bottom = 831.0
+[node name="ElementsListContainer" type="ScrollContainer" parent="VBoxContainer/ToolBG/ToolContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_styles/bg = SubResource( "StyleBoxFlat_626v5" )
 
-[node name="ElementsList" type="GridContainer" parent="VBoxContainer/ScrollContainer"]
-theme_override_constants/v_separation = 11
+[node name="ElementsList" type="GridContainer" parent="VBoxContainer/ToolBG/ToolContainer/ElementsListContainer"]
+layout_mode = 2
 theme_override_constants/h_separation = 11
+theme_override_constants/v_separation = 11
 columns = 4
 
-[node name="Split" type="ColorRect" parent="VBoxContainer"]
+[node name="Split" type="ColorRect" parent="VBoxContainer/ToolBG/ToolContainer"]
 modulate = Color(1, 1, 1, 0.631373)
-minimum_size = Vector2(0, 5)
-offset_top = 838.0
-offset_right = 327.0
-offset_bottom = 843.0
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 color = Color(0.12549, 0.12549, 0.12549, 1)
 
-[node name="PropertyBG" type="VSplitContainer" parent="VBoxContainer"]
-minimum_size = Vector2(0, 230)
-offset_top = 850.0
-offset_right = 327.0
-offset_bottom = 1080.0
+[node name="PropertyBG" type="VSplitContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split"]
+layout_mode = 2
+offset_top = 7.0
+offset_right = 279.0
+offset_bottom = 7.0
 
-[node name="PropertyPanel" type="VBoxContainer" parent="VBoxContainer/PropertyBG"]
+[node name="PropertyPanel" type="VBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG"]
 visible = false
-offset_right = 327.0
-offset_bottom = 230.0
+layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel"]
-offset_right = 327.0
-offset_bottom = 37.0
+[node name="NameLabel" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "box"
 
-[node name="Split" type="ColorRect" parent="VBoxContainer/PropertyBG/PropertyPanel"]
+[node name="Split" type="ColorRect" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
 modulate = Color(1, 1, 1, 0.623529)
-minimum_size = Vector2(0, 5)
-offset_top = 41.0
-offset_right = 327.0
-offset_bottom = 46.0
+layout_mode = 2
 color = Color(0.12549, 0.12549, 0.12549, 1)
 
-[node name="DensityBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
-offset_top = 50.0
-offset_right = 327.0
-offset_bottom = 81.0
+[node name="DensityBox" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
+layout_mode = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/DensityBox"]
-minimum_size = Vector2(60, 0)
-offset_top = 2.0
-offset_right = 60.0
-offset_bottom = 28.0
-hint_tooltip = "1000 x 1000"
+[node name="Label2" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/DensityBox"]
+layout_mode = 2
 mouse_filter = 1
 text = "Density"
 
-[node name="densitySpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/DensityBox"]
-offset_left = 64.0
-offset_right = 147.0
-offset_bottom = 31.0
+[node name="densitySpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/DensityBox"]
+layout_mode = 2
 max_value = 1000.0
 value = 10.0
 
-[node name="RadiusBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
-offset_top = 85.0
-offset_right = 327.0
-offset_bottom = 116.0
+[node name="RadiusBox" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
+layout_mode = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/RadiusBox"]
-minimum_size = Vector2(60, 0)
-offset_top = 2.0
-offset_right = 61.0
-offset_bottom = 28.0
+[node name="Label2" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RadiusBox"]
+layout_mode = 2
 text = "Redius  "
 
-[node name="radiusSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/RadiusBox"]
-offset_left = 65.0
-offset_right = 148.0
-offset_bottom = 31.0
+[node name="radiusSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RadiusBox"]
+layout_mode = 2
 max_value = 1000.0
 step = 0.01
 value = 30.0
 
-[node name="YOffsetBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
-offset_top = 120.0
-offset_right = 327.0
-offset_bottom = 151.0
+[node name="YOffsetBox" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
+layout_mode = 2
 
-[node name="Label2" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox"]
-minimum_size = Vector2(60, 0)
-offset_top = 2.0
-offset_right = 60.0
-offset_bottom = 28.0
+[node name="Label2" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox"]
+layout_mode = 2
 text = "YOffset"
 
-[node name="Label3" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox"]
-minimum_size = Vector2(32, 0)
-offset_left = 64.0
-offset_top = 2.0
-offset_right = 96.0
-offset_bottom = 28.0
+[node name="Label3" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox"]
+layout_mode = 2
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox"]
-offset_left = 100.0
-offset_right = 183.0
-offset_bottom = 31.0
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox"]
+layout_mode = 2
 min_value = -1000.0
 max_value = 1000.0
 step = 0.1
 
-[node name="Label4" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox"]
-minimum_size = Vector2(35, 0)
-offset_left = 187.0
-offset_top = 2.0
-offset_right = 222.0
-offset_bottom = 28.0
+[node name="Label4" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox"]
+layout_mode = 2
 text = "max"
 
-[node name="maxSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox"]
-offset_left = 226.0
-offset_right = 309.0
-offset_bottom = 31.0
+[node name="maxSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox"]
+layout_mode = 2
 min_value = -1000.0
 max_value = 1000.0
 step = 0.1
 
-[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
-offset_top = 155.0
-offset_right = 327.0
-offset_bottom = 186.0
+[node name="ScaleBox" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
+layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="des" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox"]
-minimum_size = Vector2(60, 0)
-offset_top = 2.0
-offset_right = 60.0
-offset_bottom = 28.0
+[node name="des" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox"]
+layout_mode = 2
 text = "Scale"
 
-[node name="Label2" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox"]
-minimum_size = Vector2(30, 0)
-offset_left = 65.0
-offset_top = 2.0
-offset_right = 95.0
-offset_bottom = 28.0
+[node name="Label2" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox"]
+layout_mode = 2
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox"]
-offset_left = 100.0
-offset_right = 183.0
-offset_bottom = 31.0
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox"]
+layout_mode = 2
 min_value = 0.1
 max_value = 10.0
 step = 0.05
 value = 1.0
 
-[node name="Label3" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox"]
-offset_left = 188.0
-offset_top = 2.0
-offset_right = 222.0
-offset_bottom = 28.0
+[node name="Label3" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox"]
+layout_mode = 2
 text = "max"
 
-[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox"]
-offset_left = 227.0
-offset_right = 310.0
-offset_bottom = 31.0
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox"]
+layout_mode = 2
 min_value = 0.1
 max_value = 10.0
 step = 0.05
 value = 1.0
 
-[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/PropertyBG/PropertyPanel"]
-offset_top = 190.0
-offset_right = 327.0
-offset_bottom = 221.0
+[node name="RotateBox" type="HBoxContainer" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel"]
+layout_mode = 2
 theme_override_constants/separation = 5
 
-[node name="des" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/RotateBox"]
-minimum_size = Vector2(60, 0)
-offset_top = 2.0
-offset_right = 60.0
-offset_bottom = 28.0
+[node name="des" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox"]
+layout_mode = 2
 text = "Rotate"
 
-[node name="Label2" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/RotateBox"]
-offset_left = 65.0
-offset_top = 2.0
-offset_right = 95.0
-offset_bottom = 28.0
+[node name="Label2" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox"]
+layout_mode = 2
 text = "min"
 
-[node name="minSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/RotateBox"]
-offset_left = 100.0
-offset_right = 183.0
-offset_bottom = 31.0
+[node name="minSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox"]
+layout_mode = 2
 min_value = -180.0
 max_value = 180.0
 step = 0.05
 
-[node name="Label3" type="Label" parent="VBoxContainer/PropertyBG/PropertyPanel/RotateBox"]
-offset_left = 188.0
-offset_top = 2.0
-offset_right = 222.0
-offset_bottom = 28.0
+[node name="Label3" type="Label" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox"]
+layout_mode = 2
 text = "max"
 
-[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/PropertyBG/PropertyPanel/RotateBox"]
-offset_left = 227.0
-offset_right = 310.0
-offset_bottom = 31.0
+[node name="MaxSpin" type="SpinBox" parent="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox"]
+layout_mode = 2
 min_value = -180.0
 max_value = 180.0
 step = 0.05
 
-[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Paint" to="." method="_on_tool_toggled" binds= ["Paint"]]
-[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Single" to="." method="_on_tool_toggled" binds= ["Single"]]
-[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/toolList/Erase" to="." method="_on_tool_toggled" binds= ["Erase"]]
-[connection signal="value_changed" from="VBoxContainer/ToolDetail/HBoxContainer/BrushSizeSpin" to="." method="_on_brush_size_spin_value_changed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton2" to="." method="_on_RemoveButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/UpdateButton" to="." method="_on_update_button_pressed"]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/DensityBox/densitySpin" to="." method="_on_property_changed" binds= ["density"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/RadiusBox/radiusSpin" to="." method="_on_property_changed" binds= ["radius"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/minSpin" to="." method="_on_property_changed" binds= ["yOffsetMin"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/maxSpin" to="." method="_on_property_changed" binds= ["yOffsetMax"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox/minSpin" to="." method="_on_property_changed" binds= ["scaleMin"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/ScaleBox/MaxSpin" to="." method="_on_property_changed" binds= ["scaleMax"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/RotateBox/minSpin" to="." method="_on_property_changed" binds= ["rotateMin"]]
-[connection signal="value_changed" from="VBoxContainer/PropertyBG/PropertyPanel/RotateBox/MaxSpin" to="." method="_on_property_changed" binds= ["rotateMax"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Paint" to="." method="_on_tool_toggled" binds= ["Paint"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Single" to="." method="_on_tool_toggled" binds= ["Single"]]
+[connection signal="toggled" from="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Erase" to="." method="_on_tool_toggled" binds= ["Erase"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/ToolDetail/HBoxContainer/BrushSizeSpin" to="." method="_on_brush_size_spin_value_changed"]
+[connection signal="pressed" from="VBoxContainer/ToolBG/ToolContainer/HBoxContainer/AddButton" to="." method="_on_AddButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/ToolBG/ToolContainer/HBoxContainer/RemoveButton2" to="." method="_on_RemoveButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/ToolBG/ToolContainer/HBoxContainer/UpdateButton" to="." method="_on_update_button_pressed"]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/DensityBox/densitySpin" to="." method="_on_property_changed" binds= ["density"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RadiusBox/radiusSpin" to="." method="_on_property_changed" binds= ["radius"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox/minSpin" to="." method="_on_property_changed" binds= ["yOffsetMin"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox/maxSpin" to="." method="_on_property_changed" binds= ["yOffsetMax"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox/minSpin" to="." method="_on_property_changed" binds= ["scaleMin"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox/MaxSpin" to="." method="_on_property_changed" binds= ["scaleMax"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox/minSpin" to="." method="_on_property_changed" binds= ["rotateMin"]]
+[connection signal="value_changed" from="VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox/MaxSpin" to="." method="_on_property_changed" binds= ["rotateMax"]]
 
-[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/Paint"]
-[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/Single"]
-[editable path="VBoxContainer/ToolBG/ToolContainer/toolList/Erase"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Paint"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Single"]
+[editable path="VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList/Erase"]

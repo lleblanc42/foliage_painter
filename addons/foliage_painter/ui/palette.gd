@@ -1,13 +1,13 @@
 @tool
 extends Control
-class_name Palette
 
 const PAINT = "Paint"
 const SINGLE = "Single"
 const ERASE = "Erase"
 
-const btn_group = preload("./btn_group/element_group.tres")
-const element_res = preload("element.tscn")
+const btn_group = preload("res://Addons/foliage_painter/ui/btn_group/element_group.tres")
+const element_res = preload("res://Addons/foliage_painter/ui/element.tscn")
+const element_res_property = preload("res://Addons/foliage_painter/scripts/element_property.gd")
 
 signal elements_selected(pattern_paths)
 signal element_added(path)
@@ -16,26 +16,26 @@ signal brush_size_changed()
 signal update_block_data()
 
 #工具列表
-@onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/toolList
+@onready var toolList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/ToolListContainer/toolList
 #场景元素列表
-@onready var elementsList:GridContainer = $VBoxContainer/ScrollContainer/ElementsList
+@onready var elementsList:GridContainer = $VBoxContainer/ToolBG/ToolContainer/ElementsListContainer/ElementsList
 #@onready var _margin_spin_box : SpinBox = $VBoxContainer/MarginContainer/MarginSpinBox
 #工具名字
-@onready var toolName:Label = $VBoxContainer/ToolDetail/ToolName
+@onready var toolName:Label = $VBoxContainer/ToolBG/ToolContainer/ToolDetail/ToolName
 #笔刷大小
-@onready var brushSize:SpinBox = $VBoxContainer/ToolDetail/HBoxContainer/BrushSizeSpin
+@onready var brushSize:SpinBox = $VBoxContainer/ToolBG/ToolContainer/ToolDetail/HBoxContainer/BrushSizeSpin
 #属性面板
-@onready var propertyPanel:VBoxContainer = $VBoxContainer/PropertyBG/PropertyPanel
+@onready var propertyPanel:VBoxContainer = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel
 
-@onready var element_name:Label = $VBoxContainer/PropertyBG/PropertyPanel/NameLabel
-@onready var density:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/DensityBox/densitySpin
-@onready var radius:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/RadiusBox/radiusSpin
-@onready var yOffset_min:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/minSpin
-@onready var yOffset_max:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/YOffsetBox/maxSpin
-@onready var scale_min:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/ScaleBox/minSpin
-@onready var scale_max:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/ScaleBox/MaxSpin
-@onready var rotate_min:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/RotateBox/minSpin
-@onready var rotate_max:SpinBox = $VBoxContainer/PropertyBG/PropertyPanel/RotateBox/MaxSpin
+@onready var element_name:Label = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/NameLabel
+@onready var density:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/DensityBox/densitySpin
+@onready var radius:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RadiusBox/radiusSpin
+@onready var yOffset_min:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox/minSpin
+@onready var yOffset_max:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/YOffsetBox/maxSpin
+@onready var scale_min:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox/minSpin
+@onready var scale_max:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/ScaleBox/MaxSpin
+@onready var rotate_min:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox/minSpin
+@onready var rotate_max:SpinBox = $VBoxContainer/ToolBG/ToolContainer/Split/PropertyBG/PropertyPanel/RotateBox/MaxSpin
 
 #正在被选择显示属性的element index
 var selected_element_index:int = -1
@@ -71,7 +71,7 @@ func setup_dialogs(base_control):
 	_file_dialog.access = FileDialog.ACCESS_RESOURCES
 	_file_dialog.mode = FileDialog.FILE_MODE_OPEN_FILE
 	_file_dialog.add_filter("*.tscn ; TSCN files")
-	_file_dialog.connect("file_selected", _on_FileDialog_file_selected)
+	_file_dialog.file_selected.connect(_on_FileDialog_file_selected)
 	_file_dialog.hide()
 	base_control.add_child(_file_dialog)
 
@@ -80,7 +80,7 @@ func set_preview_provider(provider : EditorResourcePreview):
 	assert(_preview_provider == null)
 	assert(provider != null)
 	_preview_provider = provider
-	_preview_provider.connect("preview_invalidated", _on_EditorResourcePreview_preview_invalidated)
+	_preview_provider.preview_invalidated.connect(_on_EditorResourcePreview_preview_invalidated)
 
 
 func _exit_tree():
@@ -91,8 +91,8 @@ func _exit_tree():
 
 func load_elements(patterns):
 	for node in elementsList.get_children():
-		node.disconnect("element_select",_on_element_selected)
-		node.disconnect("show_property",_on_show_element_property)
+		node.element_select.disconnect(_on_element_selected)
+		node.show_property.disconnect(_on_show_element_property)
 		elementsList.remove_child(node)
 
 	for dic in patterns:
@@ -102,23 +102,32 @@ func load_elements(patterns):
 
 func add_element(scene_path,is_selected:bool=false,number:int=0):
 	var element = element_res.instantiate()
-	var godot_theme = EditorPlugin.new().get_editor_interface().get_base_control().theme
+	var godot_theme = EditorInterface.get_editor_theme()
 	var default_icon = godot_theme.get_icon("PackedScene", "EditorIcons")
 	var pattern_name = scene_path.get_file().get_basename()
 	var i = elementsList.get_child_count()
-	elementsList.add_child(element)
-	element.connect("element_select",_on_element_selected)
-	element.connect("show_property",_on_show_element_property)
+
 	element.name = pattern_name
+
+	element.get_script()
+	element.icon = element.get_node_or_null("icon")
+	element.checkBox = element.get_node_or_null("CheckBox")
+	element.count = element.get_node_or_null("count")
 	element.icon.texture = default_icon
+	element.checkBox.button_group = btn_group
+	element.property = element_res_property.new()
+	element.element_select.connect(_on_element_selected)
+	element.show_property.connect(_on_show_element_property)
 	element.index = i
 	element.path = scene_path
-	element.button_group = btn_group
 	element.update_number(number)
+
 	if element and is_selected == true:
-		element.checkBox.button_pressed = true
 		element.selected = true
-	
+		element.checkBox.button_pressed = true
+
+	elementsList.add_child(element)
+
 	_preview_provider.queue_resource_preview(scene_path, self, "_on_EditorResourcePreview_preview_loaded", i)
 
 
@@ -143,8 +152,8 @@ func remove_element(scene_path):
 	if i != -1:
 #		_item_list.remove_item(i)
 		var node = elementsList.get_child(i)
-		node.disconnect("element_select",_on_element_selected)
-		node.disconnect("show_property",_on_show_element_property)
+		node.element_select.disconnect(_on_element_selected)
+		node.show_property.disconnect(_on_show_element_property)
 		elementsList.remove_child(node)
 
 #根据资源地址查找资源在GridContainer里的索引

@@ -1,16 +1,15 @@
-[gd_scene load_steps=9 format=3 uid="uid://bfj1vrqsqy18e"]
+[gd_scene load_steps=8 format=3 uid="uid://bfj1vrqsqy18e"]
 
-[ext_resource type="Texture2D" uid="uid://ghvinfm7mlxl" path="res://icon.png" id="1_bstac"]
-[ext_resource type="Script" path="res://addons/foliage_painter/ui/element.gd" id="2_erivp"]
-[ext_resource type="Texture2D" uid="uid://7n5xvcf706o4" path="res://addons/foliage_painter/icons/checkbox-check.png" id="3_5rm75"]
-[ext_resource type="Texture2D" uid="uid://c1i7gmd8q5dr6" path="res://addons/foliage_painter/icons/checkbox-no.png" id="4_tr2fl"]
+[ext_resource type="Script" path="res://Addons/foliage_painter/ui/element.gd" id="2_erivp"]
+[ext_resource type="Texture2D" uid="uid://2ain5lleya5f" path="res://addons/foliage_painter/icons/checkbox-check.png" id="3_5rm75"]
+[ext_resource type="Texture2D" uid="uid://c0dnrfxqohi2b" path="res://addons/foliage_painter/icons/checkbox-no.png" id="4_tr2fl"]
 
 [sub_resource type="Gradient" id="Gradient_npcs4"]
 offsets = PackedFloat32Array(0.00642398, 0.997859)
 colors = PackedColorArray(0.333333, 0.670588, 1, 1, 0.333333, 0.670588, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_cym5k"]
-gradient = SubResource( "Gradient_npcs4" )
+gradient = SubResource("Gradient_npcs4")
 width = 80
 height = 80
 
@@ -18,22 +17,21 @@ height = 80
 colors = PackedColorArray(1, 1, 1, 0.501961, 1, 1, 1, 0.501961)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_svfob"]
-gradient = SubResource( "Gradient_h2b56" )
+gradient = SubResource("Gradient_h2b56")
 width = 80
 height = 80
 
 [node name="Element" type="TextureButton"]
-minimum_size = Vector2(80, 80)
 offset_right = 80.0
 offset_bottom = 80.0
 toggle_mode = true
-texture_pressed = SubResource( "GradientTexture2D_cym5k" )
-texture_hover = SubResource( "GradientTexture2D_svfob" )
-script = ExtResource( "2_erivp" )
+texture_pressed = SubResource("GradientTexture2D_cym5k")
+texture_hover = SubResource("GradientTexture2D_svfob")
+script = ExtResource("2_erivp")
 
 [node name="icon" type="TextureRect" parent="."]
 modulate = Color(0.392157, 0.392157, 0.392157, 1)
-minimum_size = Vector2(56, 56)
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -45,21 +43,22 @@ offset_bottom = 35.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource( "1_bstac" )
-ignore_texture_size = true
+expand_mode = 1
 metadata/_edit_layout_mode = 1
 
 [node name="CheckBox" type="CheckBox" parent="."]
+layout_mode = 0
 offset_left = 6.0
 offset_top = 6.0
 offset_right = 34.0
 offset_bottom = 37.0
 focus_mode = 0
 mouse_default_cursor_shape = 2
-theme_override_icons/checked = ExtResource( "3_5rm75" )
-theme_override_icons/unchecked = ExtResource( "4_tr2fl" )
+theme_override_icons/checked = ExtResource("3_5rm75")
+theme_override_icons/unchecked = ExtResource("4_tr2fl")
 
 [node name="count" type="Label" parent="."]
+layout_mode = 0
 offset_left = 7.0
 offset_top = 52.0
 offset_right = 72.0

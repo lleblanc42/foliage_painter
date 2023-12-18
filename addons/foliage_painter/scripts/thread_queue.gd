@@ -42,7 +42,7 @@ func start() -> void:
 			var thread = Thread.new()
 			_threads += 1
 
-			thread.start(_work, thread, Thread.PRIORITY_LOW)
+			thread.start(_work.bind(thread), Thread.PRIORITY_LOW)
 	_mtx.unlock()
 
 func _work(thread) -> void:

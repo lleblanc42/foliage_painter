@@ -28,12 +28,12 @@ static func get_instance_root(node):
 	return node
 
 
-static func get_node_in_parents(node, klass):
-	while node != null:
-		node = node.get_parent()
-		if node != null and node is klass:
-			return node
-	return null
+# static func get_node_in_parents(node, klass):
+# 	while node != null:
+# 		node = node.get_parent()
+# 		if node != null and node is klass:
+# 			return node
+# 	return null
 
 
 static func is_self_or_parent_scene(fpath, node):
